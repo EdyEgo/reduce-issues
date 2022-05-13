@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore ,serverTimestamp } from 'firebase/firestore';
-import { getAnalytics, logEvent } from 'firebase/analytics'
+// import { getAnalytics, logEvent } from 'firebase/analytics'// later
 import { getAuth } from 'firebase/auth';
 // import {getFunctions} from 'firebase/functions' // nope no need for you 
 
@@ -23,9 +23,10 @@ initializeApp(firebaseConfig);
 // init services
 const db = getFirestore()
 // const functions_instance = getFunctions() // no ,no, no, no 
-const analytics = getAnalytics()
+// const analytics = getAnalytics()
 const auth = getAuth()
-logEvent(analytics, 'notification_received')
+
+// logEvent(analytics, 'notification_received')
 export { db, auth ,  serverTimestamp };
 
 
