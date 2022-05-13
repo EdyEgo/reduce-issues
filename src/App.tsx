@@ -1,26 +1,23 @@
-import React from 'react';
+// import React,{use} from 'react';
+import {BrowserRouter as Router , Routes} from 'react-router-dom'
 
-import logo from './logo.svg';
 import './App.css';
+import { useDispatch, useSelector } from 'react-redux';
+import {} from '@reduxjs/toolkit'
+import { useState  } from 'react';
+import {fakeLogin} from './store/auth'
 
 function App() {
+
+ const authStore = useSelector((state:any)=> state.auth)
+ const dispatch = useDispatch()
+ const [someState,setSomeState] = useState('hey')
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App bg-blue-400 pt-2">
+     hey son {authStore.user.email}
+     <button onClick={()=>{dispatch(fakeLogin())}}>click me</button>
     </div>
+    
   );
 }
 
