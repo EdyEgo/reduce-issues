@@ -16,12 +16,12 @@ import {postNewDocument} from '../post/postDocument'
 
 
 
-export  const signUp = async({ email, firstName,lastName, password }: { email: string; password: string; firstName: string, lastName: string }) => {
+export  const signUpFirebase = async({ email, firstName,lastName, password }: { email: string; password: string; firstName: string, lastName: string }) => {
  
 
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password)
-    if (!res)return{error:true,message:'Could not complete signup'}
+    if (!res)return{error:true,message:'Could not complete sign up'}
       
       
  if(auth.currentUser != null){ // update user display name
@@ -37,7 +37,10 @@ export  const signUp = async({ email, firstName,lastName, password }: { email: s
 
   
       await postNewDocument({
-        collectionSelected: 'users', documentName: createdUidUser, inputObject: { email: createdUserEmail ,displayName:`${firstName} ${lastName[0]}.`},
+        collectionSelected: 'users', documentName: createdUidUser, inputObject: { 
+            emailIsVerified: false,
+            email: createdUserEmail ,
+            displayName:`${firstName} ${lastName[0]}.`},
       })
        
 

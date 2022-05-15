@@ -1,7 +1,7 @@
 import {auth} from '../../../firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 
-export  const watchUserState =  ( setCurrentUser:(user:any)=>void)=>{
+export  const watchUserStateFirebase =  ( setCurrentUser:(user:any)=>void)=>{
     
    
 
