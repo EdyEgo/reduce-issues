@@ -19,12 +19,12 @@ export async function signUp({ email, firstName,lastName, password }:
   
 }
 
-export async function userState(setCurrentUser:(user:any)=>void){
-    try{
+export  function userState(setCurrentUser:(user:any)=>void){
+    // try{
         return  watchUserStateFirebase(setCurrentUser)
-    }catch(e:any){
-      return {error:true,message:e.message}
-    }
+    // }catch(e:any){
+    //   return {error:true,message:e.message}
+    // }
 }
 
 export async function signIn(email:string,password:string,rememberMe?:string){
