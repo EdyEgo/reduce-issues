@@ -30,23 +30,23 @@ export  const signUp = async({ email, firstName,lastName, password }: { email: s
   })
  }
 
-    const created_uid_user = res.user.uid
-    const created_user_email = res.user.email
+    const createdUidUser = res.user.uid
+    const createdUserEmail = res.user.email
 
 
-// this one is working but was adding a member role , we don t need that really--->
-    if (res) {
+
+  
       await postNewDocument({
-        collectionSelected: 'users', documentName: created_uid_user, inputObject: { email: created_user_email ,displayName:`${firstName} ${lastName[0]}.`},
+        collectionSelected: 'users', documentName: createdUidUser, inputObject: { email: createdUserEmail ,displayName:`${firstName} ${lastName[0]}.`},
       })
        
 
-    }
+  
 
 
 
  
-    return res.user // created user return 
+    return {error:false,data:res.user} // created user return 
   }
   catch (err: any) {
     return{error:true,message:err.message}
