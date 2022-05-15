@@ -4,6 +4,8 @@
 
 // import React,{use} from 'react';
 import {BrowserRouter as Router , Routes} from 'react-router-dom'
+import AppAreaLayout from './components/layouts/AppArea'
+import ClientAreaLayout from './components/layouts/ClientArea'
 import {changeUserStatus , changeUnsubscribeStatus,changeErrorStatus} from './store/auth'
 import {userState } from './api/dataBaseAuthMethods'
 import './App.css';
@@ -39,10 +41,11 @@ useEffect(() => {
     if(error) {
       
       dispatch(changeErrorStatus(error))
+      setLoading(false)
       return 
     }
     
-    
+    setLoading(false)
     changeUnsubscribeStatus(data)
   
 
@@ -56,7 +59,27 @@ useEffect(() => {
 
   return (
     <div className="App ">
-    
+     
+     
+
+      {
+        currentUser === null 
+        &&
+        <ClientAreaLayout >
+ client area
+        </ClientAreaLayout>
+      }
+
+      {
+      currentUser 
+            && 
+      <AppAreaLayout>
+ app area 
+      </AppAreaLayout> 
+      
+      }
+
+     
      
     
     </div>
