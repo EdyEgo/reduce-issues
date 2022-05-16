@@ -1,9 +1,9 @@
 import ReactDOM from 'react-dom';
 import * as React from 'react';
+import { signUp} from '../../../api/dataBaseAuthMethods'
 
-import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel'
-import Input from '@mui/material/Input';
+
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -11,9 +11,10 @@ import IconButton from '@mui/material/IconButton'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LoadingButton from '@mui/lab/LoadingButton';
-import SaveIcon from '@mui/icons-material/Save';
+
 import SendIcon from '@mui/icons-material/Send';
 import Box from '@mui/material/Box';
+
 
 
 export interface SignUpProps {
@@ -26,16 +27,12 @@ export interface SignUpProps {
 const SignUp: React.FC<SignUpProps> = () => { 
 
  
-const inputFields = React.useRef({
-  email:'',
-  firstName:'',
-  lastName:'',
-  password:'',
-  confirmPassword:''
-}) 
+
 
 const [values, setValues] = React.useState<any>({
-
+  firstName:'',
+  lastName:'',
+  email:'',
   password: '',
   confirmPassword:'',
   showPassword:false,
@@ -43,11 +40,50 @@ const [values, setValues] = React.useState<any>({
  
 
 }); 
+
+const [errorMessage,setErrorMessage]  = React.useState<null | string>(null)
+
+
 const [loading, setLoading] = React.useState(false);
+ 
 
+const validateEmail = (email:string)=>{
+  const validEmailFormat = /^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/
+ return  validEmailFormat.test(email)
 
-function handleSubmit() {
+}
+const validatePasswordFormat  = (password:string)=>{
+  const validPasswordFormat = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])([a-zA-Z0-9]{8,})$/
+  return validPasswordFormat.test(password)
+  
+}
+
+async function handleSubmit() {
+  if(values.password !== values.confirmPassword) {
+    setErrorMessage('Password and confirm password must be the same !')
+    setTimeout(()=>{
+      setErrorMessage(null)
+    },2000)
+    return 
+  }
+  if(validatePasswordFormat(values.password) === false || validatePasswordFormat(values.confirmPassword) === false || values.firstName === '' || values.lastName === '' || validateEmail(values.email) === false){
+    setErrorMessage('Please complete all the fields !')
+    setTimeout(()=>{
+      setErrorMessage(null)
+    },2000)
+    return 
+  }
   setLoading(true);
+
+
+   
+//  const signedUpUser = await signUp(values) 
+ 
+ setLoading(false);
+//  console.log('submit data',signedUpUser)
+
+
+ 
 }
  
 const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -69,6 +105,8 @@ const handleClickShowConfirmPassword = () => {
 
 
 
+
+
 const handleChange =
 (prop: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
   setValues({ ...values, [prop]: event.target.value });
@@ -84,6 +122,10 @@ const handleChange =
               <h1 className="text-xl lg:text-3xl">Let's </h1>
               <h1 id="signUpTitle" className="text-xl lg:text-3xl font-bold "> get started!</h1>
             </div>
+
+            {errorMessage && <div className="error-message-container">
+              {errorMessage}
+            </div>}
          
        
 
