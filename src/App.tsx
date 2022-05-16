@@ -6,6 +6,8 @@
 import {BrowserRouter as Router , Routes} from 'react-router-dom'
 import AppAreaLayout from './components/layouts/AppArea'
 import ClientAreaLayout from './components/layouts/ClientArea'
+import ClientArea from './components/client-area'
+import AppArea from './components/app-area'
 import {changeUserStatus , changeUnsubscribeStatus,changeErrorStatus} from './store/auth'
 import {userState } from './api/dataBaseAuthMethods'
 import './App.css';
@@ -54,7 +56,7 @@ useEffect(() => {
   
  
 
-}, [dispatch]) // functions are  here only because of the "Mr. eslint" is screaming his lungs of ,it  does not make any sens i know
+}, [dispatch,currentUser]) // functions like dispatch are  here only because of the "Mr. eslint" is screaming his lungs of ,it  does not make any sens i know
 
 
   return (
@@ -66,7 +68,7 @@ useEffect(() => {
         currentUser === null 
         &&
         <ClientAreaLayout >
- client area
+        <ClientArea/>
         </ClientAreaLayout>
       }
 
@@ -74,7 +76,8 @@ useEffect(() => {
       currentUser 
             && 
       <AppAreaLayout>
- app area 
+        <AppArea/>
+
       </AppAreaLayout> 
       
       }
