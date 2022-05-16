@@ -3,7 +3,7 @@ import * as React from 'react';
 import { signUp} from '../../../api/dataBaseAuthMethods'
 
 import InputLabel from '@mui/material/InputLabel'
-
+import { styled } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -11,9 +11,15 @@ import IconButton from '@mui/material/IconButton'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LoadingButton from '@mui/lab/LoadingButton';
+import GoogleIcon from '@mui/icons-material/Google';
 
 import SendIcon from '@mui/icons-material/Send';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+
+const Input = styled('input')({
+  display: 'none',
+});
 
 
 
@@ -41,7 +47,7 @@ const [values, setValues] = React.useState<any>({
 
 }); 
 
-const [errorMessage,setErrorMessage]  = React.useState<null | string>(null)
+const [errorMessage,setErrorMessage]  = React.useState<null | string>('invisible')
 
 
 const [loading, setLoading] = React.useState(false);
@@ -62,14 +68,14 @@ async function handleSubmit() {
   if(values.password !== values.confirmPassword) {
     setErrorMessage('Password and confirm password must be the same !')
     setTimeout(()=>{
-      setErrorMessage(null)
+      setErrorMessage('invisible')
     },2000)
     return 
   }
   if(validatePasswordFormat(values.password) === false || validatePasswordFormat(values.confirmPassword) === false || values.firstName === '' || values.lastName === '' || validateEmail(values.email) === false){
     setErrorMessage('Please complete all the fields !')
     setTimeout(()=>{
-      setErrorMessage(null)
+      setErrorMessage('invisible')
     },2000)
     return 
   }
@@ -84,6 +90,18 @@ async function handleSubmit() {
 
 
  
+}
+
+async function handleProviderSubmit(providerName:string){
+    
+    const providerList:{[key:string]:()=>void} = {
+      google:()=>{
+        // sign up with google here 
+        
+        return null
+      }
+    }
+   return  providerList[providerName]()
 }
  
 const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -117,13 +135,13 @@ const handleChange =
       
       
       <div className="sign-up-form-container flex justify-center">
-      <form onSubmit={(event)=>{}} className="flex flex-col my-4 "> 
-            <div className="title-sign-up-form flex space-x-2.5  self-center my-4">
+      <form onSubmit={(event)=>{}} className="flex flex-col my-2 "> 
+            <div className="title-sign-up-form flex space-x-2.5  self-center my-2">
               <h1 className="text-xl lg:text-3xl">Let's </h1>
               <h1 id="signUpTitle" className="text-xl lg:text-3xl font-bold "> get started!</h1>
             </div>
 
-            {errorMessage && <div className="error-message-container">
+            { <div  className={`error-message-container text-center p-3  text-red-600 ${errorMessage === 'invisible' ? errorMessage : ''}`}>
               {errorMessage}
             </div>}
          
@@ -135,6 +153,7 @@ const handleChange =
                 <InputLabel htmlFor="outlined-adornment-firstName">First Name</InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-firstName"
+                  
                   type="text"
                   value={values.firstName}
                   onChange={handleChange('firstName')}
@@ -221,6 +240,31 @@ const handleChange =
 
      </div>
        
+     <div className="or-sign-method-row flex justify-center items-center my-2">
+             <div className="border-t bg-gray-600  border-b  border-gray-600 w-5/12 self-center">
+              </div>
+              <p className="mt-1 pb-1 mx-4 font-bold text-black">OR</p>
+              <div className="border-t bg-gray-600  border-b  border-gray-600 w-5/12 self-center">
+              </div>
+          </div>
+
+        <div className="provider-sign-method-row flex justify-center my-2">
+          
+
+        <Stack direction="row" alignItems="center" spacing={2}>
+     
+      <label htmlFor="icon-button-file">
+        <Input onClick={()=>{handleProviderSubmit('google')}} id="icon-button-file" type="button" />
+        <IconButton color="primary" aria-label="upload picture" component="span">
+          <GoogleIcon />
+        </IconButton>
+      </label>
+    </Stack>
+
+         
+
+          
+        </div>    
 
       <div className="submit-row flex justify-center">
 
@@ -237,8 +281,11 @@ const handleChange =
           loadingPosition="end"
           variant="contained"
         >
-          Register
+          Continue with email  
         </LoadingButton>
+
+
+      
       
 
             
