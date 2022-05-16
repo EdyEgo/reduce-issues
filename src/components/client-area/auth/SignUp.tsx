@@ -66,6 +66,7 @@ const validatePasswordFormat  = (password:string)=>{
 }
 
 async function handleSubmit() {
+  console.log('i submit')
   if(values.password !== values.confirmPassword) {
     setErrorMessage('Password and confirm password must be the same !')
     setTimeout(()=>{
@@ -98,10 +99,10 @@ async function handleSubmit() {
 
 
    
-//  const signedUpUser = await signUp(values) 
+ const signedUpUser = await signUp(values) 
  
  setLoading(false);
-//  console.log('submit data',signedUpUser)
+ console.log('submit data , you are logged in with',signedUpUser)
 
 
  
