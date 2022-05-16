@@ -56,7 +56,7 @@ useEffect(() => {
   
  
 
-}, [dispatch,currentUser]) // functions like dispatch are  here only because of the "Mr. eslint" is screaming his lungs of ,it  does not make any sens i know
+}, [dispatch]) // functions like dispatch are  here only because of the "Mr. eslint" is screaming his lungs of ,it  does not make any sens i know
 
 
   return (
