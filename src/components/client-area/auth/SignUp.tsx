@@ -10,6 +10,10 @@ import InputAdornment from '@mui/material/InputAdornment'
 import IconButton from '@mui/material/IconButton'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import LoadingButton from '@mui/lab/LoadingButton';
+import SaveIcon from '@mui/icons-material/Save';
+import SendIcon from '@mui/icons-material/Send';
+import Box from '@mui/material/Box';
 
 
 export interface SignUpProps {
@@ -38,7 +42,13 @@ const [values, setValues] = React.useState<any>({
   showConfirmPassword:false,
  
 
-});
+}); 
+const [loading, setLoading] = React.useState(false);
+
+
+function handleSubmit() {
+  setLoading(true);
+}
  
 const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
   event.preventDefault();
@@ -57,6 +67,8 @@ const handleClickShowConfirmPassword = () => {
   });
 }; 
 
+
+
 const handleChange =
 (prop: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
   setValues({ ...values, [prop]: event.target.value });
@@ -64,106 +76,148 @@ const handleChange =
 
     return ( 
       <> 
-        <form onSubmit={(event)=>{}} className="flex felx-col"> 
-            <div className="flex space-x-2.5  self-center">
+      
+      
+      <div className="sign-up-form-container flex justify-center">
+      <form onSubmit={(event)=>{}} className="flex flex-col my-4 "> 
+            <div className="title-sign-up-form flex space-x-2.5  self-center my-4">
               <h1 className="text-xl lg:text-3xl">Let's </h1>
               <h1 id="signUpTitle" className="text-xl lg:text-3xl font-bold "> get started!</h1>
             </div>
-          {/* <TextField id="first-name" label="First Name" variant="filled" />
-          <TextField id="last-name" label="Last Name" variant="filled" />
-          <TextField id="email" label="Email" variant="filled"  helperText="Incorrect entry." /> */}
+         
        
 
-    {/* d */}
-    <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-firstName">First Name</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-firstName"
-            type="text"
-            value={values.firstName}
-            onChange={handleChange('firstName')}
-           
-            label="First Name"
-          />
-        </FormControl> 
+   <div className="inputs-container-sign-up-forms flex flex-col">
+     <div className="name-row flex justify-center w-12/12">
+        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-firstName">First Name</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-firstName"
+                  type="text"
+                  value={values.firstName}
+                  onChange={handleChange('firstName')}
+                
+                  label="First Name"
+                />
+              </FormControl> 
+              
+              <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-lastName">Last Name</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-lastName"
+                  type="text"
+                  value={values.lastName}
+                  onChange={handleChange('lastName')}
+                
+                  label="Last Name"
+                />
+              </FormControl> 
+              
+        </div>
+     <div className="email-row flex ">
+
+              <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-email">Email</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-email"
+                  type="email"
+                  value={values.email}
+                  onChange={handleChange('email')}
+                  
+                  label="Email"
+                />
+              </FormControl>
+     </div>
+     <div className="password-row flex justify-center">
+
+            <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={values.showPassword ? 'text' : 'password'}
+                  value={values.password}
+                  onChange={handleChange('password')}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                />
+              </FormControl>
+        
+              <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" className='outline-hidden'>
+                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-confirm-password"
+                  
+                  type={values.showConfirmPassword ? 'text' : 'password'}
+                  value={values.confirmPassword}
+                  onChange={handleChange('confirmPassword')}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowConfirmPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {values.showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Confirm Password"
+                />
+          </FormControl>
+
+     </div>
+       
+
+      <div className="submit-row flex justify-center">
+
+      <Box sx={{ '& > button': { m: 1 } }} >
          
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-lastName">Last Name</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-lastName"
-            type="text"
-            value={values.lastName}
-            onChange={handleChange('lastName')}
-           
-            label="Last Name"
-          />
-        </FormControl> 
+  {/*   */}
 
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-email">Email</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-email"
-            type="email"
-            value={values.email}
-            onChange={handleChange('email')}
+{/* endIcon={<SendIcon />} */}
+  <LoadingButton 
+          size="small"
+          onClick={handleSubmit}
+          endIcon={<SendIcon />}
+          loading={loading}
+          loadingPosition="end"
+          variant="contained"
+        >
+          Register
+        </LoadingButton>
+      
+
             
-            label="Email"
-          />
-        </FormControl>
-  
 
-        {/*  d */}
+      </Box>
 
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type={values.showPassword ? 'text' : 'password'}
-            value={values.password}
-            onChange={handleChange('password')}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="Password"
-          />
-        </FormControl>
+        
+        </div>       
+        
+
+              
+
+             
+   </div>
   
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" className='outline-hidden'>
-          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-confirm-password"
-            
-            type={values.showConfirmPassword ? 'text' : 'password'}
-            value={values.confirmPassword}
-            onChange={handleChange('confirmPassword')}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowConfirmPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {values.showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="Confirm Password"
-          />
-        </FormControl>
 
         
 
         </form> 
+      </div>
+       
 
 
       {/*  */}
