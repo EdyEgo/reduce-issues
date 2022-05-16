@@ -54,12 +54,13 @@ const [loading, setLoading] = React.useState(false);
  
 
 const validateEmail = (email:string)=>{
-  const validEmailFormat = /^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/
+  const validEmailFormat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
  return  validEmailFormat.test(email)
 
 }
 const validatePasswordFormat  = (password:string)=>{
-  const validPasswordFormat = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])([a-zA-Z0-9]{8,})$/
+  // (?=.*[a-z])(?=.*[A-Z]) // for upper and lower case letters // (?=.*[0-9]) // one numeric value
+  const validPasswordFormat = /^(?=.{8,})/
   return validPasswordFormat.test(password)
   
 }
@@ -72,7 +73,21 @@ async function handleSubmit() {
     },2000)
     return 
   }
-  if(validatePasswordFormat(values.password) === false || validatePasswordFormat(values.confirmPassword) === false || values.firstName === '' || values.lastName === '' || validateEmail(values.email) === false){
+  if(validateEmail(values.email) === false){
+    setErrorMessage('Please enter a valid email !')
+    setTimeout(()=>{
+      setErrorMessage('invisible')
+    },2000)
+    return 
+  }
+  if(validatePasswordFormat(values.password) === false || validatePasswordFormat(values.confirmPassword) === false){
+    setErrorMessage('Password must contain at least 8 characters long !')
+    setTimeout(()=>{
+      setErrorMessage('invisible')
+    },2000)
+    return 
+  }
+  if( values.firstName === '' || values.lastName === '' ){
     setErrorMessage('Please complete all the fields !')
     setTimeout(()=>{
       setErrorMessage('invisible')
