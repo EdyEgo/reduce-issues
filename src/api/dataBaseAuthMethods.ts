@@ -27,9 +27,9 @@ export  function userState(setCurrentUser:(user:any)=>void){
     // }
 }
 
-export async function signIn(email:string,password:string,rememberMe?:string){
+export async function signIn({email,password,remember}:{email:string,password:string,remember?:string}){
   try{
-      return await signInFirebase(email,password,rememberMe)
+      return await signInFirebase(email,password,remember)
   }catch(e:any){
     return {error:true,message:e.message}
   }
