@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom';
 import * as React from 'react';
 import { signUp} from '../../../api/dataBaseAuthMethods'
+import handleErrorMessage from '../../../api/handleErrorMessages'
 
 import InputLabel from '@mui/material/InputLabel'
 import { styled } from '@mui/material/styles';
@@ -36,11 +37,18 @@ const SignUp: React.FC<SignUpProps> = () => {
 
 
 const [values, setValues] = React.useState<any>({
-  firstName:'',
-  lastName:'',
-  email:'',
-  password: '',
-  confirmPassword:'',
+  // firstName:'',
+  // lastName:'',
+  // email:'',
+  // password: '',
+  // confirmPassword:'',
+  // showPassword:false,
+  // showConfirmPassword:false,
+  firstName:'Prodan',
+  lastName:'Septimiu',
+  email:'prodan.septimiu@gmail.com',
+  password: 'test1234',
+  confirmPassword:'test1234',
   showPassword:false,
   showConfirmPassword:false,
  
@@ -66,7 +74,8 @@ const validatePasswordFormat  = (password:string)=>{
 }
 
 async function handleSubmit() {
-  console.log('i submit')
+  
+  
   if(values.password !== values.confirmPassword) {
     setErrorMessage('Password and confirm password must be the same !')
     setTimeout(()=>{
@@ -99,10 +108,17 @@ async function handleSubmit() {
 
 
    
- const signedUpUser = await signUp(values) 
+ const signedUpUserResponse = await signUp(values) 
  
  setLoading(false);
- console.log('submit data , you are logged in with',signedUpUser)
+
+ if(signedUpUserResponse.error){
+  setErrorMessage(handleErrorMessage(signedUpUserResponse.message))
+  setTimeout(()=>{
+    setErrorMessage('invisible')
+  },5000)
+ }
+ console.log('submit data , you are logged in with',signedUpUserResponse)
 
 
  
