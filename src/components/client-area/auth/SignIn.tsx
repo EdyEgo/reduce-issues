@@ -263,6 +263,7 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import GoogleIcon from "@mui/icons-material/Google";
 import { styled } from "@mui/material/styles";
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
   timeoutErrorSet,
   validateEmail,
@@ -430,14 +431,31 @@ export default function SignIn() {
               </Stack>
             </div>
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
+            {loading === false && (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+            )}
+
+            {loading && (
+              <Button
+                type="submit"
+                fullWidth
+                disabled={true}
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                <LoadingButton loading={true} variant="text" disabled>
+                  disabled
+                </LoadingButton>
+              </Button>
+            )}
+
             {/* <Grid container>
               <Grid item xs>
                 <Link to="/forgotpassword" variant="body2">
