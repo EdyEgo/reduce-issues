@@ -1,7 +1,7 @@
 
 
 // firebase imports
-import { signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from 'firebase/auth';
+import { signInWithEmailAndPassword, setPersistence, browserSessionPersistence  } from 'firebase/auth';
 import {postNewDocument} from '../post/postDocument'
 import {auth} from '../../../firebase'
 

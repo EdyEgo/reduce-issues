@@ -3,7 +3,7 @@
 
 // firebase imports
 import {auth} from '../../../firebase'
-import { createUserWithEmailAndPassword,updateProfile } from 'firebase/auth'
+import { createUserWithEmailAndPassword,updateProfile ,  sendEmailVerification } from 'firebase/auth'
 
 // postDocument
 import {postNewDocument} from '../post/postDocument'
@@ -28,7 +28,8 @@ export  const signUpFirebase = async({ email, firstName,lastName, password }: { 
   await updateProfile(auth.currentUser,{
     displayName: `${firstName}  ${lastName}`,
   })
- }
+ } 
+  sendEmailVerification(res.user)
 
     const createdUidUser = res.user.uid
     const createdUserEmail = res.user.email
