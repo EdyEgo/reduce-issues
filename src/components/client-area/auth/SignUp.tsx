@@ -327,6 +327,7 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import GoogleIcon from "@mui/icons-material/Google";
 import { styled } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
@@ -345,6 +346,8 @@ export default function SignUp() {
     showPassword: false,
     showConfirmPassword: false,
   });
+
+  const navigateTo = useNavigate();
 
   const [loading, setLoading] = React.useState(false);
 
@@ -392,17 +395,31 @@ export default function SignUp() {
         handleErrorMessage(signedUpUserResponse.message),
         5000
       );
+      return;
     }
+    navigateTo("/");
   }
 
   async function handleProviderSubmit(providerName: string) {
-    const providerList: { [key: string]: () => void } = {
+    const providerList: {
+      [key: string]: () => Promise<
+        | { data: any; error: boolean }
+        | { error: boolean; message: any }
+        | undefined
+      >;
+    } = {
       google: async () => {
         // sign up with google here
-        await signInWithProvider("google");
+        const result = await signInWithProvider("google");
+        return result;
       },
     };
-    await providerList[providerName]();
+    const signedInWithProvider = await providerList[providerName]();
+    if (signedInWithProvider === undefined || signedInWithProvider?.error)
+      return;
+    navigateTo("/");
+
+    // if data.error don t push
   }
 
   const handleChange =

@@ -74,19 +74,28 @@ export default function SignIn() {
       );
       return;
     }
-    if()
+
     navigateTo("/");
   }
   async function handleProviderSubmit(providerName: string) {
-    const providerList: { [key: string]: () => void } = {
+    const providerList: {
+      [key: string]: () => Promise<
+        | { data: any; error: boolean }
+        | { error: boolean; message: any }
+        | undefined
+      >;
+    } = {
       google: async () => {
         // sign up with google here
-        await signInWithProvider("google");
+        const result = await signInWithProvider("google");
+        return result;
       },
     };
     const signedInWithProvider = await providerList[providerName]();
-
-    console.log("hello", signedInWithProvider);
+    if (signedInWithProvider === undefined || signedInWithProvider?.error)
+      return;
+    navigateTo("/");
+    
 
     // if data.error don t push
   }
