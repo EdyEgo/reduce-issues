@@ -14,6 +14,7 @@ import './App.css';
 import { useDispatch, useSelector } from 'react-redux';
 import {} from '@reduxjs/toolkit'
 import { useState ,useEffect } from 'react';
+import "./styles/signButtons.css";
 
 
 function App() {
