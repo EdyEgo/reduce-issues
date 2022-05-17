@@ -23,7 +23,8 @@ const ClientHome: React.FC<ClientHomeProps> = () => {
               to="/signup"
               className="sign-up-button-client-area transform-all ease-in-out duration-300  border-0  rounded-md  font-bold text-black text-lg cursor-pointer p-4 "
             >
-              Sign up for free
+              Sign up for free{" "}
+              <span className="arrow-right pl-1">&#10230;</span>
             </Link>
           </div>
         </div>

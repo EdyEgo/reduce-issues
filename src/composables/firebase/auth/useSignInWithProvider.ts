@@ -153,8 +153,16 @@ export async function signInWithProviderFirebase({
     };
 
     const fit_provider = authCreateFitProvider[providerName]();
-    return await redirectOrPopUp(fit_provider);
+
+    try{
+     const result =  await redirectOrPopUp(fit_provider);
+     return result
+    }catch(err:any){
+      return{error:true,message:err.message}
+    } 
   }
+    // return {data:res.user,error:false}
+ 
 
 
 

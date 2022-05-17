@@ -1,23 +1,34 @@
-import {BrowserRouter as Router , Routes} from 'react-router-dom'
-import {signOut} from '../../api/dataBaseAuthMethods'
+import { BrowserRouter as Router } from "react-router-dom";
+import { signOut } from "../../api/dataBaseAuthMethods";
+import LeftMenu from "./left-menu";
+import RightContent from "./right-content";
 
-interface AppAreaProps {
-    
-}
- 
+interface AppAreaProps {}
 
-async function signMeOut(){
- await signOut()
+async function signMeOut() {
+  await signOut();
 }
 
 const AppArea: React.FC<AppAreaProps> = () => {
-    return ( 
+  return (
     <>
-    app area
-    <button onClick={signMeOut}>Sign Out</button>
-    </> 
-    
-    );
-}
- 
+      <button onClick={signMeOut}>Sign Out</button>
+
+      {/* left menu will only change on selected and added staff like favorites and notifications on issues */}
+      <Router>
+        {/* links here */}
+        <div className="left-menu-container">
+          <LeftMenu />
+        </div>
+
+        {/* add pagination to issues by date,use serverTimestamp */}
+        {/* routes here */}
+        <div className="right-content-container">
+          <RightContent />
+        </div>
+      </Router>
+    </>
+  );
+};
+
 export default AppArea;

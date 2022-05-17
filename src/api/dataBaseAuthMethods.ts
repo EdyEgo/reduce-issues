@@ -44,5 +44,10 @@ export async function signOut(){
 }
 
 export async function signInWithProvider(providerName:string){
-   return await signInWithProviderFirebase({providerName}) 
+   
+   try{
+    return await signInWithProviderFirebase({providerName}) 
+}catch(e:any){
+  return {error:true,message:e.message}
+}
 }

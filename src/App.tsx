@@ -11,7 +11,7 @@ import AppArea from './components/app-area'
 import {changeUserStatus , changeUnsubscribeStatus,changeErrorStatus} from './store/auth'
 import {userState } from './api/dataBaseAuthMethods'
 import './App.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from "react-redux";
 import {} from '@reduxjs/toolkit'
 import { useState ,useEffect } from 'react';
 import "./styles/signButtons.css";

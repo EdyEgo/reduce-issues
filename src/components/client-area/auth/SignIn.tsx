@@ -24,12 +24,16 @@ import {
   validateEmail,
   validatePasswordFormat,
 } from "../../../composables/authFormHelpers";
+import { useNavigate } from "react-router-dom";
+import {useStore } from 'react-redux';
 
 const theme = createTheme();
 
 const Input = styled("input")({
   display: "none",
 });
+
+
 
 export default function SignIn() {
   const [values, setValues] = React.useState<any>({
@@ -39,6 +43,8 @@ export default function SignIn() {
 
     showPassword: false,
   });
+  // const authStore = 
+  const navigateTo = useNavigate();
 
   async function handleSubmit(event: any) {
     event.preventDefault();
@@ -66,7 +72,10 @@ export default function SignIn() {
         handleErrorMessage(signedInUserResponse.message),
         5000
       );
+      return;
     }
+    if()
+    navigateTo("/");
   }
   async function handleProviderSubmit(providerName: string) {
     const providerList: { [key: string]: () => void } = {
@@ -75,7 +84,11 @@ export default function SignIn() {
         await signInWithProvider("google");
       },
     };
-    await providerList[providerName]();
+    const signedInWithProvider = await providerList[providerName]();
+
+    console.log("hello", signedInWithProvider);
+
+    // if data.error don t push
   }
 
   const [loading, setLoading] = React.useState(false);

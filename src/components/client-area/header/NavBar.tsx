@@ -19,9 +19,9 @@ const ClientNavBar: React.FC<ClientNavBarProps> = () => {
           </Link>
           <div className="link-container"></div>
           <div className="auth-container">
-            <div className="auth-links-container flex items-center justify-center gap-4">
+            <div className="auth-links-container flex items-center justify-center gap-4 font-semibold">
               <div className="sign-in-link text-blue-900 hover:text-blue-600 transition-all ease">
-                <Link to="login" className="sign-in-button-client-area p-2">
+                <Link to="login" className="sign-in-button-client-area p-2 ">
                   Log In
                 </Link>
               </div>
