@@ -18,14 +18,14 @@ import {
 export async function signInWithProviderFirebase({
     providerName,
    
-    // callBackUserUpdate,
+   
    
    
   }: {
     providerName: string;
  
   
-    // callBackUserUpdate: (credentials:any) => void;
+   
     
    
   }) {

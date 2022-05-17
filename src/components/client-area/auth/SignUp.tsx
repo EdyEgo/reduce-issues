@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import * as React from 'react';
-import { signUp} from '../../../api/dataBaseAuthMethods'
+import { signUp,signInWithProvider} from '../../../api/dataBaseAuthMethods'
 import handleErrorMessage from '../../../api/handleErrorMessages'
 
 import InputLabel from '@mui/material/InputLabel'
@@ -37,20 +37,14 @@ const SignUp: React.FC<SignUpProps> = () => {
 
 
 const [values, setValues] = React.useState<any>({
-  // firstName:'',
-  // lastName:'',
-  // email:'',
-  // password: '',
-  // confirmPassword:'',
-  // showPassword:false,
-  // showConfirmPassword:false,
-  firstName:'Prodan',
-  lastName:'Septimiu',
-  email:'prodan.septimiu@gmail.com',
-  password: 'test1234',
-  confirmPassword:'test1234',
+  firstName:'',
+  lastName:'',
+  email:'',
+  password: '',
+  confirmPassword:'',
   showPassword:false,
   showConfirmPassword:false,
+ 
  
 
 }); 
@@ -118,7 +112,7 @@ async function handleSubmit() {
     setErrorMessage('invisible')
   },5000)
  }
- console.log('submit data , you are logged in with',signedUpUserResponse)
+ 
 
 
  
@@ -127,13 +121,14 @@ async function handleSubmit() {
 async function handleProviderSubmit(providerName:string){
     
     const providerList:{[key:string]:()=>void} = {
-      google:()=>{
+      google:async()=>{
         // sign up with google here 
-        
-        return null
+        await signInWithProvider('google')
+      
+       
       }
     }
-   return  providerList[providerName]()
+   await providerList[providerName]()
 }
  
 const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {

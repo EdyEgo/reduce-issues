@@ -43,6 +43,6 @@ export async function signOut(){
      }
 }
 
-export async function signInWithProvider(providerName:string,callBackUserUpdate:(credentials:any)=>void){
+export async function signInWithProvider(providerName:string){
    return await signInWithProviderFirebase({providerName}) 
 }
