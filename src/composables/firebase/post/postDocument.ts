@@ -24,12 +24,12 @@ export const postDocument = async ({
 export const postNewDocument = async ({
    collectionSelected,
   inputObject,useAddDocument,
-  documentName,noRegister
+  documentName,noRegister,useBatch
 }: {
   collectionSelected: string;
-  useAddDocument?:boolean;
+  useAddDocument?:boolean;// remember  the setDoc does not return the document object only the addDoc
   documentName?: string;noRegister?:boolean;
-  inputObject: any;
+  inputObject: any;useBatch?:any | undefined
 }) => {
   let copyObjectInput:any
   if(noRegister == null) copyObjectInput = { ...inputObject, ...{ registeredAt: Date.now() } };
@@ -44,13 +44,28 @@ export const postNewDocument = async ({
 
   if(documentName == null) { // create a document with a random id
     // const result_for_posted_doument = await addDoc(doc(db, collection_selected), copy_object_input)
-    const resultPostedDoument = doc(collection(db, collectionSelected));
-    const newDocumentObject = await setDoc(resultPostedDoument, copyObjectInput);
-console.log('new created document is 1',newDocumentObject)
+
+    const documentRef = doc(collection(db, collectionSelected));
+    //
+    if(useBatch) {
+      const newDocumentObject = useBatch.set(documentRef, copyObjectInput)
+      return newDocumentObject
+    }
+    //
+    const newDocumentObject = await setDoc(documentRef, copyObjectInput);
+
   return newDocumentObject
   }
-  const resultPostedDoument = await setDoc(doc(db, collectionSelected, documentName), copyObjectInput,{merge:true});
-  console.log('new created document is 2',resultPostedDoument)
+
+  const documentRef = doc(db, collectionSelected, documentName) 
+  //
+      if(useBatch) {
+        const newDocumentObject = useBatch.set(documentRef, copyObjectInput,{merge:true})
+        return newDocumentObject
+      }
+  //
+  const resultPostedDoument = await setDoc(documentRef, copyObjectInput,{merge:true});
+ 
   return resultPostedDoument;
 
 };

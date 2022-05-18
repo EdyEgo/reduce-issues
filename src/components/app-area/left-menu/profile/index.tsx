@@ -1,7 +1,15 @@
+import ProfileColumn from "./ManageProfileColumn";
+import TeamColumn from "./ManageTeamColumn";
+
 interface ProfieProps {}
 
 const Profie: React.FC<ProfieProps> = () => {
-  return <>PRofile section</>;
+  return (
+    <>
+      <ProfileColumn />
+      <TeamColumn />
+    </>
+  );
 };
 
 export default Profie;

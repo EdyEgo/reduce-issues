@@ -20,6 +20,8 @@
     "@types/react-dom": "^18.0.4",
     "@types/react-router-dom": "^5.3.3",
     "firebase": "^9.8.1",
+    "moment": "^2.29.3",
+    "moment-timezone": "^0.5.34",
     "postcss": "^7",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",

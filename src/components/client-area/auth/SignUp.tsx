@@ -122,11 +122,11 @@
 
 //   return (
 //     <>
-//       <div className="sign-up-form-container flex justify-center">
+//       <div className="flex justify-center sign-up-form-container">
 //         <form onSubmit={(event) => {}} className="flex flex-col my-2 ">
 //           <div className="title-sign-up-form flex space-x-2.5  self-center my-2">
 //             <h1 className="text-xl lg:text-3xl">Let's </h1>
-//             <h1 id="signUpTitle" className="text-xl lg:text-3xl font-bold ">
+//             <h1 id="signUpTitle" className="text-xl font-bold lg:text-3xl ">
 //               {" "}
 //               get started!
 //             </h1>
@@ -142,8 +142,8 @@
 //             </div>
 //           }
 
-//           <div className="inputs-container-sign-up-forms flex flex-col">
-//             <div className="name-row flex justify-center w-12/12">
+//           <div className="flex flex-col inputs-container-sign-up-forms">
+//             <div className="flex justify-center name-row w-12/12">
 //               <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
 //                 <InputLabel htmlFor="outlined-adornment-firstName">
 //                   First Name
@@ -170,7 +170,7 @@
 //                 />
 //               </FormControl>
 //             </div>
-//             <div className="email-row flex ">
+//             <div className="flex email-row ">
 //               <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
 //                 <InputLabel htmlFor="outlined-adornment-email">
 //                   Email
@@ -184,7 +184,7 @@
 //                 />
 //               </FormControl>
 //             </div>
-//             <div className="password-row flex justify-center">
+//             <div className="flex justify-center password-row">
 //               <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
 //                 <InputLabel htmlFor="outlined-adornment-password">
 //                   Password
@@ -248,13 +248,13 @@
 //               </FormControl>
 //             </div>
 
-//             <div className="or-sign-method-row flex justify-center items-center my-2">
-//               <div className="border-t bg-gray-600  border-b  border-gray-600 w-5/12 self-center"></div>
-//               <p className="mt-1 pb-1 mx-4 font-bold text-black">OR</p>
-//               <div className="border-t bg-gray-600  border-b  border-gray-600 w-5/12 self-center"></div>
+//             <div className="flex items-center justify-center my-2 or-sign-method-row">
+//               <div className="self-center w-5/12 bg-gray-600 border-t border-b border-gray-600"></div>
+//               <p className="pb-1 mx-4 mt-1 font-bold text-black">OR</p>
+//               <div className="self-center w-5/12 bg-gray-600 border-t border-b border-gray-600"></div>
 //             </div>
 
-//             <div className="provider-sign-method-row flex justify-center my-2">
+//             <div className="flex justify-center my-2 provider-sign-method-row">
 //               <Stack direction="row" alignItems="center" spacing={2}>
 //                 <label htmlFor="icon-button-file">
 //                   <Input
@@ -275,7 +275,7 @@
 //               </Stack>
 //             </div>
 
-//             <div className="submit-row flex justify-center">
+//             <div className="flex justify-center submit-row">
 //               <Box sx={{ "& > button": { m: 1 } }}>
 //                 {/*   */}
 
@@ -410,7 +410,7 @@ export default function SignUp() {
     } = {
       google: async () => {
         // sign up with google here
-        const result = await signInWithProvider("google");
+        const result = await signInWithProvider("google", true);
         return result;
       },
     };
@@ -541,13 +541,13 @@ export default function SignUp() {
               </Grid>
             </Grid>
 
-            <div className="or-sign-method-row flex justify-center items-center ">
-              <div className="border-t bg-gray-600  border-b  border-gray-600 w-5/12 self-center"></div>
-              <p className="mt-1 pb-1 mx-4 font-bold text-black">OR</p>
-              <div className="border-t bg-gray-600  border-b  border-gray-600 w-5/12 self-center"></div>
+            <div className="flex items-center justify-center or-sign-method-row ">
+              <div className="self-center w-5/12 bg-gray-600 border-t border-b border-gray-600"></div>
+              <p className="pb-1 mx-4 mt-1 font-bold text-black">OR</p>
+              <div className="self-center w-5/12 bg-gray-600 border-t border-b border-gray-600"></div>
             </div>
 
-            <div className="provider-sign-method-row flex justify-center ">
+            <div className="flex justify-center provider-sign-method-row ">
               <Stack direction="row" alignItems="center" spacing={2}>
                 <label htmlFor="icon-button-file">
                   <Input

@@ -25,15 +25,14 @@ import {
   validatePasswordFormat,
 } from "../../../composables/authFormHelpers";
 import { useNavigate } from "react-router-dom";
-import {useStore } from 'react-redux';
+
+import { useDispatch } from "react-redux";
 
 const theme = createTheme();
 
 const Input = styled("input")({
   display: "none",
 });
-
-
 
 export default function SignIn() {
   const [values, setValues] = React.useState<any>({
@@ -43,7 +42,9 @@ export default function SignIn() {
 
     showPassword: false,
   });
-  // const authStore = 
+
+  const dispatch = useDispatch();
+
   const navigateTo = useNavigate();
 
   async function handleSubmit(event: any) {
@@ -95,7 +96,6 @@ export default function SignIn() {
     if (signedInWithProvider === undefined || signedInWithProvider?.error)
       return;
     navigateTo("/");
-    
 
     // if data.error don t push
   }
@@ -181,13 +181,13 @@ export default function SignIn() {
               label="Remember me"
             />
 
-            <div className="or-sign-method-row flex justify-center items-center ">
-              <div className="border-t bg-gray-600  border-b  border-gray-600 w-5/12 self-center"></div>
-              <p className="mt-1 pb-1 mx-4 font-bold text-black">OR</p>
-              <div className="border-t bg-gray-600  border-b  border-gray-600 w-5/12 self-center"></div>
+            <div className="flex items-center justify-center or-sign-method-row ">
+              <div className="self-center w-5/12 bg-gray-600 border-t border-b border-gray-600"></div>
+              <p className="pb-1 mx-4 mt-1 font-bold text-black">OR</p>
+              <div className="self-center w-5/12 bg-gray-600 border-t border-b border-gray-600"></div>
             </div>
 
-            <div className="provider-sign-method-row flex justify-center ">
+            <div className="flex justify-center provider-sign-method-row ">
               <Stack direction="row" alignItems="center" spacing={2}>
                 <label htmlFor="icon-button-file">
                   <Input

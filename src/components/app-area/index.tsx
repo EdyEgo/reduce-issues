@@ -17,14 +17,16 @@ const AppArea: React.FC<AppAreaProps> = () => {
       {/* left menu will only change on selected and added staff like favorites and notifications on issues */}
       <Router>
         {/* links here */}
-        <div className="left-menu-container">
-          <LeftMenu />
-        </div>
+        <div className="flex app-side-content-container">
+          <div className="w-3/12 left-menu-container">
+            <LeftMenu />
+          </div>
 
-        {/* add pagination to issues by date,use serverTimestamp */}
-        {/* routes here */}
-        <div className="right-content-container">
-          <RightContent />
+          {/* add pagination to issues by date,use serverTimestamp */}
+          {/* routes here */}
+          <div className="w-9/12 right-content-container">
+            <RightContent />
+          </div>
         </div>
       </Router>
     </>

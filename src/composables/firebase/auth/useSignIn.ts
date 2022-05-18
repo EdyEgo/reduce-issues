@@ -2,8 +2,9 @@
 
 // firebase imports
 import { signInWithEmailAndPassword, setPersistence, browserSessionPersistence  } from 'firebase/auth';
-import {postNewDocument} from '../post/postDocument'
-import {auth} from '../../../firebase'
+import {writeBatch} from 'firebase/firestore'
+import {postNewDocument } from '../post/postDocument'
+import {auth,db} from '../../../firebase'
 
 
 
@@ -15,13 +16,12 @@ export const signInFirebase = async (email: string, password: string, rememberMe
     const res = await signInWithEmailAndPassword(auth, email, password);
 
     if (!res) return{error:true,message:'Could not complete sign in'}
-  
+    
 
     if (rememberMe === 'session') await setPersistence(auth, browserSessionPersistence);
-    // post registered userd object to firestore
-    await postNewDocument({collectionSelected:'users',documentName:res.user.uid,
-    inputObject:{email:res.user.email,verifiedEmail:res.user.emailVerified}})
+    // post registered userd object to firestore 
 
+   
    
     return {data:res.user,error:false}
   } catch (err: any) {
