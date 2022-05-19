@@ -36,7 +36,7 @@ export default function MenuListComposition({
   //   };
 
   const authStore = useSelector((state: any) => state.auth);
-  const teamStore = useSelector((state: any) => state.team);
+  const workSpaceStore = useSelector((state: any) => state.workspace);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -66,7 +66,9 @@ export default function MenuListComposition({
       authStore.user.email.indexOf("@")
     );
 
-    navigate(`/${teamStore.selectedTeam.name}/profiles/${extractEmailName}`);
+    navigate(
+      `/${workSpaceStore.selectedWorkSpace.workspaceURL}/profiles/${extractEmailName}`
+    );
   }
 
   async function logUserOut() {

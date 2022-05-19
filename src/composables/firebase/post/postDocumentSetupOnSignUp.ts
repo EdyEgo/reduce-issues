@@ -29,7 +29,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
       const createdWorkSpace =  await postNewDocument({collectionSelected:'workspaces',
         inputObject:{
       
-        name:'My First Workspace' ,logoUrl:'',identified:'MFW' , timezone:browserDate
+        name:'My First Workspace' ,logoURL:'',identified:'MFW' , timezone:browserDate , workspaceURL:'myfirst'
       }
         ,useAddDocument:true,useBatch:batch}) //  setDoc does not return the doc only the addDoc
 
@@ -41,7 +41,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
       const createdTeam =  await postNewDocument({collectionSelected:collectionSelectedPath,
         inputObject:{memebersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}},
       
-        name:'My First Team' ,logoUrl:'',identified:'MFT' , timezone:browserDate
+        name:'My First Team' ,logoURL:'',identified:'MFT' , timezone:browserDate
       }
         ,useAddDocument:true,useBatch:batch}) 
          
@@ -52,7 +52,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
         inputObject:{ 
           title:'Wellcome to reduce issues',
           content:{
-            pictureListUrl:[],// here are the urls that are gonna be stored in firebase ,
+            pictureListURL:[],// here are the urls that are gonna be stored in firebase ,
             text:'Fell free to explore the app'
           },
           status:{name:'Backlog',icon:'backlog'},
@@ -81,13 +81,13 @@ export default async function postDocumentSetupOnSugnUp(user:any){
       },useBatch:batch})
   
    
-        // bind team to the owner
+        // bind team and workspace  to the owner
   
         await postNewDocument({collectionSelected:'users',documentName:user.uid,
         inputObject:{ 
-          workSpaces:{[createdWorkSpace.id]:{ role:'Owner' 
-           }
-          }
+          photoURL:user.photoURL,
+          workSpaces:{[createdWorkSpace.id]:{ role:'Owner' }},
+          workSpaceSelected:{id:createdWorkSpace.id} // maybe add this one too later : tabSelected:{name:'my-issues'} 
         },useBatch:batch}) 
 
         await batch.commit()

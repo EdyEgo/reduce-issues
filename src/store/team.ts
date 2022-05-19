@@ -7,10 +7,7 @@ const initialState:{selectedTeam:{name:string}} = {
 
 
 
-// export const signUserUp = createAsyncThunk('auth/signUserUp',async(userObject:userObject,thunkAPI)=>{
-//    const response = await signUp(userObject)
-//    return response
-// })
+
 
 export const teamSlice = createSlice({
     name:'team',

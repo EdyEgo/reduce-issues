@@ -1,16 +1,22 @@
 import {createSlice } from '@reduxjs/toolkit'
 
-const initialState:{selectedWorkSpace:{name:string}} = {
-   selectedWorkSpace:{name:'My First Work Space'}
+const initialState:{
+    selectedWorkSpace:{
+        name:string,id:string , 
+        logoURL:string,
+        identified:string,
+        timezone:string,
+        workspaceURL:string}} = {
+   selectedWorkSpace:{name:'My First Work Space' , id:'', logoURL:'',
+   identified:'MFW' , 
+   timezone:'' , 
+   workspaceURL:'myfirst'}
 } 
 
 
 
 
-// export const signUserUp = createAsyncThunk('auth/signUserUp',async(userObject:userObject,thunkAPI)=>{
-//    const response = await signUp(userObject)
-//    return response
-// })
+
 
 export const workspaceSlice = createSlice({
     name:'team',

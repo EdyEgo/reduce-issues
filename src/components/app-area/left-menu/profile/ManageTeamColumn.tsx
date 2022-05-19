@@ -1,7 +1,7 @@
-interface ManageTeamColumnProps {}
+interface ManageWorkspaceColumnProps {}
 
-const ManageTeamColumn: React.FC<ManageTeamColumnProps> = () => {
+const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
   return <>Manage Team Column</>;
 };
 
-export default ManageTeamColumn;
+export default ManageWorkspaceColumn;

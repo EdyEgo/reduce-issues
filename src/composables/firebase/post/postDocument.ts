@@ -1,9 +1,9 @@
-import {  addDoc, collection, doc, serverTimestamp, setDoc  } from 'firebase/firestore';
+import {  addDoc, collection, doc, serverTimestamp, setDoc   } from 'firebase/firestore';
 
 
 import {db} from '../../../firebase'
 
-export const postDocument = async ({
+const postDocument = async ({
     collectionSelected,
   inputObject,
 }: {
