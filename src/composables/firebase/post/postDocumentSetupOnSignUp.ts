@@ -13,27 +13,42 @@ export default async function postDocumentSetupOnSugnUp(user:any){
     const batch = writeBatch(db); 
 
 
-    
- 
-     // in providers too man
-     // add type signend up on provider so you add the document onece
-        await postNewDocument({collectionSelected:'users',documentName:user.uid,
-        inputObject:{email:user.email,verifiedEmail:user.emailVerified},useBatch:batch})
-      
+     
+
   
-        // create first team
-        const browserDate = tz.guess()
-      const createdTeam =  await postNewDocument({collectionSelected:'teams',
+        
+     let collectionSelectedPath = 'workspaces'
+
+
+        //////////// 
+
+
+     // create first workspace 
+
+     const browserDate = tz.guess()
+      const createdWorkSpace =  await postNewDocument({collectionSelected:'workspaces',
+        inputObject:{
+      
+        name:'My First Workspace' ,logoUrl:'',identified:'MFW' , timezone:browserDate
+      }
+        ,useAddDocument:true,useBatch:batch}) //  setDoc does not return the doc only the addDoc
+
+  
+       // // create first team 
+
+       collectionSelectedPath = `workspaces/${createdWorkSpace.id}/teams`
+     
+      const createdTeam =  await postNewDocument({collectionSelected:collectionSelectedPath,
         inputObject:{memebersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}},
       
         name:'My First Team' ,logoUrl:'',identified:'MFT' , timezone:browserDate
       }
-        ,useAddDocument:true,useBatch:batch}) //  setDoc does not return the doc only the addDoc
+        ,useAddDocument:true,useBatch:batch}) 
          
-   
+        collectionSelectedPath +=  `/${createdTeam.id}/issues`
         // create first Issue 
      
-        const createdIssue =  await postNewDocument({collectionSelected:`teams/${createdTeam.id}/issues`,
+        const createdIssue =  await postNewDocument({collectionSelected:collectionSelectedPath,
         inputObject:{ 
           title:'Wellcome to reduce issues',
           content:{
@@ -56,8 +71,8 @@ export default async function postDocumentSetupOnSugnUp(user:any){
         ,useAddDocument:true,useBatch:batch}) //  setDoc does not return the doc only the addDoc
     
       // create issue activity tracker (with two tipes , comment and action , action for ex User Name created Issue 5 days ago)
-    
-      await postNewDocument({collectionSelected:`teams/${createdTeam.id}/issues/${createdIssue.id}/activites`,
+      collectionSelectedPath += `/${createdIssue.id}/activites`
+      await postNewDocument({collectionSelected:collectionSelectedPath,
       inputObject:{ 
         type:'action',
         actionType:'create',
@@ -70,7 +85,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
   
         await postNewDocument({collectionSelected:'users',documentName:user.uid,
         inputObject:{ 
-          teams:{[createdTeam.id]:{ role:'Owner' ,invitedAt:serverTimestamp(),acceptedAt:serverTimestamp()
+          workSpaces:{[createdWorkSpace.id]:{ role:'Owner' 
            }
           }
         },useBatch:batch}) 

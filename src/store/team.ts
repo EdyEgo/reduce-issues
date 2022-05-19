@@ -23,21 +23,9 @@ export const teamSlice = createSlice({
       
       
     },
-    // extraReducers:(builder)=>{
-         
-    //     //user signed Up -->
-    //      builder.addCase(signUserUp.fulfilled,(state,action)=>{
-    //         if(!action.payload.error){
-    //             state.user = action.payload.data
-    //            return 
-    //         }
-    //         state.error = action.payload.message
-    //      })
 
-    //     // user signed Up <--
-    // },
 })
 
-export const { } = teamSlice.actions
+export const { changeSelectedTeam } = teamSlice.actions
 
 export default teamSlice.reducer
