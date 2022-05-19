@@ -11,7 +11,7 @@ import Stack from "@mui/material/Stack";
 import { signOut } from "../../../../api/dataBaseAuthMethods";
 import { authSlice, changeErrorStatus } from "../../../../store/auth";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+
 
 interface MenuItemInterface {
   type: string;
@@ -36,6 +36,7 @@ export default function MenuListComposition({
   //   };
 
   const authStore = useSelector((state: any) => state.auth);
+  const teamStore = useSelector((state: any) => state.team);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -65,7 +66,7 @@ export default function MenuListComposition({
       authStore.user.email.indexOf("@")
     );
 
-    navigate(`/${authStore.selectedTeam}/profiles/${extractEmailName}`);
+    navigate(`/${teamStore.selectedTeam.name}/profiles/${extractEmailName}`);
   }
 
   async function logUserOut() {
