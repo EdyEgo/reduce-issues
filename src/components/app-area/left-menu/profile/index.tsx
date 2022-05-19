@@ -6,8 +6,8 @@ interface ProfieProps {}
 const Profie: React.FC<ProfieProps> = () => {
   return (
     <>
-      <ProfileColumn />
       <TeamColumn />
+      <ProfileColumn />
     </>
   );
 };

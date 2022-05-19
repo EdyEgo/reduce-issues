@@ -32,7 +32,7 @@ export const postNewDocument = async ({
   inputObject: any;useBatch?:any | undefined
 }) => {
   let copyObjectInput:any
-  if(noRegister == null) copyObjectInput = { ...inputObject, ...{ registeredAt: Date.now() } };
+  if(noRegister == null) copyObjectInput = { ...inputObject, ...{ registeredAt: serverTimestamp() } };
   if(noRegister)copyObjectInput = {...inputObject}
 
   if(useAddDocument){

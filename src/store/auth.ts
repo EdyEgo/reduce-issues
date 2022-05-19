@@ -1,8 +1,8 @@
 import {createSlice , createAsyncThunk} from '@reduxjs/toolkit'
 // import {signUp} from '../api/dataBaseAuthMethods'
 
-const initialState:{user:null | any, unsubscribe:null | (()=>void),error:null | string} = {
-    user:{email:'prodan',uid:'heyheyehey'},unsubscribe:null,error:null 
+const initialState:{user:null | any, selectedTeam:string,unsubscribe:null | (()=>void),error:null | string} = {
+    user:{email:'prodan',uid:'heyheyehey'},selectedTeam:'',unsubscribe:null,error:null 
     // topping:null
 } 
 

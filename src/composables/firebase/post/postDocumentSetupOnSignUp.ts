@@ -14,7 +14,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
 
 
     
-    //////sign up setup -->
+ 
      // in providers too man
      // add type signend up on provider so you add the document onece
         await postNewDocument({collectionSelected:'users',documentName:user.uid,
@@ -25,13 +25,14 @@ export default async function postDocumentSetupOnSugnUp(user:any){
         const browserDate = tz.guess()
       const createdTeam =  await postNewDocument({collectionSelected:'teams',
         inputObject:{memebersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}},
-        createdAt:serverTimestamp(),name:'My First Team' ,logoUrl:'',identified:'MFT' , timezone:browserDate
+      
+        name:'My First Team' ,logoUrl:'',identified:'MFT' , timezone:browserDate
       }
         ,useAddDocument:true,useBatch:batch}) //  setDoc does not return the doc only the addDoc
          
    
         // create first Issue 
-         //
+     
         const createdIssue =  await postNewDocument({collectionSelected:`teams/${createdTeam.id}/issues`,
         inputObject:{ 
           title:'Wellcome to reduce issues',
@@ -47,7 +48,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
           blockingIssueId:'',
   
           assigneeToId:user.uid,
-          createdAt:serverTimestamp(),
+          
           updatedAt:serverTimestamp(),
   
   
@@ -60,7 +61,8 @@ export default async function postDocumentSetupOnSugnUp(user:any){
       inputObject:{ 
         type:'action',
         actionType:'create',
-        createdAt:serverTimestamp()
+        creatorId:'app',// if no id then the app has created the issue
+        
       },useBatch:batch})
   
    
