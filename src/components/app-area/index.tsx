@@ -2,7 +2,11 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { useEffect } from "react";
 import { useStore, useSelector, useDispatch } from "react-redux";
 import { getUser, getUsers } from "../../api/dataBaseUsersMethods";
+import { getWorkSpace } from "../../api/dataBaseWorkSpaceMethods";
+import { getTeams } from "../../api/dataBaseTeamsMethods";
 import { changeCurrentUser } from "../../store/users";
+import { changeSelectedWorkSpace } from "../../store/workspace";
+import { setTeamList } from "../../store/team";
 import LeftMenu from "./left-menu";
 import RightContent from "./right-content";
 
@@ -15,27 +19,65 @@ const AppArea: React.FC<AppAreaProps> = () => {
   const dispatch = useDispatch();
   const usersStore = useSelector((state: any) => state.users);
   const authStore = useSelector((state: any) => state.auth);
+  const workspaceStore = useSelector((state: any) => state.workspace);
 
   async function getCurrentUserAndSave() {
     const currentUser = authStore.user;
     const currentUserObject = await getUser({ userId: currentUser.uid });
-    if (currentUserObject.exists()) {
-      const currentUserDataObject = currentUserObject.data();
-      dispatch(changeCurrentUser(currentUserDataObject));
-      console.log("current user fetched", currentUserDataObject);
-      return currentUserObject;
-    }
-    throw new Error("Could not fetch user");
+    if (currentUserObject.error) throw new Error(currentUserObject.message);
+    const currentUserDataObject = currentUserObject.data;
+    dispatch(
+      changeCurrentUser({ ...currentUserDataObject, id: currentUser.uid })
+    );
+
+    return currentUserObject;
   }
+
+  async function getCurrentSelectedWorkspaceAndSave(workspaceId: string) {
+    const document: any = await getWorkSpace(workspaceId);
+    if (document.error) throw new Error(document.message);
+    const workspaceData = document.data;
+    dispatch(changeSelectedWorkSpace({ ...workspaceData, id: workspaceId }));
+
+    return workspaceData;
+  }
+
+  async function getCurrentTeamForWorkspace(workspaceId: string) {
+    const document = await getTeams(workspaceId);
+    if (document.error) throw new Error(document.message);
+    const teamData = document.data;
+
+    dispatch(setTeamList(teamData));
+    return teamData;
+  }
+
+  // load all memebers from the work space but add te members into the teams as they belong , so you can t assign a task to a non team member even if he/she is in the workspace
 
   useEffect(() => {
     let isSubscribed = true;
 
     if (isSubscribed) {
-      const userData = getCurrentUserAndSave().catch((error: Error) =>
-        console.log("error on loading current user object ", error.message)
-      );
-      // get workspace data , ex userData.workSpaceSelected.id , then fetch it
+      getCurrentUserAndSave()
+        .catch((error: Error) =>
+          console.log("error on loading current user object ", error.message)
+        )
+        .then(async (userData: any) => {
+          const selectedWorkspaceId = userData.data.workSpaceSelected.id;
+
+          const workspaceData = await getCurrentSelectedWorkspaceAndSave(
+            selectedWorkspaceId
+          );
+          const teamData = await getCurrentTeamForWorkspace(
+            selectedWorkspaceId
+          );
+
+          console.log("my team data is", teamData);
+        });
+
+      // get workspace data , ex userData.workSpaceSelected.id , then fetch it , get team from workspace , then for each team  , get his memebers,
+      // or just add the members to the work space and get them from there
+      // because a  member from worksspace can be in a team
+      // ADD MEMBERS TO THE WORKSPACE
     }
 
     return () => {

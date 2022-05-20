@@ -11,7 +11,7 @@ export const getDocument = async ({
   
   }) => {
   
-  
+    
   const docRef = doc(db, collectionSelected, documentName);
   const docSnap = await getDoc(docRef);
   
