@@ -44,7 +44,9 @@ export  const signUpFirebase = async({ email, firstName,lastName, password }: { 
         collectionSelected: 'users', documentName: createdUidUser, inputObject: { 
             emailIsVerified: false,
             email: createdUserEmail ,
-            displayName:`${firstName} ${lastName[0]}.`},
+            firstName,
+            lastName
+           },
       })  
 
       await setupOnSignUp(res.user)

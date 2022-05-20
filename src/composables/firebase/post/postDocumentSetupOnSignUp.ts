@@ -29,7 +29,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
       const createdWorkSpace =  await postNewDocument({collectionSelected:'workspaces',
         inputObject:{
       
-        name:'My First Workspace' ,logoURL:'',identified:'MFW' , timezone:browserDate , workspaceURL:'myfirst' , 
+        name:'My First Workspace' ,photoURL:'',identified:'MFW' , timezone:browserDate , workspaceURL:'myfirst' , 
         membersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}}
       }
         ,useAddDocument:true,useBatch:batch}) //  setDoc does not return the doc only the addDoc
@@ -42,7 +42,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
       const createdTeam =  await postNewDocument({collectionSelected:collectionSelectedPath,
         inputObject:{membersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}},
       
-        name:'My First Team' ,logoURL:'',identified:'MFT' , timezone:browserDate
+        name:'My First Team' ,photoURL:'',identified:'MFT' , timezone:browserDate
       }
         ,useAddDocument:true,useBatch:batch}) 
          

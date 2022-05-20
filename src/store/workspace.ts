@@ -6,11 +6,13 @@ const initialState:{
         logoURL:string,
         identified:string,
         timezone:string,
-        workspaceURL:string}} = {
+        workspaceURL:string},members:any[] // ordered by invitedAt
+    
+    } = {
    selectedWorkSpace:{name:'My First Work Space' , id:'', logoURL:'',
    identified:'MFW' , 
    timezone:'' , 
-   workspaceURL:'myfirst'}
+   workspaceURL:'myfirst'},members:[]
 } 
 
 
@@ -25,6 +27,15 @@ export const workspaceSlice = createSlice({
 
         changeSelectedWorkSpace:(state,action)=>{
             state.selectedWorkSpace = action.payload
+        },
+        loadMembersToStore:(state,action)=>{
+            state.members = action.payload
+        },
+        updateOneMember:(state,action)=>{
+            const {memberId,updatedMember} = action.payload
+            const indexOfMemberById = state.members.indexOf({id:memberId})
+            if(indexOfMemberById === -1) return
+            state.members[indexOfMemberById] = updatedMember
         }
       
       
@@ -32,6 +43,6 @@ export const workspaceSlice = createSlice({
 
 })
 
-export const { changeSelectedWorkSpace } = workspaceSlice.actions
+export const { changeSelectedWorkSpace, loadMembersToStore,updateOneMember } = workspaceSlice.actions
 
 export default workspaceSlice.reducer

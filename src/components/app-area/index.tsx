@@ -5,7 +5,10 @@ import { getUser, getUsers } from "../../api/dataBaseUsersMethods";
 import { getWorkSpace } from "../../api/dataBaseWorkSpaceMethods";
 import { getTeams } from "../../api/dataBaseTeamsMethods";
 import { changeCurrentUser } from "../../store/users";
-import { changeSelectedWorkSpace } from "../../store/workspace";
+import {
+  changeSelectedWorkSpace,
+  loadMembersToStore,
+} from "../../store/workspace";
 import { setTeamList } from "../../store/team";
 import LeftMenu from "./left-menu";
 import RightContent from "./right-content";
@@ -51,6 +54,17 @@ const AppArea: React.FC<AppAreaProps> = () => {
     return teamData;
   }
 
+  async function getSelectedWorkspaceMembersAndSave(usersIds: {
+    [key: string]: any;
+  }) {
+    // load from db/users all members in this workspace
+
+    const members = await getUsers({ usersIds });
+    if (members.error) throw new Error(members.message);
+    const teamMembersList = members.data;
+    dispatch(loadMembersToStore(teamMembersList));
+  }
+
   // load all memebers from the work space but add te members into the teams as they belong , so you can t assign a task to a non team member even if he/she is in the workspace
 
   useEffect(() => {
@@ -71,7 +85,9 @@ const AppArea: React.FC<AppAreaProps> = () => {
             selectedWorkspaceId
           );
 
-          console.log("my team data is", teamData);
+          const workspaceMembers = await getSelectedWorkspaceMembersAndSave(
+            workspaceData.membersId
+          );
         });
 
       // get workspace data , ex userData.workSpaceSelected.id , then fetch it , get team from workspace , then for each team  , get his memebers,
