@@ -1,12 +1,12 @@
 import ProfileColumn from "./ManageProfileColumn";
-import TeamColumn from "./ManageTeamColumn";
+import WorkspaceColumn from "./ManageWorkspaceColumn";
 
 interface ProfieProps {}
 
 const Profie: React.FC<ProfieProps> = () => {
   return (
     <>
-      <TeamColumn />
+      <WorkspaceColumn />
       <ProfileColumn />
     </>
   );

@@ -3,16 +3,16 @@ import {createSlice } from '@reduxjs/toolkit'
 const initialState:{
     selectedWorkSpace:{
         name:string,id:string , 
-        logoURL:string,
+        photoURL:string | null,
         identified:string,
         timezone:string,
         workspaceURL:string},members:any[] // ordered by invitedAt
     
     } = {
-   selectedWorkSpace:{name:'My First Work Space' , id:'', logoURL:'',
-   identified:'MFW' , 
+   selectedWorkSpace:{name:'Mt First Work Space unlodaded' , id:'', photoURL:null,
+   identified:'MFWU' , 
    timezone:'' , 
-   workspaceURL:'myfirst'},members:[]
+   workspaceURL:'myfirstUnloaded'},members:[]
 } 
 
 

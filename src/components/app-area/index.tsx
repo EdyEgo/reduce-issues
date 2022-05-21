@@ -78,16 +78,14 @@ const AppArea: React.FC<AppAreaProps> = () => {
         .then(async (userData: any) => {
           const selectedWorkspaceId = userData.data.workSpaceSelected.id;
 
+          // load workspace data
           const workspaceData = await getCurrentSelectedWorkspaceAndSave(
             selectedWorkspaceId
           );
-          const teamData = await getCurrentTeamForWorkspace(
-            selectedWorkspaceId
-          );
-
-          const workspaceMembers = await getSelectedWorkspaceMembersAndSave(
-            workspaceData.membersId
-          );
+          // load team data from workspace nested collection
+          await getCurrentTeamForWorkspace(selectedWorkspaceId);
+          // load members list from data base in users collection
+          await getSelectedWorkspaceMembersAndSave(workspaceData.membersId);
         });
 
       // get workspace data , ex userData.workSpaceSelected.id , then fetch it , get team from workspace , then for each team  , get his memebers,
