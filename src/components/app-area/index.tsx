@@ -111,7 +111,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
 
           {/* add pagination to issues by date,use serverTimestamp */}
           {/* routes here */}
-          <div className="w-9/12 right-content-container">
+          <div className="w-10/12 right-content-container">
             <RightContent />
           </div>
         </div>
