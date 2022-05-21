@@ -104,7 +104,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
       {/* left menu will only change on selected and added staff like favorites and notifications on issues */}
       <Router>
         {/* links here */}
-        <div className="flex app-side-content-container">
+        <div className="flex app-side-content-container text-md mt-1">
           <div className="w-3/12 left-menu-container">
             <LeftMenu />
           </div>

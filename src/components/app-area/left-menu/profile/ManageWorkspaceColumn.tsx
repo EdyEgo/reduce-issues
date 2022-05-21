@@ -31,8 +31,7 @@ const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
   return (
     <>
       <div
-        className="workspace-column-container"
-        ref={anchorRef}
+        className="workspace-column-container flex gap-2 items-center hover:bg-gray-200 p-1 cursor-pointer rounded-sm"
         onClick={handleToggle}
       >
         <div className="workspace-column-picture">
@@ -40,13 +39,17 @@ const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
             <img src={selectedWorkSpace.photoURL} alt="" />
           )}
           {selectedWorkSpace.photoURL === null && (
-            <span className="p-2 bg-orange-600">
+            <span className="text-ls p-1 bg-red-400 rounded-sm text-white font-light">
               {selectedWorkSpace.name[0].toUpperCase() +
                 selectedWorkSpace.name[1].toUpperCase()}
             </span>
           )}
         </div>
-        <div className="workspace-coulumn-name" title={selectedWorkSpace.name}>
+        <div
+          className="workspace-coulumn-name"
+          title={selectedWorkSpace.name}
+          ref={anchorRef}
+        >
           {returnWorkspaceNameMaxLength()}
         </div>
         <DropDownProfileMenu
