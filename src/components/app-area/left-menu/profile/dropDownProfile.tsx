@@ -19,6 +19,7 @@ interface MenuItemInterface {
   action?: () => any;
   to?: string;
   isLine?: boolean;
+  id: number;
 }
 
 export default function MenuListComposition({
@@ -84,6 +85,50 @@ export default function MenuListComposition({
     return true;
   }
 
+  function createMenuItems(menuItemList: MenuItemInterface[]) {
+    console.log("i was called with ", menuItemList);
+    return menuItemList.map((itemObject: any) => {
+      if (itemObject.type === "Link") {
+        return (
+          <MenuItem
+            key={itemObject.id}
+            onClick={() => {
+              navigate(itemObject.to);
+            }}
+          >
+            {itemObject.name}
+          </MenuItem>
+        );
+      }
+      if (itemObject.action) {
+        return (
+          <MenuItem
+            key={itemObject.id}
+            onClick={() => {
+              itemObject.action();
+            }}
+          >
+            {itemObject.name}
+            {itemObject.children && <span>ma frate</span>}children ,lets just
+            make a sep drop down menu for this one so i can just useSelector on
+            workspaces
+            {itemObject?.children && (
+              <MenuList
+                autoFocusItem={open}
+                id="composition-menu"
+                aria-labelledby="composition-button"
+                onKeyDown={handleListKeyDown}
+              >
+                {createMenuItems(itemObject.children)}ss
+              </MenuList>
+            )}
+          </MenuItem>
+        );
+      }
+      return <MenuItem key={itemObject.id}>{itemObject.name}</MenuItem>;
+    });
+  }
+
   return (
     <Stack direction="row" spacing={4} className="absolute top-7 left-8">
       <div>
@@ -121,7 +166,6 @@ export default function MenuListComposition({
                     aria-labelledby="composition-button"
                     onKeyDown={handleListKeyDown}
                   >
-                    <span>ss</span>
                     <MenuItem
                       onClick={async (event) => {
                         directUserToProfilePage();
@@ -139,6 +183,8 @@ export default function MenuListComposition({
                     >
                       Logout
                     </MenuItem>
+
+                    {menuItemList && createMenuItems(menuItemList)}
                   </MenuList>
                 </ClickAwayListener>
               </Paper>

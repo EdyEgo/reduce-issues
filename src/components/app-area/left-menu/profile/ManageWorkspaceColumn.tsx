@@ -47,42 +47,47 @@ const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
 
   const workspaceMenuList: any = [
     {
-      type: "span",
+      type: "MenuItem",
       name: authStoreEmail,
       children: [],
+      id: 1,
     },
-    // ...workspaces,
 
     {
-      type: "span",
+      type: "MenuItem",
       name: "",
       isLine: true,
+      id: 2,
     },
     {
       type: "Link",
       to: "/addworkspace",
       name: "Create a new workspace",
+      id: 3,
     },
     {
-      type: "span",
+      type: "MenuItem",
       name: "",
       isLine: true,
+      id: 4,
     },
     {
-      type: "div",
+      type: "MenuItem",
       name: "Log out",
       action: logUserOut,
+      id: 5,
     },
   ];
 
   function createWorkspaceMenuList() {
     const objectList = Object.entries(workspaces);
     if (objectList.length <= 0) return;
-    workspaceMenuList[0].children = objectList.map((workspace: any) => {
+    workspaceMenuList[0].children = objectList.map((workspace: any, index) => {
       return {
         type: "Link",
         name: workspace[1].name,
         to: workspace[1].workspaceURL,
+        id: index,
       };
     });
   }
@@ -91,7 +96,6 @@ const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
 
     if (isSubscribed) {
       createWorkspaceMenuList();
-      console.log("this one exe times", workspaceMenuList);
     }
 
     return () => {
