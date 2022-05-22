@@ -18,6 +18,7 @@ interface MenuItemInterface {
   name: string;
   action?: () => any;
   to?: string;
+  isLine?: boolean;
 }
 
 export default function MenuListComposition({

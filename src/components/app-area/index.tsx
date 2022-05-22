@@ -54,9 +54,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
       ...userWorkspace[workspaceId],
       id: workspaceId,
     };
-    dispatch(
-      changeSelectedWorkSpace({ ...selectedWorkspaceObject, id: workspaceId })
-    );
+    dispatch(changeSelectedWorkSpace({ ...selectedWorkspaceObject }));
     return selectedWorkspaceObject;
   }
 
@@ -65,7 +63,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
   }) {
     const documents: any = await getWorkSpacesByIds(workspacesIds);
     if (documents.error) throw new Error("Could not fetch workspaces");
-    dispatch(changeUserWorkspaces(documents));
+    dispatch(changeUserWorkspaces(documents.data));
 
     return documents.data;
   }
@@ -118,11 +116,6 @@ const AppArea: React.FC<AppAreaProps> = () => {
           // load members list from data base in users collection
           await getSelectedWorkspaceMembersAndSave(workspaceData.membersId);
         });
-
-      // get workspace data , ex userData.workSpaceSelected.id , then fetch it , get team from workspace , then for each team  , get his memebers,
-      // or just add the members to the work space and get them from there
-      // because a  member from worksspace can be in a team
-      // ADD MEMBERS TO THE WORKSPACE
     }
 
     return () => {
