@@ -1,18 +1,20 @@
 import {createSlice } from '@reduxjs/toolkit'
 
+interface Workspace {
+    name:string,id:string , 
+    photoURL:string | null,
+    identified:string,
+    timezone:string,
+    workspaceURL:string}
+
 const initialState:{
-    selectedWorkSpace:{
-        name:string,id:string , 
-        photoURL:string | null,
-        identified:string,
-        timezone:string,
-        workspaceURL:string},members:any[] // ordered by invitedAt
-    
+    selectedWorkSpace:Workspace,members:any[] // ordered by invitedAt
+    userWorkspaces:{[key:string]:Workspace}
     } = {
    selectedWorkSpace:{name:'Mt First Work Space unlodaded' , id:'', photoURL:null,
    identified:'MFWU' , 
    timezone:'' , 
-   workspaceURL:'myfirstUnloaded'},members:[]
+   workspaceURL:'myfirstUnloaded'},userWorkspaces:{},members:[]
 } 
 
 
@@ -27,6 +29,9 @@ export const workspaceSlice = createSlice({
 
         changeSelectedWorkSpace:(state,action)=>{
             state.selectedWorkSpace = action.payload
+        },
+        changeUserWorkspaces:(state,action)=>{
+            state.userWorkspaces = action.payload
         },
         loadMembersToStore:(state,action)=>{
             state.members = action.payload
@@ -43,6 +48,6 @@ export const workspaceSlice = createSlice({
 
 })
 
-export const { changeSelectedWorkSpace, loadMembersToStore,updateOneMember } = workspaceSlice.actions
+export const { changeSelectedWorkSpace, loadMembersToStore,updateOneMember , changeUserWorkspaces} = workspaceSlice.actions
 
 export default workspaceSlice.reducer

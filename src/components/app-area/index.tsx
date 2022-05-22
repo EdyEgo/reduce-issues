@@ -2,11 +2,15 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { useEffect } from "react";
 import { useStore, useSelector, useDispatch } from "react-redux";
 import { getUser, getUsers } from "../../api/dataBaseUsersMethods";
-import { getWorkSpace } from "../../api/dataBaseWorkSpaceMethods";
+import {
+  getWorkSpace,
+  getWorkSpacesByIds,
+} from "../../api/dataBaseWorkSpaceMethods";
 import { getTeams } from "../../api/dataBaseTeamsMethods";
 import { changeCurrentUser } from "../../store/users";
 import {
   changeSelectedWorkSpace,
+  changeUserWorkspaces,
   loadMembersToStore,
 } from "../../store/workspace";
 import { setTeamList } from "../../store/team";
@@ -36,13 +40,34 @@ const AppArea: React.FC<AppAreaProps> = () => {
     return currentUserObject;
   }
 
-  async function getCurrentSelectedWorkspaceAndSave(workspaceId: string) {
-    const document: any = await getWorkSpace(workspaceId);
-    if (document.error) throw new Error(document.message);
-    const workspaceData = document.data;
-    dispatch(changeSelectedWorkSpace({ ...workspaceData, id: workspaceId }));
+  async function getCurrentSelectedWorkspaceAndSave(
+    workspaceId: string,
+    userWorkspace: { [key: string]: any }
+  ) {
+    // const document: any = await getWorkSpace(workspaceId);
+    // if (document.error) throw new Error(document.message);
+    // const workspaceData = document.data;
+    // dispatch(changeSelectedWorkSpace({ ...workspaceData, id: workspaceId }));
 
-    return workspaceData;
+    // return workspaceData;
+    const selectedWorkspaceObject = {
+      ...userWorkspace[workspaceId],
+      id: workspaceId,
+    };
+    dispatch(
+      changeSelectedWorkSpace({ ...selectedWorkspaceObject, id: workspaceId })
+    );
+    return selectedWorkspaceObject;
+  }
+
+  async function getUserWorkSpaces(workspacesIds: {
+    [key: string]: { role: string };
+  }) {
+    const documents: any = await getWorkSpacesByIds(workspacesIds);
+    if (documents.error) throw new Error("Could not fetch workspaces");
+    dispatch(changeUserWorkspaces(documents));
+
+    return documents.data;
   }
 
   async function getCurrentTeamForWorkspace(workspaceId: string) {
@@ -77,10 +102,16 @@ const AppArea: React.FC<AppAreaProps> = () => {
         )
         .then(async (userData: any) => {
           const selectedWorkspaceId = userData.data.workSpaceSelected.id;
+          const userWorkSpaces = userData.data.workSpaces;
 
-          // load workspace data
+          // load user workspaces
+
+          const userWorkspace = await getUserWorkSpaces(userWorkSpaces);
+
+          // save the selected workspace object
           const workspaceData = await getCurrentSelectedWorkspaceAndSave(
-            selectedWorkspaceId
+            selectedWorkspaceId,
+            userWorkspace
           );
           // load team data from workspace nested collection
           await getCurrentTeamForWorkspace(selectedWorkspaceId);

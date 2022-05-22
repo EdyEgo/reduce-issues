@@ -24,10 +24,12 @@ export default function MenuListComposition({
   open,
   setOpen,
   anchorRef,
+  menuItemList,
 }: {
   open: boolean;
   setOpen: (argument: any) => void;
   anchorRef: any;
+  menuItemList?: MenuItemInterface[];
 }) {
   //   const [open, setOpen] = React.useState(false);
 
@@ -118,6 +120,7 @@ export default function MenuListComposition({
                     aria-labelledby="composition-button"
                     onKeyDown={handleListKeyDown}
                   >
+                    <span>ss</span>
                     <MenuItem
                       onClick={async (event) => {
                         directUserToProfilePage();

@@ -27,6 +27,9 @@ const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
     }
     return selectedWorkSpace.name;
   }
+ 
+  console.log("real", workspaceStore);
+  const workspaceMenuList = [{}];
 
   return (
     <>
@@ -56,6 +59,7 @@ const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
           open={open}
           setOpen={setOpen}
           anchorRef={anchorRef}
+          // menuItemList={}
         />
       </div>
     </>
