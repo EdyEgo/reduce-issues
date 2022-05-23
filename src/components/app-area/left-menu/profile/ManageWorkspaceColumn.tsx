@@ -46,39 +46,39 @@ const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
     return selectedWorkSpace.name;
   }
 
-  const workspaceMenuList: any = [
-    {
-      type: "MenuItem",
-      name: authStoreEmail,
-      children: [{ ma: "frate" }, { idk: "2" }],
-      id: 1,
-    },
+  // const workspaceMenuList: any = [
+  //   {
+  //     type: "MenuItem",
+  //     name: authStoreEmail,
+  //     children: [{ ma: "frate" }, { idk: "2" }],
+  //     id: 1,
+  //   },
 
-    {
-      type: "MenuItem",
-      name: "",
-      isLine: true,
-      id: 2,
-    },
-    {
-      type: "Link",
-      to: "/addworkspace",
-      name: "Create a new workspace",
-      id: 3,
-    },
-    {
-      type: "MenuItem",
-      name: "",
-      isLine: true,
-      id: 4,
-    },
-    {
-      type: "MenuItem",
-      name: "Log out",
-      action: logUserOut,
-      id: 5,
-    },
-  ];
+  //   {
+  //     type: "MenuItem",
+  //     name: "",
+  //     isLine: true,
+  //     id: 2,
+  //   },
+  //   {
+  //     type: "Link",
+  //     to: "/addworkspace",
+  //     name: "Create a new workspace",
+  //     id: 3,
+  //   },
+  //   {
+  //     type: "MenuItem",
+  //     name: "",
+  //     isLine: true,
+  //     id: 4,
+  //   },
+  //   {
+  //     type: "MenuItem",
+  //     name: "Log out",
+  //     action: logUserOut,
+  //     id: 5,
+  //   },
+  // ];
 
   // function createWorkspaceMenuList() {
   //   const objectList = Object.entries(workspaces);
@@ -132,7 +132,6 @@ const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
           open={open}
           setOpen={setOpen}
           anchorRef={anchorRef}
-       
         />
       </div>
     </>

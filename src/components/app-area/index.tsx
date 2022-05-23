@@ -44,12 +44,6 @@ const AppArea: React.FC<AppAreaProps> = () => {
     workspaceId: string,
     userWorkspace: { [key: string]: any }
   ) {
-    // const document: any = await getWorkSpace(workspaceId);
-    // if (document.error) throw new Error(document.message);
-    // const workspaceData = document.data;
-    // dispatch(changeSelectedWorkSpace({ ...workspaceData, id: workspaceId }));
-
-    // return workspaceData;
     const selectedWorkspaceObject = {
       ...userWorkspace[workspaceId],
       id: workspaceId,

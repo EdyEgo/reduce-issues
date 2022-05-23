@@ -25,7 +25,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
 
      // create first workspace 
 
-     const browserDate = tz.guess()
+     const browserDate = tz.guess()//timezone
       const createdWorkSpace =  await postNewDocument({collectionSelected:'workspaces',
         inputObject:{
       
@@ -89,7 +89,81 @@ export default async function postDocumentSetupOnSugnUp(user:any){
           photoURL:user.photoURL,
           workSpaces:{[createdWorkSpace.id]:{ role:'Owner' }},
           workSpaceSelected:{id:createdWorkSpace.id} // maybe add this one too later : tabSelected:{name:'my-issues'} 
+        },useBatch:batch})  
+
+
+
+
+
+        
+        /// my second workspace -->
+        
+        const createdWorkSpaceSec =  await postNewDocument({collectionSelected:'workspaces',
+        inputObject:{
+      
+        name:'My Second Workspace' ,photoURL:null,identified:'MSW' , timezone:browserDate , workspaceURL:'mysecond' , 
+        membersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}}
+      }
+        ,useAddDocument:true,useBatch:batch}) //  setDoc does not return the doc only the addDoc
+
+  
+       // // create first team 
+
+       collectionSelectedPath = `workspaces/${createdWorkSpaceSec.id}/teams`
+     
+      const createdTeamSec =  await postNewDocument({collectionSelected:collectionSelectedPath,
+        inputObject:{membersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}},
+      
+        name:'My Second Team' ,photoURL:null,identified:'MST' , timezone:browserDate
+      }
+        ,useAddDocument:true,useBatch:batch}) 
+         
+        collectionSelectedPath +=  `/${createdTeamSec.id}/issues`
+        // create first Issue 
+     
+        const createdIssueSec =  await postNewDocument({collectionSelected:collectionSelectedPath,
+        inputObject:{ 
+          title:'Wellcome to reduce issues again',
+          content:{
+            pictureListURL:[],// here are the urls that are gonna be stored in firebase ,
+            text:'Fell free to explore the app,..again :)'
+          },
+          status:{name:'Backlog',icon:'backlog'},
+          priority:{name:'Low',icon:'low'},
+          label:{name:'Feature',icon:'blueDot'},
+          dueDate:'',
+          blockByIssueId:'',
+          blockingIssueId:'',
+  
+          assigneeToId:user.uid,
+          
+          updatedAt:serverTimestamp(),
+  
+  
+        }
+        ,useAddDocument:true,useBatch:batch}) //  setDoc does not return the doc only the addDoc
+    
+      // create issue activity tracker (with two tipes , comment and action , action for ex User Name created Issue 5 days ago)
+      collectionSelectedPath += `/${createdIssueSec.id}/activites`
+      await postNewDocument({collectionSelected:collectionSelectedPath,
+      inputObject:{ 
+        type:'action',
+        actionType:'create',
+        creatorId:'app',// if no id then the app has created the issue
+        
+      },useBatch:batch})
+  
+   
+        // bind team and workspace  to the owner
+  
+        await postNewDocument({collectionSelected:'users',documentName:user.uid,
+        inputObject:{ 
+          
+          workSpaces:{[createdWorkSpaceSec.id]:{ role:'Owner' }},
+          
         },useBatch:batch}) 
+
+        /// <--- second workspace
 
         await batch.commit()
 }
