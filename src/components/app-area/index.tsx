@@ -27,6 +27,9 @@ const AppArea: React.FC<AppAreaProps> = () => {
   const usersStore = useSelector((state: any) => state.users);
   const authStore = useSelector((state: any) => state.auth);
   const workspaceStore = useSelector((state: any) => state.workspace);
+  const selectedWorkSpace = useSelector(
+    (state: any) => state.selectedWorkSpace
+  );
 
   async function getCurrentUserAndSave() {
     const currentUser = authStore.user;
@@ -62,7 +65,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
     return documents.data;
   }
 
-  async function getCurrentTeamForWorkspace(workspaceId: string) {
+  async function getCurrentTeamListForWorkspace(workspaceId: string) {
     const document = await getTeams(workspaceId);
     if (document.error) throw new Error(document.message);
     const teamData = document.data;
@@ -93,20 +96,23 @@ const AppArea: React.FC<AppAreaProps> = () => {
           console.log("error on loading current user object ", error.message)
         )
         .then(async (userData: any) => {
+          console.log("BRLP");
           const selectedWorkspaceId = userData.data.workSpaceSelected.id;
           const userWorkSpaces = userData.data.workSpaces;
 
           // load user workspaces
 
-          const userWorkspace = await getUserWorkSpaces(userWorkSpaces);
+          const collectionUserWorkspace = await getUserWorkSpaces(
+            userWorkSpaces
+          );
 
           // save the selected workspace object
           const workspaceData = await getCurrentSelectedWorkspaceAndSave(
             selectedWorkspaceId,
-            userWorkspace
+            collectionUserWorkspace
           );
           // load team data from workspace nested collection
-          await getCurrentTeamForWorkspace(selectedWorkspaceId);
+          await getCurrentTeamListForWorkspace(selectedWorkspaceId);
           // load members list from data base in users collection
           await getSelectedWorkspaceMembersAndSave(workspaceData.membersId);
         });
@@ -115,7 +121,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
     return () => {
       isSubscribed = false;
     };
-  }, []);
+  }, [selectedWorkSpace]);
 
   return (
     <>

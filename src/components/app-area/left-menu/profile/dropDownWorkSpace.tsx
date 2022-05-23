@@ -12,6 +12,16 @@ import Check from "@mui/icons-material/Check";
 import { signOut } from "../../../../api/dataBaseAuthMethods";
 import { changeSelectedWorkspace as changeSelectedWorkspaceApi } from "../../../../api/dataBaseWorkSpaceMethods";
 import { changeErrorStatus } from "../../../../store/auth";
+
+import { getUser, getUsers } from "../../../../api/dataBaseUsersMethods";
+import { getTeams } from "../../../../api/dataBaseTeamsMethods";
+import { setTeamList } from "../../../../store/team";
+import { changeCurrentUser } from "../../../../store/users";
+import {
+  changeSelectedWorkSpace,
+  changeUserWorkspaces,
+  loadMembersToStore,
+} from "../../../../store/workspace";
 import { changeSelectedWorkSpace as changeSelectedWorkSpaceStore } from "../../../../store/workspace";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -33,20 +43,74 @@ export default function MenuListComposition({
   );
   const authStoreEmail = useSelector((state: any) => state.auth.user.email);
   const authStoreUid = useSelector((state: any) => state.auth.user.uid);
+  const currentUser = useSelector((state: any) => state.users.currentUser);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  async function getCurrentSelectedWorkspaceAndSave(
+    workspaceId: string,
+    userWorkspace: { [key: string]: any }
+  ) {
+    const selectedWorkspaceObject = {
+      ...userWorkspace[workspaceId],
+      id: workspaceId,
+    };
+    dispatch(changeSelectedWorkSpace({ ...selectedWorkspaceObject }));
+    return selectedWorkspaceObject;
+  }
+
+  async function getCurrentTeamListForWorkspace(workspaceId: string) {
+    const document = await getTeams(workspaceId);
+    if (document.error) throw new Error(document.message);
+    const teamData = document.data;
+
+    dispatch(setTeamList(teamData));
+    return teamData;
+  }
+
+  async function getSelectedWorkspaceMembersAndSave(usersIds: {
+    [key: string]: any;
+  }) {
+    // load from db/users all members in this workspace
+
+    const members = await getUsers({ usersIds });
+    if (members.error) throw new Error(members.message);
+    const teamMembersList = members.data;
+    dispatch(loadMembersToStore(teamMembersList));
+  }
 
   async function changeSelectedWorkspaceById(selectedWorkspaceId: string) {
     const result = await changeSelectedWorkspaceApi(
       selectedWorkspaceId,
       authStoreUid
     );
+
     if (result?.error) {
       setErrorMessage("Could not change your selected workspace ");
       return;
     }
+    // change current user
+    dispatch(
+      changeCurrentUser({
+        ...currentUser,
+        workSpaceSelected: { id: selectedWorkspaceId },
+      })
+    );
+
+    const collectionUserWorkspace = workspaces;
+    const workspaceData = await getCurrentSelectedWorkspaceAndSave(
+      selectedWorkspaceId,
+      collectionUserWorkspace
+    );
+    // load team data from workspace nested collection
+    await getCurrentTeamListForWorkspace(selectedWorkspaceId);
+    // load members list from data base in users collection
+    await getSelectedWorkspaceMembersAndSave(workspaceData.membersId);
+
     const newWorkspaceSelected = workspaces[selectedWorkspaceId];
     dispatch(changeSelectedWorkSpaceStore(newWorkspaceSelected));
+    // see if the teams are loaded and the issues
   }
 
   const handleClose = (event: Event | React.SyntheticEvent) => {
@@ -86,12 +150,12 @@ export default function MenuListComposition({
       return (
         <div
           className="p-1 hover:bg-gray-200"
-          onClick={(event) => {
+          onClick={async (event) => {
             if (workspace[1].id === selectedWorkspace.id) {
               handleClose(event);
               return;
             }
-            changeSelectedWorkspaceById(workspace[1].id);
+            await changeSelectedWorkspaceById(workspace[1].id);
             navigate(workspace[1].workspaceURL);
             handleClose(event);
           }}

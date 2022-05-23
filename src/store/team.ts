@@ -16,7 +16,7 @@ export const teamSlice = createSlice({
 
         changeSelectedTeam:(state,action)=>{
             state.selectedTeam = action.payload
-        },
+        }, // we don t have a selected team future
 
         setTeamList:(state,action)=>{
           

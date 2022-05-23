@@ -28,7 +28,9 @@ export const workspaceSlice = createSlice({
     reducers:{
 
         changeSelectedWorkSpace:(state,action)=>{
+         
             state.selectedWorkSpace = action.payload
+         
         },
         changeUserWorkspaces:(state,action)=>{
             state.userWorkspaces = action.payload
