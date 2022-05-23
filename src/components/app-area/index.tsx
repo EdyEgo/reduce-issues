@@ -1,5 +1,6 @@
 import { BrowserRouter as Router } from "react-router-dom";
 import { useEffect } from "react";
+import NewIssueModal from "./modals/NewIssue";
 import { useStore, useSelector, useDispatch } from "react-redux";
 import { getUser, getUsers } from "../../api/dataBaseUsersMethods";
 import {
@@ -27,6 +28,9 @@ const AppArea: React.FC<AppAreaProps> = () => {
   const usersStore = useSelector((state: any) => state.users);
   const authStore = useSelector((state: any) => state.auth);
   const workspaceStore = useSelector((state: any) => state.workspace);
+  const newIssueModalIsOpen = useSelector(
+    (state: any) => state.issues.newIssueModalOpenStatus
+  );
   const selectedWorkSpace = useSelector(
     (state: any) => state.selectedWorkSpace
   );
@@ -126,6 +130,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
   return (
     <>
       {/* left menu will only change on selected and added staff like favorites and notifications on issues */}
+
       <Router>
         {/* links here */}
         <div className="flex app-side-content-container text-md mt-1">
@@ -138,6 +143,11 @@ const AppArea: React.FC<AppAreaProps> = () => {
           <div className="w-10/12 right-content-container">
             <RightContent />
           </div>
+          {newIssueModalIsOpen && (
+            <div className="app-area-modals-container w-full h-full bg-trasparent absolute">
+              <NewIssueModal />
+            </div>
+          )}
         </div>
       </Router>
     </>

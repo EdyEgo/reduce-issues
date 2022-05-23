@@ -4,8 +4,8 @@ interface TeamIssues{[key:string]:{[key:string]:any}[]}
 
 
 
-const initialState:{teamsIssues:TeamIssues} = {
-    teamsIssues:{}
+const initialState:{teamsIssues:TeamIssues,newIssueModalOpenStatus:boolean} = {
+    teamsIssues:{},newIssueModalOpenStatus:false
 } 
 
 
@@ -36,12 +36,14 @@ export const usersSlice = createSlice({
            const issueToRemoveId =  state.teamsIssues[teamId].findIndex((issue)=>issue.id === issueId)
            state.teamsIssues[teamId].splice(issueToRemoveId,1)
         },
-      
+        changenewIssueModalOpenStatus:(state,action)=>{
+            state.newIssueModalOpenStatus = action.payload
+        }
       
     },
 
 })
 
-export const { loadTeamsIssues ,changeOneTeamIssues,addOneIssueToTeam,removeOneIssueToTeam} = usersSlice.actions
+export const { loadTeamsIssues ,changeOneTeamIssues,addOneIssueToTeam,removeOneIssueToTeam , changenewIssueModalOpenStatus} = usersSlice.actions
 
 export default usersSlice.reducer
