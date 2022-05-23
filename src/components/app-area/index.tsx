@@ -67,6 +67,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
 
   async function getCurrentTeamListForWorkspace(workspaceId: string) {
     const document = await getTeams(workspaceId);
+
     if (document.error) throw new Error(document.message);
     const teamData = document.data;
 
@@ -96,7 +97,6 @@ const AppArea: React.FC<AppAreaProps> = () => {
           console.log("error on loading current user object ", error.message)
         )
         .then(async (userData: any) => {
-          console.log("BRLP");
           const selectedWorkspaceId = userData.data.workSpaceSelected.id;
           const userWorkSpaces = userData.data.workSpaces;
 
@@ -121,7 +121,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
     return () => {
       isSubscribed = false;
     };
-  }, [selectedWorkSpace]);
+  }, []);
 
   return (
     <>

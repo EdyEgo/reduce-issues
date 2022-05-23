@@ -97,7 +97,7 @@ export default function MenuListComposition({
         workSpaceSelected: { id: selectedWorkspaceId },
       })
     );
-
+    // this part is not gonna be needed once you make the routes right ----->
     const collectionUserWorkspace = workspaces;
     const workspaceData = await getCurrentSelectedWorkspaceAndSave(
       selectedWorkspaceId,
@@ -111,6 +111,8 @@ export default function MenuListComposition({
     const newWorkspaceSelected = workspaces[selectedWorkspaceId];
     dispatch(changeSelectedWorkSpaceStore(newWorkspaceSelected));
     // see if the teams are loaded and the issues
+    console.log("delete this when you have your rotes right!!!!!");
+    //this part is not gonna be needed once you make the routes right <-----
   }
 
   const handleClose = (event: Event | React.SyntheticEvent) => {
