@@ -11,7 +11,7 @@ const initialState:{
     selectedWorkSpace:Workspace,members:any[] // ordered by invitedAt
     userWorkspaces:{[key:string]:Workspace}
     } = {
-   selectedWorkSpace:{name:'Mt First Work Space unlodaded' , id:'', photoURL:null,
+   selectedWorkSpace:{name:'Loading Workspace' , id:'', photoURL:null,
    identified:'MFWU' , 
    timezone:'' , 
    workspaceURL:'myfirstUnloaded'},userWorkspaces:{},members:[]

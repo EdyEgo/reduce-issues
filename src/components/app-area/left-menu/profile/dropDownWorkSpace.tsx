@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Grow from "@mui/material/Grow";
@@ -9,11 +9,8 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import Stack from "@mui/material/Stack";
 import { signOut } from "../../../../api/dataBaseAuthMethods";
-import { authSlice, changeErrorStatus } from "../../../../store/auth";
+import { changeErrorStatus } from "../../../../store/auth";
 import { useSelector, useDispatch } from "react-redux";
-
-
-
 
 export default function MenuListComposition({
   open,
@@ -24,14 +21,10 @@ export default function MenuListComposition({
   setOpen: (argument: any) => void;
   anchorRef: any;
 }) {
-  //   const [open, setOpen] = React.useState(false);
-
-  //   const handleToggle = () => {
-  //     setOpen((prevOpen) => !prevOpen);
-  //   };
-
-  const authStore = useSelector((state: any) => state.auth);
-  const workSpaceStore = useSelector((state: any) => state.workspace);
+  const workspaces = useSelector(
+    (state: any) => state.workspace.userWorkspaces
+  );
+  const authStoreEmail = useSelector((state: any) => state.auth.user.email);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -55,17 +48,6 @@ export default function MenuListComposition({
     }
   }
 
-  function directUserToProfilePage() {
-    const extractEmailName = authStore.user.email.slice(
-      0,
-      authStore.user.email.indexOf("@")
-    );
-
-    navigate(
-      `/${workSpaceStore.selectedWorkSpace.workspaceURL}/profiles/${extractEmailName}`
-    );
-  }
-
   async function logUserOut() {
     const result = await signOut();
     if (result.error) {
@@ -76,19 +58,27 @@ export default function MenuListComposition({
     return true;
   }
 
-  return (
-    <Stack direction="row" spacing={4} className="absolute top-7 left-8">
-      <div>
-        {/* <Button
-          ref={anchorRef}
-          id="composition-button"
-          aria-controls={open ? "composition-menu" : undefined}
-          aria-expanded={open ? "true" : undefined}
-          aria-haspopup="true"
-          onClick={handleToggle}
+  function createWorkspaceList() {
+    const objectList = Object.entries(workspaces);
+    if (objectList.length <= 0) return [];
+    return objectList.map((workspace: any, index) => {
+      return (
+        <MenuItem
+          onClick={(event) => {
+            navigate(workspace[1].workspaceURL);
+            handleClose(event);
+          }}
+          key={index}
         >
-          Dashboard
-        </Button> */}
+          {workspace[1].name}
+        </MenuItem>
+      );
+    });
+  }
+
+  return (
+    <Stack direction="row" spacing={5} className="absolute top-7 left-9">
+      <div>
         <Popper
           open={open}
           anchorEl={anchorRef.current}
@@ -113,19 +103,35 @@ export default function MenuListComposition({
                     aria-labelledby="composition-button"
                     onKeyDown={handleListKeyDown}
                   >
+                    {/* <MenuItem>{authStoreEmail}</MenuItem> */}
+                    <div className="email-container p-2 font-semibold">
+                      {authStoreEmail}
+                    </div>
+
+                    <MenuItem>
+                      <div className="workspaces-list-container ">
+                        {createWorkspaceList()}
+                      </div>
+                    </MenuItem>
+
+                    <div className="line-separator border-b "></div>
                     <MenuItem
-                      onClick={async (event) => {
-                        directUserToProfilePage();
+                      onClick={(event) => {
+                        navigate("/addworkspace");
                         handleClose(event);
                       }}
                     >
-                      Profile
+                      Create a new workspace
                     </MenuItem>
+                    <div className="line-separator border-b "></div>
 
                     <MenuItem
                       onClick={async (event) => {
                         const userWasLoggedOut = await logUserOut();
-                        if (userWasLoggedOut) handleClose(event);
+                        if (userWasLoggedOut) {
+                          handleClose(event);
+                          navigate("/");
+                        }
                       }}
                     >
                       Logout

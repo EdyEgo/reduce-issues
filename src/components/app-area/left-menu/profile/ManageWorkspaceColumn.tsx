@@ -1,6 +1,7 @@
 import { useStore, useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import DropDownProfileMenu from "./dropDownProfile";
+
+import DropDownWorkspace from "./dropDownWorkSpace";
 import { useRef, useState, useEffect } from "react";
 import { signOut } from "../../../../api/dataBaseAuthMethods";
 import { changeErrorStatus } from "../../../../store/auth";
@@ -49,7 +50,7 @@ const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
     {
       type: "MenuItem",
       name: authStoreEmail,
-      children: [],
+      children: [{ ma: "frate" }, { idk: "2" }],
       id: 1,
     },
 
@@ -79,29 +80,29 @@ const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
     },
   ];
 
-  function createWorkspaceMenuList() {
-    const objectList = Object.entries(workspaces);
-    if (objectList.length <= 0) return;
-    workspaceMenuList[0].children = objectList.map((workspace: any, index) => {
-      return {
-        type: "Link",
-        name: workspace[1].name,
-        to: workspace[1].workspaceURL,
-        id: index,
-      };
-    });
-  }
-  useEffect(() => {
-    let isSubscribed = true;
+  // function createWorkspaceMenuList() {
+  //   const objectList = Object.entries(workspaces);
+  //   if (objectList.length <= 0) return;
+  //   workspaceMenuList[0].children = objectList.map((workspace: any, index) => {
+  //     return {
+  //       type: "Link",
+  //       name: workspace[1].name,
+  //       to: workspace[1].workspaceURL,
+  //       id: index,
+  //     };
+  //   });
+  // }
+  // useEffect(() => {
+  //   let isSubscribed = true;
 
-    if (isSubscribed) {
-      createWorkspaceMenuList();
-    }
+  //   if (isSubscribed) {
+  //     createWorkspaceMenuList();
+  //   }
 
-    return () => {
-      isSubscribed = false;
-    };
-  }, [workspaces]);
+  //   return () => {
+  //     isSubscribed = false;
+  //   };
+  // }, [workspaces]);
 
   return (
     <>
@@ -127,11 +128,11 @@ const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
         >
           {returnWorkspaceNameMaxLength()}
         </div>
-        <DropDownProfileMenu
+        <DropDownWorkspace
           open={open}
           setOpen={setOpen}
           anchorRef={anchorRef}
-          menuItemList={workspaceMenuList}
+       
         />
       </div>
     </>
