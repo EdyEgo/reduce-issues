@@ -1,4 +1,5 @@
 import {getWorkSpaceFirebase} from '../composables/firebase/workspace/useGetSelectedWorkspace'
+import {postNewDocument} from '../composables/firebase/post/postDocument'
 
 export async function getWorkSpace(workspaceId:string){
    
@@ -27,6 +28,20 @@ export async function getWorkSpacesByIds(workSpacesIds:{[key:string]:{role:strin
       
       return {data:workspacesList,error:false}
    
+    }catch(e:any){
+      return {error:true,message:e.message}
+    }
+}
+
+export async function changeSelectedWorkspace(workSpaceId:string,userId:string){
+    try{
+      await postNewDocument({
+      collectionSelected:'users',
+      documentName:userId,
+      inputObject:{workSpaceSelected:{id:workSpaceId}},
+      noRegister:true}) 
+
+      return {data:true,error:false}
     }catch(e:any){
       return {error:true,message:e.message}
     }

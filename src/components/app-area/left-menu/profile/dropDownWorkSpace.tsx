@@ -9,7 +9,9 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import Stack from "@mui/material/Stack";
 import { signOut } from "../../../../api/dataBaseAuthMethods";
+import { changeSelectedWorkspace as changeSelectedWorkspaceApi } from "../../../../api/dataBaseWorkSpaceMethods";
 import { changeErrorStatus } from "../../../../store/auth";
+import { changeSelectedWorkSpace as changeSelectedWorkSpaceStore } from "../../../../store/workspace";
 import { useSelector, useDispatch } from "react-redux";
 
 export default function MenuListComposition({
@@ -21,12 +23,30 @@ export default function MenuListComposition({
   setOpen: (argument: any) => void;
   anchorRef: any;
 }) {
+  const [errorMessage, setErrorMessage] = React.useState<null | string>(null);
   const workspaces = useSelector(
     (state: any) => state.workspace.userWorkspaces
   );
+  const selectedWorkspace = useSelector(
+    (state: any) => state.workspace.selectedWorkSpace
+  );
   const authStoreEmail = useSelector((state: any) => state.auth.user.email);
+  const authStoreUid = useSelector((state: any) => state.auth.user.uid);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  async function changeSelectedWorkspaceById(selectedWorkspaceId: string) {
+    const result = await changeSelectedWorkspaceApi(
+      selectedWorkspaceId,
+      authStoreUid
+    );
+    if (result?.error) {
+      setErrorMessage("Could not change your selected workspace ");
+      return;
+    }
+    const newWorkspaceSelected = workspaces[selectedWorkspaceId];
+    dispatch(changeSelectedWorkSpaceStore(newWorkspaceSelected));
+  }
 
   const handleClose = (event: Event | React.SyntheticEvent) => {
     if (
@@ -65,6 +85,7 @@ export default function MenuListComposition({
       return (
         <MenuItem
           onClick={(event) => {
+            changeSelectedWorkspaceById(workspace[1].id);
             navigate(workspace[1].workspaceURL);
             handleClose(event);
           }}
