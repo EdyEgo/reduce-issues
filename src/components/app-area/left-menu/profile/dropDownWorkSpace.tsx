@@ -8,6 +8,7 @@ import Popper from "@mui/material/Popper";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import Stack from "@mui/material/Stack";
+import Check from "@mui/icons-material/Check";
 import { signOut } from "../../../../api/dataBaseAuthMethods";
 import { changeSelectedWorkspace as changeSelectedWorkspaceApi } from "../../../../api/dataBaseWorkSpaceMethods";
 import { changeErrorStatus } from "../../../../store/auth";
@@ -83,8 +84,13 @@ export default function MenuListComposition({
     if (objectList.length <= 0) return [];
     return objectList.map((workspace: any, index) => {
       return (
-        <MenuItem
+        <div
+          className="p-1"
           onClick={(event) => {
+            if (workspace[1].id === selectedWorkspace.id) {
+              handleClose(event);
+              return;
+            }
             changeSelectedWorkspaceById(workspace[1].id);
             navigate(workspace[1].workspaceURL);
             handleClose(event);
@@ -92,7 +98,10 @@ export default function MenuListComposition({
           key={index}
         >
           {workspace[1].name}
-        </MenuItem>
+          {workspace[1].id === selectedWorkspace.id && (
+            <Check className="pl-2" />
+          )}
+        </div>
       );
     });
   }
