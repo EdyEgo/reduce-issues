@@ -85,7 +85,7 @@ export default function MenuListComposition({
     return objectList.map((workspace: any, index) => {
       return (
         <div
-          className="p-1"
+          className="p-1 hover:bg-gray-200"
           onClick={(event) => {
             if (workspace[1].id === selectedWorkspace.id) {
               handleClose(event);
@@ -138,11 +138,9 @@ export default function MenuListComposition({
                       {authStoreEmail}
                     </div>
 
-                    <MenuItem>
-                      <div className="workspaces-list-container ">
-                        {createWorkspaceList()}
-                      </div>
-                    </MenuItem>
+                    <div className="workspaces-list-container p-2">
+                      {createWorkspaceList()}
+                    </div>
 
                     <div className="line-separator border-b "></div>
                     <MenuItem
