@@ -1,4 +1,5 @@
 import { postNewDocument} from '../composables/firebase/post/postDocument' 
+import {postMultipleFiles} from './dataBaseStorageMethods'
 import {serverTimestamp} from 'firebase/firestore'
 import type { Issue} from '../types/issues' 
 
@@ -16,7 +17,7 @@ export async function postIssue ({newIssue,teamId,workspaceId}:{workspaceId:stri
  }
 }
 
-export async function addPicturesToIssue({teamId,workspaceId,issueId,pictureListURL}:{pictureListURL:string[],workspaceId:string,teamId:string,issueId:string}){
+export async function addPicturesURLToIssue({teamId,workspaceId,issueId,pictureListURL}:{pictureListURL:string[],workspaceId:string,teamId:string,issueId:string}){
     try{
          await postNewDocument({
             collectionSelected:`workspaces/${workspaceId}/teams/${teamId}/issues/${issueId}`,
@@ -26,5 +27,16 @@ export async function addPicturesToIssue({teamId,workspaceId,issueId,pictureList
       return {data:true,error:false}
     }catch(e:any){
     return {error:true,message:'Could add pictures url to  the issue'}
+    }
+
+
+}
+
+
+export async function addIssuePicturesToStore({beforeGeneralPath,files}:{beforeGeneralPath:string,files:File[]}){
+    try{
+        return await postMultipleFiles({beforeGeneralPath,files})
+    }catch(e:any){
+        return {error:true,message:'Adding pictures to issue failed'}
     }
 }

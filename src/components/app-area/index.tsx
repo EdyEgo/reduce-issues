@@ -40,6 +40,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
     const currentUserObject = await getUser({ userId: currentUser.uid });
     if (currentUserObject.error) throw new Error(currentUserObject.message);
     const currentUserDataObject = currentUserObject.data;
+    
     dispatch(
       changeCurrentUser({ ...currentUserDataObject, id: currentUser.uid })
     );
@@ -87,6 +88,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
     const members = await getUsers({ usersIds });
     if (members.error) throw new Error(members.message);
     const teamMembersList = members.data;
+    console.log('my member',teamMembersList)
     dispatch(loadMembersToStore(teamMembersList));
   }
 

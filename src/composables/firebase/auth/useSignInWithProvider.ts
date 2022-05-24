@@ -45,9 +45,9 @@ export async function signInWithProviderFirebase({
         const user = result.user;
    
         if(signUp){
-         
+         const splitName:any = user.displayName?.split(' ')
 
-             await setupOnSignUp(user)
+             await setupOnSignUp(user,{createdUidUser:user.uid,createdUserEmail:user.email,firstName:splitName[0] ,lastName:splitName[1]})
          }
 
         return {data:user,error:false};
@@ -66,7 +66,11 @@ export async function signInWithProviderFirebase({
             // const credential = provider.credentialFromResult(auth, result);
 
             if(signUp){
-              await setupOnSignUp(user)
+              
+
+              const splitName:any = user.displayName?.split(' ')
+
+              await setupOnSignUp(user,{createdUidUser:user.uid,createdUserEmail:user.email,firstName:splitName[0] ,lastName:splitName[1]})
              }
 
             return {data:user,error:false}

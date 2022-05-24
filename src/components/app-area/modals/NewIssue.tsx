@@ -4,7 +4,7 @@ import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { changenewIssueModalOpenStatus } from "../../../store/issues";
 import {postFile,postMultipleFiles} from '../../../api/dataBaseStorageMethods'
-import {postIssue,addPicturesToIssue} from '../../../api/dataBaseIssuesMethods'
+import {postIssue,addPicturesURLToIssue , addIssuePicturesToStore} from '../../../api/dataBaseIssuesMethods'
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -17,7 +17,11 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import SelectDialogObjectBased from '../../selectors/basicObjectBased'
-import SelectPictures from '../../selectors/selectPictures'
+import AssigneeSelector from '../../selectors/assigneeSelector'
+import SelectPictures from '../../selectors/selectPictures' 
+import SelectDate from '../../selectors/basicDateSelector'
+import {labelsList,priorityList,statusList} from '../../../composables/modalOptions/issues'
+
 
 // saveing the issues img is gonna be interesting , maybe the workspace id will be a good fit
 
@@ -66,6 +70,10 @@ export default function NewIssueModal() {
     (state: any) => state.issues.newIssueModalOpenStatus
   ); 
 
+  const team = useSelector(
+    (state: any) => state.team.teamList
+  ); 
+
   const teamsList = useSelector(
     (state: any) => state.team.teamList
   );
@@ -75,22 +83,41 @@ export default function NewIssueModal() {
   const [selectedText,setSelectedText] = React.useState('') 
   
   const [values, setValues] = React.useState<any>({
-    team:'',
-   title:'',
-   text:'',
+    teamId:'',
+    title:'',
+    text:'',
     pictures:null,
+    status:null,
+    priority:null,
+    label: null,
+    dueDate:null,
+    blockByIssueId:null,
+    blockingIssueId:null,
+    assignedToUserId:null
 
-    showPassword: false,
+
+   
   });
+
+  const [selectedTeamObject,setSelectedTeamObject] = React.useState([])
+  const [selectedMemberObject,setSelectedMemberObject] = React.useState({photoURL:null,name:"Assignee",id:null})
 
   const handleChange =
     (prop: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
       setValues({ ...values, [prop]: event.target.value });
     };
+ 
+ const setSelectedAssigneeTeamMember  =(memberObject:any)=>{
+   
+  setValues({ ...values, assignedToUserId: memberObject.id });
+  setSelectedMemberObject(memberObject)
+  // setSelectedTeamObject(id)
+ }
+
 
  const updateTeam = (teamId:string)=>{
-  setValues({ ...values, team: teamId});
-  
+  setValues({ ...values,  teamId});
+  setSelectedTeamObject(teamsList.find((team:any)=>team.id === teamId).membersId)
  } 
 
  
@@ -121,26 +148,38 @@ function createImgs(){
     dispatch(changenewIssueModalOpenStatus(false));
   }
   
-  async function handleSaveChanges(){
-     // first post the issue , 
+  async function handleSaveChanges(){ 
+   // helpers postIssue,addPicturesURLToIssue , addIssuePicturesToStore
      
-    //  const newIssueObject = {
-    //   title:string,
-    //   content:{
-    //     pictureListURL:string[] | null,// here are the urls that are gonna be stored in firebase ,
-    //     text:string
-    //   },
-    //   status:{name:string,icon:string},
-    //   priority:{name:string,icon:string},
-    //   label: any,
-    //   dueDate:any,
-    //   blockByIssueId:string,
-    //   blockingIssueId:string,
+     // first post the issue then we add the pictures to the store if we have any , then we add the 
+     // the urls to the issue
+
+ 
+    const {pictures,teamId,title,text , status,
+      priority,
+      label,
+      dueDate,
+      blockByIssueId,
+      blockingIssueId,
+      assignedToUserId} = values
+     
+     const newIssueObject = {
+      title,
+      content:{
+        pictureListURL:null,// here are the urls that are gonna be stored in firebase ,
+        text
+      },
+      status,
+      priority,
+      label,
+      dueDate,
+      blockByIssueId,
+      blockingIssueId,
   
-    //   assignedToUserId:string,
+      assignedToUserId,
       
       
-    //  }
+     }
      // postIssue()
      
      //then post the pictures
@@ -151,9 +190,10 @@ function createImgs(){
 
     // works
     // const fileResult = await postFile({file:values.pictures[0],path:`testing/staff/${values.pictures[0].name}`})
-    // console.log('my staff are ',values,'but my upload is',fileResult.data ,fileResult.data.snapshot, fileResult.data.downloadURL )
+    // console.log('my staff are ',values,)//'but my upload is',fileResult.data ,fileResult.data.snapshot, fileResult.data.downloadURL )
   }
-
+ 
+  
   return (
     <>
       <BootstrapDialog
@@ -168,7 +208,7 @@ function createImgs(){
          <div className="title-and-select-team-container flex flex-col items-center">
            <div className="title"> Create a new issue</div>
             <div className="select-team">
-              <SelectDialogObjectBased itemsList={teamsList} selectedItem={selectedTeam} setSelectedItem={updateTeam} labelTitle="Select Team" />
+              <SelectDialogObjectBased itemsList={teamsList} selectedItem={selectedTeam} setSelectedItem={updateTeam} labelTitle="Select Team" returnIdAsValue={true} />
             </div>
          </div>
         </BootstrapDialogTitle>
@@ -199,18 +239,7 @@ function createImgs(){
               autoFocus 
               variant="standard"
             />
-            {/* <TextField
-              margin="normal"
-              value={values.pictures}
-              onChange={handleChange("pictures")}
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="file"
-              id="issue-pictures"
-             
-            /> */}
+           
             {createImgs()}
             
             <TextField
@@ -236,7 +265,22 @@ function createImgs(){
             
           </Box>
          </div>
-         <div className="buttons-row "></div>
+         <div className="buttons-row ">
+           {/* labelsList,priorityList,statusList */}
+           {/* one you selected a team object then you must take only the members with in that list for assignee */}
+
+         {/* <SelectDialogObjectBased itemsList={statusList} selectedItem={statusList[0].name} setSelectedItem={} labelTitle="Backlog" /> */}
+         {/* <SelectDialogObjectBased itemsList={priorityList} selectedItem={priorityList[0].name} setSelectedItem={} labelTitle="Priority" /> */}
+         {/* <SelectDialogObjectBased itemsList={} selectedItem={} setSelectedItem={} labelTitle="Assignee" returnIdAsValue={true} /> */}
+         <AssigneeSelector teamMembersList={selectedTeamObject} selectedMember={selectedMemberObject} setSelectedMember={setSelectedAssigneeTeamMember} labelTitle="Assignee" />
+         {/* <SelectDialogObjectBased itemsList={labelsList} selectedItem="" setSelectedItem={} labelTitle="Label" /> */}
+         {/* <SelectDate setValue={} value={} /> */}
+
+
+         {/*  setting the parent issue must wait  , we need to first see how we get the issues lists from the teams */}
+         {/* <SelectDialogObjectBased itemsList={} selectedItem={} setSelectedItem={} labelTitle="Set parent issue" /> */}
+
+         </div>
         </DialogContent>
        
           <div className="container-actions flex justify-between my-1">

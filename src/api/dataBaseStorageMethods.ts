@@ -10,12 +10,17 @@ export async function postFile({file,path}:{file:File,path:string}){
 
 export async function postMultipleFiles({beforeGeneralPath,files}:{files:File[],beforeGeneralPath:string}){
     try{
+        let downloadListObjects:any = []
        const result  = await   Promise.all(
             files.map(async (file)=>{
-                await postToStorageFirebase({file,path:beforeGeneralPath + file.name})
+               const document:any = await postToStorageFirebase({file,path:beforeGeneralPath + file.name})
+               //fileResult.data.snapshot, fileResult.data.downloadURL 
+               if(document.error) return
+               downloadListObjects.push({snapshot:document.data.snapshot,downloadURL:document.data.downloadURL})
             })
         )
-        return {data:result,error:false}
+        // wich one will you keep ??
+        return {data:{result,files:downloadListObjects},error:false}
     }catch(e:any){
       return {error:true,message:e.message}
     }

@@ -10,7 +10,7 @@ export interface Issue {
     dueDate:any,
     blockByIssueId:string,
     blockingIssueId:string,
-
+    parentIssueId?:string,
     assignedToUserId:string,
     
     updatedAt:any,

@@ -5,15 +5,23 @@ import {db} from '../../../firebase'
 // postDocument
 import {postNewDocument} from '../post/postDocument'
 
-export default async function postDocumentSetupOnSugnUp(user:any){ 
+export default async function postDocumentSetupOnSugnUp(user:any,userObject:{firstName:string,lastName:string,createdUserEmail:string | null,createdUidUser:string}){ 
 
-
+  const {createdUserEmail,firstName,lastName,createdUidUser} = userObject
     
    
     const batch = writeBatch(db); 
 
 
      
+    await postNewDocument({
+      collectionSelected: 'users', documentName: createdUidUser, inputObject: { 
+          emailIsVerified: false,
+          email: createdUserEmail ,
+          firstName,
+          lastName
+         },useBatch:batch
+    }) 
 
   
         
@@ -89,6 +97,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
         await postNewDocument({collectionSelected:'users',documentName:user.uid,
         inputObject:{ 
           photoURL:user.photoURL,
+          
           workSpaces:{[createdWorkSpace.id]:{ role:'Owner' }},
           workSpaceSelected:{id:createdWorkSpace.id} // maybe add this one too later : tabSelected:{name:'my-issues'} 
         },useBatch:batch})  

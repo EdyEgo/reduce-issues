@@ -5,10 +5,14 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 interface SelectProps{
-    itemsList:{[key:string]:any},setSelectedItem:(argument:any)=>void,selectedItem:string,labelTitle:string
+    itemsList:{[key:string]:any},
+    setSelectedItem:(argument:any)=>void,
+    selectedItem:string,
+    labelTitle:string,
+    returnIdAsValue?:boolean
 }
 
- const  SelectAutoWidth: React.FC<SelectProps>  = ({itemsList,setSelectedItem,selectedItem,labelTitle})=> {
+ const  SelectAutoWidth: React.FC<SelectProps>  = ({itemsList,setSelectedItem,selectedItem,labelTitle,returnIdAsValue})=> {
 
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -19,10 +23,18 @@ interface SelectProps{
   function generateItemList(){
     const list = Object.entries(itemsList)
     if(list.length <= 0) return []
-     return list.map((item)=>{
+    if(returnIdAsValue){
+        return list.map((item)=>{
+        
+          return (<MenuItem value={item[1].id}>{item[1].name}</MenuItem>)
+      })
+    } 
+
+    return list.map((item)=>{
        
-         return (<MenuItem value={item[1].id}>{item[1].name}</MenuItem>)
-     })
+      return (<MenuItem value={item[1]}>{item[1].name}</MenuItem>)
+  })
+
   }
 
   return (
