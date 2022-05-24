@@ -65,7 +65,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
           blockByIssueId:'',
           blockingIssueId:'',
   
-          assigneeToId:user.uid,
+          assignedToUserId:user.uid,
           
           updatedAt:serverTimestamp(),
   
@@ -122,7 +122,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
             blockByIssueId:'',
             blockingIssueId:'',
     
-            assigneeToId:user.uid,
+            assignedToUserId:user.uid,
             
             updatedAt:serverTimestamp(),
     
@@ -185,7 +185,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
           blockByIssueId:'',
           blockingIssueId:'',
   
-          assigneeToId:user.uid,
+          assignedToUserId:user.uid,
           
           updatedAt:serverTimestamp(),
   

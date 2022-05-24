@@ -4,6 +4,7 @@ import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { changenewIssueModalOpenStatus } from "../../../store/issues";
 import {postFile,postMultipleFiles} from '../../../api/dataBaseStorageMethods'
+import {postIssue,addPicturesToIssue} from '../../../api/dataBaseIssuesMethods'
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -123,10 +124,28 @@ function createImgs(){
   async function handleSaveChanges(){
      // first post the issue , 
      
-     
-     
+    //  const newIssueObject = {
+    //   title:string,
+    //   content:{
+    //     pictureListURL:string[] | null,// here are the urls that are gonna be stored in firebase ,
+    //     text:string
+    //   },
+    //   status:{name:string,icon:string},
+    //   priority:{name:string,icon:string},
+    //   label: any,
+    //   dueDate:any,
+    //   blockByIssueId:string,
+    //   blockingIssueId:string,
+  
+    //   assignedToUserId:string,
+      
+      
+    //  }
+     // postIssue()
      
      //then post the pictures
+     // here update picturesURL on issue 
+    //  addPicturesToIssue({issueId,pictureListURL,teamId,workspaceId})
  // postMultipleFiles
 
 
