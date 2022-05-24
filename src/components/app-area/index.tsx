@@ -88,7 +88,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
     const members = await getUsers({ usersIds });
     if (members.error) throw new Error(members.message);
     const teamMembersList = members.data;
-    console.log('my member',teamMembersList)
+    
     dispatch(loadMembersToStore(teamMembersList));
   }
 

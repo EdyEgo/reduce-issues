@@ -1,13 +1,13 @@
 import * as React from 'react';
-import InputLabel from '@mui/material/InputLabel';
+
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
+
 import PersonIcon from "@mui/icons-material/Person";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+
 
 interface SelectProps{
     teamMembersList:{[key:string]:any},
@@ -21,11 +21,7 @@ interface SelectProps{
 
   const workspaceMembers = useSelector((state:any)=>state.workspace.members)
 
-console.log('hey yo these are the members',workspaceMembers)
-//   const handleChange = (event: SelectChangeEvent) => {
- 
-//     setSelectedMember(event.target.value);
-//   }; 
+
 
   function returnWorspaceMemberObjectById(id:string){
       return workspaceMembers.find((member:any)=>member.id === id)
@@ -95,20 +91,7 @@ console.log('hey yo these are the members',workspaceMembers)
 
   return (
     <div>
-      {/* <FormControl sx={{ m: 1, minWidth: 180 }}>
-        <InputLabel id="demo-simple-select-autowidth-label">{labelTitle}</InputLabel>
-        <Select
-          labelId="demo-simple-select-autowidth-label"
-          id="demo-simple-select-autowidth"
-          value={selectedMember.id ? selectedMember.id : undefined}
-          onChange={handleChange}
-          autoWidth
-          label={labelTitle}
-        >
-          
-          {generateItemList()}
-        </Select>
-      </FormControl> */} 
+    
 
 <Button
         id="basic-button"
