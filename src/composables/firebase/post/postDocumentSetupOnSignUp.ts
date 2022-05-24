@@ -29,7 +29,9 @@ export default async function postDocumentSetupOnSugnUp(user:any){
       const createdWorkSpace =  await postNewDocument({collectionSelected:'workspaces',
         inputObject:{
       
-        name:'My First Workspace' ,photoURL:null,identified:'MFW' , timezone:browserDate , workspaceURL:'myfirst' , 
+        name:'My First Workspace' ,photoURL:null,identified:'MFW' ,
+        labels:[{name:'Feature',icon:'purpleDot',},{name:'Improvement',icon:'blueDot'},{name:'Bug',icon:'redDot'} ]
+        ,timezone:browserDate , workspaceURL:'myfirst' , 
         membersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}}
       }
         ,useAddDocument:true,useBatch:batch}) //  setDoc does not return the doc only the addDoc
@@ -58,7 +60,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
           },
           status:{name:'Backlog',icon:'backlog'},
           priority:{name:'Low',icon:'low'},
-          label:{name:'Feature',icon:'blueDot'},
+          label:null,
           dueDate:'',
           blockByIssueId:'',
           blockingIssueId:'',
@@ -115,7 +117,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
             },
             status:{name:'Backlog',icon:'backlog'},
             priority:{name:'Low',icon:'low'},
-            label:{name:'Feature',icon:'blueDot'},
+            label:null,
             dueDate:'',
             blockByIssueId:'',
             blockingIssueId:'',
@@ -148,7 +150,8 @@ export default async function postDocumentSetupOnSugnUp(user:any){
         const createdWorkSpaceSec =  await postNewDocument({collectionSelected:'workspaces',
         inputObject:{
       
-        name:'My Second Workspace' ,photoURL:null,identified:'MSW' , timezone:browserDate , workspaceURL:'mysecond' , 
+        name:'My Second Workspace' ,photoURL:null,identified:'MSW' ,
+        labels:[{name:'Feature',icon:'purpleDot',},{name:'Improvement',icon:'blueDot'},{name:'Bug',icon:'redDot'} ], timezone:browserDate , workspaceURL:'mysecond' , 
         membersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}}
       }
         ,useAddDocument:true,useBatch:batch}) //  setDoc does not return the doc only the addDoc
@@ -177,7 +180,7 @@ export default async function postDocumentSetupOnSugnUp(user:any){
           },
           status:{name:'Backlog',icon:'backlog'},
           priority:{name:'Low',icon:'low'},
-          label:{name:'Feature',icon:'blueDot'},
+          label:null,
           dueDate:'',
           blockByIssueId:'',
           blockingIssueId:'',
