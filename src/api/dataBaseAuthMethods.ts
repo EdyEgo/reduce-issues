@@ -4,7 +4,7 @@ import { signInFirebase} from '../composables/firebase/auth/useSignIn'
 import  {signInWithProviderFirebase} from '../composables/firebase/auth/useSignInWithProvider'
 import {signOutFirebase} from '../composables/firebase/auth/useSignOut'
 import { watchUserStateFirebase} from '../composables/firebase/auth/useUserState'
-import { } from '../composables/firebase/post/postDocument'
+
 
 // we use firebase as  backend
 
@@ -13,7 +13,7 @@ export async function signUp({ email, firstName,lastName, password }:
    
         try{
             return await signUpFirebase({ email, firstName,lastName, password })
-        }catch(e){
+        }catch(e:any){
           return {error:true,message:'Could not sign up !'}
         }
   
