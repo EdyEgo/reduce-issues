@@ -4,8 +4,8 @@ export interface Issue {
       pictureListURL:string[] | null,// here are the urls that are gonna be stored in firebase ,
       text:string
     },
-    status:{name:string,icon:string},
-    priority:{name:string,icon:string},
+    status:{name:string,icon:string,index:number} | null,
+    priority:{name:string,icon:string,index:number} | null,
     label: any,
     dueDate:any,
     blockByIssueId:string,
@@ -13,7 +13,7 @@ export interface Issue {
     parentIssueId?:string,
     assignedToUserId:string,
     
-    updatedAt:any,
+    updatedAt?:any,
 
 
   }

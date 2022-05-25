@@ -71,24 +71,21 @@ export default function NewIssueModal() {
     (state: any) => state.issues.newIssueModalOpenStatus
   ); 
 
-  const team = useSelector(
-    (state: any) => state.team.teamList
-  ); 
+ const selectedWorkspace = useSelector((state:any)=>state.workspace.selectedWorkSpace)
 
   const teamsList = useSelector(
     (state: any) => state.team.teamList
   );
 
-  const [selectedTitle,setSelectedTitle] = React.useState('') 
-  const [selectedPictures,setSelectedPictures] = React.useState('') 
-  const [selectedText,setSelectedText] = React.useState('') 
+ 
+
   const [selectedTeamObject,setSelectedTeamObject] = React.useState([])
   const [selectedTeam,setSelectedTeam] = React.useState('') 
   const [selectedMemberObject,setSelectedMemberObject] = React.useState({photoURL:null,name:"Assignee",id:null})
   const [selectedStatus,setSelectedStatus] = React.useState(null)
   const [selectedPriority,setSelectedPriority] = React.useState(null)
   const [selectedLabel,setSelectedLabel] = React.useState(null)
-
+ const [selectedDueDate,setSelectedDueDate] = React.useState(null)
   
 
 
@@ -98,7 +95,7 @@ export default function NewIssueModal() {
     text:'',
     pictures:null,
   
-    dueDate:null,
+ 
     blockByIssueId:null,
     blockingIssueId:null,
     assignedToUserId:null
@@ -106,6 +103,7 @@ export default function NewIssueModal() {
 
    
   });
+
 
 
 
@@ -158,15 +156,12 @@ function createImgs(){
   }
   
   async function handleSaveChanges(){ 
-   // helpers postIssue,addPicturesURLToIssue , addIssuePicturesToStore
-     
-     // first post the issue then we add the pictures to the store if we have any , then we add the 
-     // the urls to the issue
-
+   
+ 
  
     const {pictures,teamId,title,text , 
       
-      dueDate,
+    
       blockByIssueId,
       blockingIssueId,
       assignedToUserId} = values
@@ -180,14 +175,26 @@ function createImgs(){
       status:selectedStatus,
       priority:selectedPriority,
       label:selectedLabel,
-      dueDate,
+      dueDate:selectedDueDate,
       blockByIssueId,
       blockingIssueId,
-  
+      updatedAt:null,
       assignedToUserId,
       
       
      }
+
+
+     // helpers postIssue,addPicturesURLToIssue , addIssuePicturesToStore
+     
+     // first post the issue then we add the pictures to the store if we have any , then we add the 
+     // the urls to the issue
+
+
+  //  const postedIssue = await postIssue({newIssue:newIssueObject,workspaceId:selectedWorkspace.id,teamId}) // left here
+
+
+     //////////
      // postIssue()
      
      //then post the pictures
@@ -198,7 +205,7 @@ function createImgs(){
 
     // works
     // const fileResult = await postFile({file:values.pictures[0],path:`testing/staff/${values.pictures[0].name}`})
-    console.log('my staff are ',values , 'and this',newIssueObject)//'but my upload is',fileResult.data ,fileResult.data.snapshot, fileResult.data.downloadURL )
+    console.log('my staff are ',values , 'and this',newIssueObject,'my date is ',selectedDueDate)//'but my upload is',fileResult.data ,fileResult.data.snapshot, fileResult.data.downloadURL )
   }
  
   
@@ -223,10 +230,7 @@ function createImgs(){
         <DialogContent dividers>
     
          <div className="attach-content-row">
-          
-         <div className="new-issue-title-container">{selectedTitle}</div>
-           <div className="new-issue-picture-attach-container">{selectedPictures}</div>
-           <div className="new-issue-text-container">{selectedText}</div> 
+         
            <Box
             component="form"
            
@@ -273,8 +277,9 @@ function createImgs(){
             
           </Box>
          </div>
-         <div className="buttons-row flex justify-center items-center gap-12">
-         <div className="first-half">
+         <div className="buttons-row flex flex-col">
+           <div className="labels-container flex justify-center items-center">
+           <div className="first-half">
          {<SelectDialogArrayBased  itemsList={statusList} labelTitle={'No status'} selectedItem={selectedStatus} setSelectedItem={setSelectedStatus} />}
           {<SelectDialogArrayBased itemsList={priorityList} labelTitle={'No priority'} selectedItem={selectedPriority} setSelectedItem={setSelectedPriority} />}
          </div>
@@ -284,10 +289,14 @@ function createImgs(){
        
          <AssigneeSelector teamMembersList={selectedTeamObject} selectedMember={selectedMemberObject} setSelectedMember={setSelectedAssigneeTeamMember} labelTitle="Assignee" />
          </div>
+           </div>
 
 
+      <div className="due-date-cotaniner  flex justify-center items-center my-2">
+           <SelectDate setValue={setSelectedDueDate} value={selectedDueDate} />
+      </div>
          
-         {/* <SelectDate setValue={} value={} /> */}
+        
 
 
          {/*  setting the parent issue must wait  , we need to first see how we get the issues lists from the teams */}

@@ -23,7 +23,7 @@ const initialState:{
 
 
 export const workspaceSlice = createSlice({
-    name:'team',
+    name:'workspace',
     initialState,
     reducers:{
 
