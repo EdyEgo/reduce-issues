@@ -8,11 +8,11 @@ interface SelectProps{
     itemsList:{[key:string]:any},
     setSelectedItem:(argument:any)=>void,
     selectedItem:string,
-    labelTitle:string,
+    labelTitle:string,disableButton:boolean,
     returnIdAsValue?:boolean
 }
 
- const  SelectAutoWidth: React.FC<SelectProps>  = ({itemsList,setSelectedItem,selectedItem,labelTitle,returnIdAsValue})=> {
+ const  SelectAutoWidth: React.FC<SelectProps>  = ({itemsList,setSelectedItem,selectedItem,labelTitle,returnIdAsValue,disableButton})=> {
 
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -41,7 +41,7 @@ interface SelectProps{
     <div>
       <FormControl sx={{ m: 1, minWidth: 180 }}>
         <InputLabel id="demo-simple-select-autowidth-label">{labelTitle}</InputLabel>
-        <Select
+        <Select disabled={disableButton}
           labelId="demo-simple-select-autowidth-label"
           id="demo-simple-select-autowidth"
           value={selectedItem}

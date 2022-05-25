@@ -11,17 +11,20 @@ export async function postIssue ({newIssue,teamId,workspaceId}:{workspaceId:stri
          useAddDocument:true,
          inputObject:{...newIssue,updatedAt:serverTimestamp()},
         })
-   return {data:{...postedIssue.data(),id:postedIssue.id},error:false}
+    
+   return {data:{id:postedIssue.id},error:false}
  }catch(e:any){
+    
  return {error:true,message:'Could not post the issue'}
  }
 }
 
 export async function addPicturesURLToIssue({teamId,workspaceId,issueId,pictureListURL}:{pictureListURL:string[],workspaceId:string,teamId:string,issueId:string}){
     try{
+      
          await postNewDocument({
-            collectionSelected:`workspaces/${workspaceId}/teams/${teamId}/issues/${issueId}`,
-            
+            collectionSelected:`workspaces/${workspaceId}/teams/${teamId}/issues`,
+            documentName:issueId,
             inputObject:{content:{pictureListURL}},
            })
       return {data:true,error:false}

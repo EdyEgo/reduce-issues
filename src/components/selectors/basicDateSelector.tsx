@@ -5,7 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 
-export default function MaterialUIPickers({value,setValue}:{value:Date | null,setValue:(argument:any)=>void}) {
+export default function MaterialUIPickers({value,setValue,disableButton}:{value:Date | null,setValue:(argument:any)=>void,disableButton:boolean}) {
 
  if(value === null) value = new Date()
   const handleChange = (newValue: Date | null) => {
@@ -18,7 +18,7 @@ export default function MaterialUIPickers({value,setValue}:{value:Date | null,se
       <Stack spacing={2}>
        
 
-        <DateTimePicker
+        <DateTimePicker disabled={disableButton}
           label=" Set due date"
           value={value}
           onChange={handleChange}

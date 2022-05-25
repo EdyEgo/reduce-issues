@@ -15,11 +15,11 @@ interface SelectProps{
     itemsList:{name:string,icon:string}[],
     setSelectedItem:(argument:any)=>void,
     selectedItem:{index:number,icon:string,name:string} | null,
-    labelTitle:string,
+    labelTitle:string,disableButton:boolean
     
 }
 
- const  SelectAutoWidth: React.FC<SelectProps>  = ({itemsList,setSelectedItem,selectedItem,labelTitle})=> {
+ const  SelectAutoWidth: React.FC<SelectProps>  = ({itemsList,setSelectedItem,selectedItem,labelTitle,disableButton})=> {
 
 
 
@@ -95,6 +95,7 @@ interface SelectProps{
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
+        disabled={disableButton}
       >
           {selectedItem === null && labelTitle}
        {selectedItem !== null && typeof selectedItem?.index === 'number' && <MenuItem value={selectedItem.index}>{returnElementOption(selectedItem)}</MenuItem>}

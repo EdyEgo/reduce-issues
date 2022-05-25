@@ -13,11 +13,11 @@ interface SelectProps{
     teamMembersList:{[key:string]:any},
     setSelectedMember:(argument:any)=>void,
     selectedMember:{name:string,photoURL:string | null,id:string | null},
-    labelTitle:string,
+    labelTitle:string,disableButton:boolean
     
 }
 
- const  SelectAutoWidth: React.FC<SelectProps>  = ({teamMembersList,setSelectedMember,selectedMember,labelTitle})=> {
+ const  SelectAutoWidth: React.FC<SelectProps>  = ({teamMembersList,setSelectedMember,selectedMember,labelTitle,disableButton})=> {
 
   const workspaceMembers = useSelector((state:any)=>state.workspace.members)
 
@@ -106,6 +106,7 @@ interface SelectProps{
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
+        disabled={disableButton}
       >
           {selectedMember.id === null && labelTitle}
        {selectedMember.id !== null && <MenuItem value={selectedMember.id}>{returnElementOption(selectedMember)}</MenuItem>}

@@ -21,6 +21,7 @@ import SelectDialogArrayBased from '../../selectors/basicArrayBased'
 import AssigneeSelector from '../../selectors/assigneeSelector'
 import SelectPictures from '../../selectors/selectPictures' 
 import SelectDate from '../../selectors/basicDateSelector'
+import LoadingButton from '@mui/lab/LoadingButton';
 import {labelsList,priorityList,statusList} from '../../../composables/modalOptions/issues'
 
 
@@ -78,7 +79,7 @@ export default function NewIssueModal() {
   );
 
  
-
+  const [loading,setLoading] = React.useState(false)
   const [selectedTeamObject,setSelectedTeamObject] = React.useState([])
   const [selectedTeam,setSelectedTeam] = React.useState('') 
   const [selectedMemberObject,setSelectedMemberObject] = React.useState({photoURL:null,name:"Assignee",id:null})
@@ -88,6 +89,7 @@ export default function NewIssueModal() {
  const [selectedDueDate,setSelectedDueDate] = React.useState(null)
   
 
+ 
 
   const [values, setValues] = React.useState<any>({
     teamId:'',
@@ -156,7 +158,11 @@ function createImgs(){
   }
   
   async function handleSaveChanges(){ 
+
+    
+
    
+    setLoading(true)
  
  
     const {pictures,teamId,title,text , 
@@ -191,21 +197,35 @@ function createImgs(){
      // the urls to the issue
 
 
-  //  const postedIssue = await postIssue({newIssue:newIssueObject,workspaceId:selectedWorkspace.id,teamId}) // left here
-
-
+   const postedIssue:any = await postIssue({newIssue:newIssueObject,workspaceId:selectedWorkspace.id,teamId}) // left here
+   
+    if(pictures === null || pictures?.length === 0 || postedIssue.error) {
+      setLoading(false)
+      closeNewIssueModal()
+      return 
+    }
+    // add issue pictures to the storage
+    const picturesData:any = await addIssuePicturesToStore({beforeGeneralPath:`${selectedWorkspace.id}/${teamId}/${postedIssue.data.id}`,
+    files:pictures })
+    
+ 
+    if(picturesData.error) {
+      setLoading(false)
+      closeNewIssueModal()
+      return
+    }
+    const mapPicturesURL = picturesData.data.files.map((pictureFile:{snapshot:any,downloadURL:string})=>pictureFile.downloadURL)
+    // add pictures URL to the created issue
+ 
+   const updatedIssue = await addPicturesURLToIssue({issueId:postedIssue.data.id,
+    teamId,workspaceId:selectedWorkspace.id,
+    pictureListURL:mapPicturesURL})
+   
+    
+    closeNewIssueModal()
+    setLoading(false)
      //////////
-     // postIssue()
-     
-     //then post the pictures
-     // here update picturesURL on issue 
-    //  addPicturesToIssue({issueId,pictureListURL,teamId,workspaceId})
- // postMultipleFiles
-
-
-    // works
-    // const fileResult = await postFile({file:values.pictures[0],path:`testing/staff/${values.pictures[0].name}`})
-    console.log('my staff are ',values , 'and this',newIssueObject,'my date is ',selectedDueDate)//'but my upload is',fileResult.data ,fileResult.data.snapshot, fileResult.data.downloadURL )
+  
   }
  
   
@@ -223,7 +243,7 @@ function createImgs(){
          <div className="title-and-select-team-container flex flex-col items-center">
            <div className="title"> Create a new issue</div>
             <div className="select-team">
-              <SelectDialogObjectBased itemsList={teamsList} selectedItem={selectedTeam} setSelectedItem={updateTeam} labelTitle="Select Team" returnIdAsValue={true} />
+              <SelectDialogObjectBased disableButton={loading}  itemsList={teamsList} selectedItem={selectedTeam} setSelectedItem={updateTeam} labelTitle="Select Team" returnIdAsValue={true} />
             </div>
          </div>
         </BootstrapDialogTitle>
@@ -280,20 +300,20 @@ function createImgs(){
          <div className="buttons-row flex flex-col">
            <div className="labels-container flex justify-center items-center">
            <div className="first-half">
-         {<SelectDialogArrayBased  itemsList={statusList} labelTitle={'No status'} selectedItem={selectedStatus} setSelectedItem={setSelectedStatus} />}
-          {<SelectDialogArrayBased itemsList={priorityList} labelTitle={'No priority'} selectedItem={selectedPriority} setSelectedItem={setSelectedPriority} />}
+         {<SelectDialogArrayBased disableButton={loading}  itemsList={statusList} labelTitle={'No status'} selectedItem={selectedStatus} setSelectedItem={setSelectedStatus} />}
+          {<SelectDialogArrayBased disableButton={loading}  itemsList={priorityList} labelTitle={'No priority'} selectedItem={selectedPriority} setSelectedItem={setSelectedPriority} />}
          </div>
          <div className="second-half">
-         {<SelectDialogArrayBased itemsList={labelsList} labelTitle={'No Label'} selectedItem={selectedLabel} setSelectedItem={setSelectedLabel} />}
+         {<SelectDialogArrayBased disableButton={loading}  itemsList={labelsList} labelTitle={'No Label'} selectedItem={selectedLabel} setSelectedItem={setSelectedLabel} />}
          
        
-         <AssigneeSelector teamMembersList={selectedTeamObject} selectedMember={selectedMemberObject} setSelectedMember={setSelectedAssigneeTeamMember} labelTitle="Assignee" />
+         <AssigneeSelector disableButton={loading} teamMembersList={selectedTeamObject} selectedMember={selectedMemberObject} setSelectedMember={setSelectedAssigneeTeamMember} labelTitle="Assignee" />
          </div>
            </div>
 
 
       <div className="due-date-cotaniner  flex justify-center items-center my-2">
-           <SelectDate setValue={setSelectedDueDate} value={selectedDueDate} />
+           <SelectDate disableButton={loading} setValue={setSelectedDueDate} value={selectedDueDate} />
       </div>
          
         
@@ -305,14 +325,20 @@ function createImgs(){
          </div>
         </DialogContent>
        
-          <div className="container-actions flex justify-between my-1">
-          <div className="attach-pictures-half">
-              <SelectPictures setSelectedItem={updatePictures}/>
+          <div className="container-actions flex justify-between items-center my-1">
+          <div className="attach-pictures-half ">
+              <SelectPictures  setSelectedItem={updatePictures} disableButton={loading}/>
           </div>
-          <div className="save-changes-half">
-              <Button autoFocus onClick={handleSaveChanges}>
-                Save changes
-              </Button>
+          <div className="save-changes-half p-1 pr-2">
+             
+              <LoadingButton
+               onClick={handleSaveChanges}
+              loading={loading}
+              variant="outlined"
+              disabled={loading}
+            >
+          Save changes
+        </LoadingButton>
           </div>
           </div>
 

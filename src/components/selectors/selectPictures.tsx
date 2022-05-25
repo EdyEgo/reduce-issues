@@ -10,16 +10,16 @@ const Input = styled('input')({
 });
 
 interface UploadButtonsProp{
-    setSelectedItem:(argument:any)=>void,
+    setSelectedItem:(argument:any)=>void,disableButton:boolean
 }
 
- const  UploadButtons: React.FC<UploadButtonsProp> = ({setSelectedItem})=> {
+ const  UploadButtons: React.FC<UploadButtonsProp> = ({setSelectedItem , disableButton})=> {
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
       
       <label htmlFor="icon-button-file">
         <Input accept="image/*" id="icon-button-file" type="file" onChange={setSelectedItem}/>
-        <IconButton color="primary" aria-label="upload picture" component="span">
+        <IconButton disabled={disableButton} color="primary" aria-label="upload picture" component="span">
           <PhotoCamera />
         </IconButton>
       </label>
