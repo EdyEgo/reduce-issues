@@ -17,6 +17,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import SelectDialogObjectBased from '../../selectors/basicObjectBased'
+import SelectDialogArrayBased from '../../selectors/basicArrayBased'
 import AssigneeSelector from '../../selectors/assigneeSelector'
 import SelectPictures from '../../selectors/selectPictures' 
 import SelectDate from '../../selectors/basicDateSelector'
@@ -77,19 +78,26 @@ export default function NewIssueModal() {
   const teamsList = useSelector(
     (state: any) => state.team.teamList
   );
-  const [selectedTeam,setSelectedTeam] = React.useState('') 
+
   const [selectedTitle,setSelectedTitle] = React.useState('') 
   const [selectedPictures,setSelectedPictures] = React.useState('') 
   const [selectedText,setSelectedText] = React.useState('') 
+  const [selectedTeamObject,setSelectedTeamObject] = React.useState([])
+  const [selectedTeam,setSelectedTeam] = React.useState('') 
+  const [selectedMemberObject,setSelectedMemberObject] = React.useState({photoURL:null,name:"Assignee",id:null})
+  const [selectedStatus,setSelectedStatus] = React.useState(null)
+  const [selectedPriority,setSelectedPriority] = React.useState(null)
+  const [selectedLabel,setSelectedLabel] = React.useState(null)
+
   
+
+
   const [values, setValues] = React.useState<any>({
     teamId:'',
     title:'',
     text:'',
     pictures:null,
-    status:null,
-    priority:null,
-    label: null,
+  
     dueDate:null,
     blockByIssueId:null,
     blockingIssueId:null,
@@ -99,8 +107,7 @@ export default function NewIssueModal() {
    
   });
 
-  const [selectedTeamObject,setSelectedTeamObject] = React.useState([])
-  const [selectedMemberObject,setSelectedMemberObject] = React.useState({photoURL:null,name:"Assignee",id:null})
+
 
   const handleChange =
     (prop: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,13 +118,15 @@ export default function NewIssueModal() {
    
   setValues({ ...values, assignedToUserId: memberObject.id });
   setSelectedMemberObject(memberObject)
-  // setSelectedTeamObject(id)
+
  }
 
 
  const updateTeam = (teamId:string)=>{
+  if(selectedMemberObject.id)setSelectedMemberObject({photoURL:null,name:"Assignee",id:null}) // delete old added member on changeing the team
   setValues({ ...values,  teamId});
-  setSelectedTeamObject(teamsList.find((team:any)=>team.id === teamId).membersId)
+  setSelectedTeamObject(teamsList.find((team:any)=>team.id === teamId).membersId) 
+  setSelectedTeam(teamId)
  } 
 
  
@@ -155,9 +164,8 @@ function createImgs(){
      // the urls to the issue
 
  
-    const {pictures,teamId,title,text , status,
-      priority,
-      label,
+    const {pictures,teamId,title,text , 
+      
       dueDate,
       blockByIssueId,
       blockingIssueId,
@@ -169,9 +177,9 @@ function createImgs(){
         pictureListURL:null,// here are the urls that are gonna be stored in firebase ,
         text
       },
-      status,
-      priority,
-      label,
+      status:selectedStatus,
+      priority:selectedPriority,
+      label:selectedLabel,
       dueDate,
       blockByIssueId,
       blockingIssueId,
@@ -190,7 +198,7 @@ function createImgs(){
 
     // works
     // const fileResult = await postFile({file:values.pictures[0],path:`testing/staff/${values.pictures[0].name}`})
-    // console.log('my staff are ',values,)//'but my upload is',fileResult.data ,fileResult.data.snapshot, fileResult.data.downloadURL )
+    console.log('my staff are ',values , 'and this',newIssueObject)//'but my upload is',fileResult.data ,fileResult.data.snapshot, fileResult.data.downloadURL )
   }
  
   
@@ -265,15 +273,20 @@ function createImgs(){
             
           </Box>
          </div>
-         <div className="buttons-row ">
-           {/* labelsList,priorityList,statusList */}
-           {/* one you selected a team object then you must take only the members with in that list for assignee */}
-
-         {/* <SelectDialogObjectBased itemsList={statusList} selectedItem={statusList[0].name} setSelectedItem={} labelTitle="Backlog" /> */}
-         {/* <SelectDialogObjectBased itemsList={priorityList} selectedItem={priorityList[0].name} setSelectedItem={} labelTitle="Priority" /> */}
-         {/* <SelectDialogObjectBased itemsList={} selectedItem={} setSelectedItem={} labelTitle="Assignee" returnIdAsValue={true} /> */}
+         <div className="buttons-row flex justify-center items-center gap-12">
+         <div className="first-half">
+         {<SelectDialogArrayBased  itemsList={statusList} labelTitle={'No status'} selectedItem={selectedStatus} setSelectedItem={setSelectedStatus} />}
+          {<SelectDialogArrayBased itemsList={priorityList} labelTitle={'No priority'} selectedItem={selectedPriority} setSelectedItem={setSelectedPriority} />}
+         </div>
+         <div className="second-half">
+         {<SelectDialogArrayBased itemsList={labelsList} labelTitle={'No Label'} selectedItem={selectedLabel} setSelectedItem={setSelectedLabel} />}
+         
+       
          <AssigneeSelector teamMembersList={selectedTeamObject} selectedMember={selectedMemberObject} setSelectedMember={setSelectedAssigneeTeamMember} labelTitle="Assignee" />
-         {/* <SelectDialogObjectBased itemsList={labelsList} selectedItem="" setSelectedItem={} labelTitle="Label" /> */}
+         </div>
+
+
+         
          {/* <SelectDate setValue={} value={} /> */}
 
 

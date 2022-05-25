@@ -6,7 +6,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { useSelector } from "react-redux";
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
-
+import {returnShortVersionString} from '../../composables/generalHelpers/returnShorterWord'
 
 
 interface SelectProps{
@@ -25,7 +25,9 @@ interface SelectProps{
 
   function returnWorspaceMemberObjectById(id:string){
       return workspaceMembers.find((member:any)=>member.id === id)
-  }
+  } 
+
+
 
   function returnElementOption(userObject:any){
     
@@ -49,8 +51,8 @@ interface SelectProps{
                     )}
          </div>
          <div className="name-container flex gap-1">
-             <div className="first-name">{userObject.firstName} </div>
-             <div className="last-name">{userObject.lastName}</div>
+             <div className="first-name">{returnShortVersionString(10,userObject.firstName)} </div>
+             <div className="last-name">{ returnShortVersionString(10,userObject.lastName)}</div>
              
          </div>
                 
@@ -74,16 +76,21 @@ interface SelectProps{
   const handleClose = () => {
     setAnchorEl(null);
   }; 
-
+ 
+  
   function generateItemList(){
     const list = Object.entries(teamMembersList)
-    if(list.length <= 0) return []
+    if(list.length <= 0) return null
   
-        return list.map((item)=>{
+     const membersList =  list.map((item)=>{
             const userObject = returnWorspaceMemberObjectById(item[0])
           return (<MenuItem value={userObject} onClick={()=>{setSelectedMember(userObject);handleClose()}}>{returnElementOption(userObject)}</MenuItem>)
       })
-  
+      const unassignedObject = {firstName:'Unassigned',lastName:'',photoURL:null,id:null}
+      membersList.unshift(
+        <MenuItem value={''} onClick={()=>{setSelectedMember(unassignedObject);handleClose()}}>{returnElementOption(unassignedObject)}</MenuItem>
+      )
+      return membersList
 
   
 
@@ -93,7 +100,7 @@ interface SelectProps{
     <div>
     
 
-<Button
+ <Button
         id="basic-button"
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
@@ -103,6 +110,7 @@ interface SelectProps{
           {selectedMember.id === null && labelTitle}
        {selectedMember.id !== null && <MenuItem value={selectedMember.id}>{returnElementOption(selectedMember)}</MenuItem>}
       </Button>
+      {Object.entries(teamMembersList).length >= 1 &&
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
@@ -113,7 +121,7 @@ interface SelectProps{
         }}
       >
         {generateItemList()}
-      </Menu>
+      </Menu>}
     </div>
   );
 } 

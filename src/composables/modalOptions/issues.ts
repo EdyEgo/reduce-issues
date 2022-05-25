@@ -11,7 +11,7 @@ export const statusList = [
 ]
 
 export const priorityList = [
-    {name:'No priority',icon:'noPriority'},
+    
     {name:'Urgent',icon:'priorityUrgent'},
     {name:'High',icon:'priorityHigh'},
     {name:'Medium',icon:'priorityMedium'},
