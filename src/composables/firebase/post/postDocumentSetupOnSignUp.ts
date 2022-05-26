@@ -146,7 +146,6 @@ export default async function postDocumentSetupOnSugnUp(user:any,userObject:{fir
           type:'action',// may be change
           action:{
             iconType:'',
-    
             actionMessage:'created the issue',
             fromMessage: null, 
             toMessage:null

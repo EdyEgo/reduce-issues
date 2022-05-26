@@ -16,7 +16,7 @@ const TeamOptionsTabs: React.FC<TeamOptionsTabsProps> = ({teamObject}) => {
         (state: any) => state.workspace.selectedWorkSpace
       )
 
-const generalLink = `/${selectedWorkspace.identified.toLowerCase()}/team/${teamObject.identified.toLowerCase()}/`
+const generalLink = `/${selectedWorkspace.workspaceURL.toLowerCase()}/team/${teamObject.identified.toLowerCase()}/`
 
     return (
       <>

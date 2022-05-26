@@ -173,7 +173,7 @@ export default function MenuListComposition({
   }
 
   return (
-    <Stack direction="row" spacing={5} className="absolute top-7 left-9">
+    <Stack direction="row" spacing={5} className="absolute top-7 left-9 z-10">
       <div>
         <Popper
           open={open}

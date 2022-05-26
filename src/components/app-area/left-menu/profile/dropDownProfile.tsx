@@ -77,7 +77,7 @@ export default function MenuListComposition({
   }
 
   return (
-    <Stack direction="row" spacing={4} className="absolute top-7 left-8">
+    <Stack direction="row" spacing={4} className="absolute top-7 left-8 z-10">
       <div>
         {/* <Button
           ref={anchorRef}

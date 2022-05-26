@@ -213,7 +213,6 @@ function createImgs(){
   await postIssueActivity({createdIssueId:postedIssue.data.id,creatorId:authUser.uid,teamId,workspaceId:selectedWorkspace.id,
     issueTypeIssue:{
       iconType:'userAvatar',
-
       actionMessage:'created the issue',
       fromMessage: null, 
       toMessage:null
