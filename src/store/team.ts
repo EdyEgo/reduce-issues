@@ -1,7 +1,7 @@
 import {createSlice } from '@reduxjs/toolkit'
 
-const initialState:{selectedTeam:{name:string,id:string},teamList:{[key:string]:any}} = {
-   selectedTeam:{name:'My First Team',id:''},teamList:{}
+const initialState:{selectedTeam:{name:string,id:string},teamList:{[key:string]:any}[] | []} = {
+   selectedTeam:{name:'My First Team',id:''},teamList:[]
 } 
 
 

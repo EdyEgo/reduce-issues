@@ -5,13 +5,15 @@ interface Workspace {
     photoURL:string | null,
     identified:string,
     timezone:string,
-    workspaceURL:string}
+    workspaceURL:string
+    membersId:{[key:string]:{role:string}} | null
+}
 
 const initialState:{
     selectedWorkSpace:Workspace,members:any[] // ordered by invitedAt
     userWorkspaces:{[key:string]:Workspace}
     } = {
-   selectedWorkSpace:{name:'Loading Workspace' , id:'', photoURL:null,
+   selectedWorkSpace:{name:'Loading Workspace' , id:'', photoURL:null,membersId:null,
    identified:'MFWU' , 
    timezone:'' , 
    workspaceURL:'myfirstUnloaded'},userWorkspaces:{},members:[]

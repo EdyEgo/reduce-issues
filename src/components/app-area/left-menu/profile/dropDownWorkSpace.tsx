@@ -111,7 +111,7 @@ export default function MenuListComposition({
     const newWorkspaceSelected = workspaces[selectedWorkspaceId];
     dispatch(changeSelectedWorkSpaceStore(newWorkspaceSelected));
     // see if the teams are loaded and the issues
-    console.log("delete this when you have your rotes right!!!!!");
+    console.log("delete this when you have your routes right!!!!!");
     //this part is not gonna be needed once you make the routes right <-----
   }
 
