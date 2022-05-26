@@ -26,7 +26,7 @@ const YourTeams: React.FC<YourTeamsProps> = () => {
         if(selectedWorkspace.membersId[authUser.uid].role === "Owner"){
             // you can see all teams in this workspace as Owner
             
-            return teamsList.map((team:any)=><TeamOneEntity teamId={team.id} key={team.id}/>)
+            return teamsList.map((team:any)=><TeamOneEntity teamObject={team} key={team.id}/>)
         }
    
     const filteredTeamList:any[] = []
@@ -34,7 +34,7 @@ const YourTeams: React.FC<YourTeamsProps> = () => {
             teamsList.forEach((team)=>{
                 const isUserATeamMember = Object.hasOwn(team.membersId,authUser.uid)
                 if(isUserATeamMember){
-                    filteredTeamList.push(<TeamOneEntity teamId={team.id} key={team.id}/>)
+                    filteredTeamList.push(<TeamOneEntity teamObject={team} key={team.id}/>)
                 }
             })
             return filteredTeamList

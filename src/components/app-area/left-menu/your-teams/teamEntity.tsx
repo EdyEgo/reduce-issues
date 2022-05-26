@@ -1,11 +1,15 @@
 import {useSelector} from 'react-redux'
 import {Link} from 'react-router-dom'
+import TeamAccordion from './teamAccordion'
+import {useState} from 'react'
 
 interface TeamEntityProps {
-    teamId:string
+    teamObject:{id:string,name:string,photoURL:null | string,identified:string}
 }
  
-const TeamEntity: React.FC<TeamEntityProps> = ({teamId}) => {
+const TeamEntity: React.FC<TeamEntityProps> = ({teamObject}) => {
+
+    const [expanded,setExpanded] = useState(false)
     
     const teamsList:any[] | [] = useSelector(
         (state: any) => state.team.teamList
@@ -18,7 +22,7 @@ const TeamEntity: React.FC<TeamEntityProps> = ({teamId}) => {
   // the link should look like soo , workspaceIdentifier/team/teamIdentifier/selectedTab(ex: all , active , backlog)
  //
 
-    return ( <div className="one-team-item">{teamId}</div> );
+    return ( <div className="one-team-item"><TeamAccordion expanded={expanded} setExpanded={setExpanded} teamObject={teamObject} /></div> );
 }
  
 export default TeamEntity;
