@@ -4,7 +4,7 @@ import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { changenewIssueModalOpenStatus } from "../../../store/issues";
 
-import {postIssue,addPicturesURLToIssue , addIssuePicturesToStore} from '../../../api/dataBaseIssuesMethods'
+import {postIssue,postIssueActivity,addPicturesURLToIssue , addIssuePicturesToStore} from '../../../api/dataBaseIssuesMethods'
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 
@@ -68,6 +68,7 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
 
 export default function NewIssueModal() {
   const dispatch = useDispatch();
+  const authUser = useSelector((state:any)=>state.auth.user)
   const newIssueModalIsOpen = useSelector(
     (state: any) => state.issues.newIssueModalOpenStatus
   ); 
@@ -199,11 +200,26 @@ function createImgs(){
 
    const postedIssue:any = await postIssue({newIssue:newIssueObject,workspaceId:selectedWorkspace.id,teamId}) // left here
    
-    if(pictures === null || pictures?.length === 0 || postedIssue.error) {
+  
+   
+   if(pictures === null || pictures?.length === 0 || postedIssue.error) {
       setLoading(false)
       closeNewIssueModal()
       return 
-    }
+    } 
+  
+    // add activity tracker 
+
+  await postIssueActivity({createdIssueId:postedIssue.data.id,creatorId:authUser.uid,teamId,workspaceId:selectedWorkspace.id,
+    issueTypeIssue:{
+      iconType:'userAvatar',
+
+      actionMessage:'created the issue',
+      fromMessage: null, 
+      toMessage:null
+    },type:"action"})
+
+
     // add issue pictures to the storage
     const picturesData:any = await addIssuePicturesToStore({beforeGeneralPath:`${selectedWorkspace.id}/${teamId}/${postedIssue.data.id}`,
     files:pictures })

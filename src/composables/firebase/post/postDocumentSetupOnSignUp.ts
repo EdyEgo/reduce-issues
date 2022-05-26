@@ -143,9 +143,15 @@ export default async function postDocumentSetupOnSugnUp(user:any,userObject:{fir
         collectionSelectedPath += `/${createdIssueToSecondTeam.id}/activites`
         await postNewDocument({collectionSelected:collectionSelectedPath,
         inputObject:{ 
-          type:'action',
-          actionType:'create',
-          creatorId:'app',// if no id then the app has created the issue
+          type:'action',// may be change
+          action:{
+            iconType:'',
+    
+            actionMessage:'created the issue',
+            fromMessage: null, 
+            toMessage:null
+          },
+          creatorId:null,// if no id then the app has created the issue
           
         },useBatch:batch})
     

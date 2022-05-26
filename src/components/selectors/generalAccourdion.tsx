@@ -8,10 +8,10 @@ import MuiAccordionSummary, {
   AccordionSummaryProps,
 } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
-import TeamOptions from './teamOptionsTabs'
+
 
 interface TeamItem {
-  teamObject:{id:string,name:string,photoURL:null | string,identified:string},
+  title:any,children:any
   expanded:boolean, 
   setExpanded:(argument:any)=>void
 }
@@ -52,7 +52,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
-const  CustomizedAccordions: React.FC<TeamItem> = ({expanded,setExpanded,teamObject})=> {
+const  CustomizedAccordions: React.FC<TeamItem> = ({expanded,setExpanded,children,title})=> {
  
 
  
@@ -65,17 +65,11 @@ const  CustomizedAccordions: React.FC<TeamItem> = ({expanded,setExpanded,teamObj
     <div>
       <Accordion expanded={expanded } onChange={()=>handleChange()}>
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-          <div className="team-photo flex gap-2">
-           {teamObject.photoURL && <img className='m-2' src={teamObject.photoURL} alt="" />} 
-           {teamObject.photoURL === null && <TeamIcon className='m-2'/>}
-          </div>
-          <div className="team-name">{teamObject.name}</div>
+          {title}
          
         </AccordionSummary>
         <AccordionDetails>
-          <div className="team-options">
-            <TeamOptions teamObject={teamObject}/>
-          </div>
+   {children}
         </AccordionDetails>
       </Accordion>
    

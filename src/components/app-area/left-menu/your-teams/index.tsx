@@ -1,6 +1,7 @@
-import { ReactComponentElement, useState} from 'react'
+import {  useState} from 'react'
 import {useSelector} from 'react-redux'
 import TeamOneEntity from './teamEntity'
+import GeneralAccordion from '../../../selectors/generalAccourdion'
 
 interface YourTeamsProps {
     
@@ -10,6 +11,8 @@ const YourTeams: React.FC<YourTeamsProps> = () => {
 
      // load all the teams if the user is  the owner of the workspace 
   // if not , then load only the teams associated with the user(where is at least the member of )
+ 
+  const [expanded,setExpanded] = useState(false)
 
   const authUser = useSelector((state:any)=>state.auth.user)
 
@@ -45,12 +48,8 @@ const YourTeams: React.FC<YourTeamsProps> = () => {
     return (  
         <>
         <div className="team-list">
-            <div className="team-list__title">
-                Your teams
-            </div>
-            <div className="team-list__item-list">
-               {returnFilteredTeamList()}
-            </div>
+ 
+            <GeneralAccordion expanded={expanded} setExpanded={setExpanded} title={'Your teams'} children={returnFilteredTeamList()}/>
         </div>
         
         </>
