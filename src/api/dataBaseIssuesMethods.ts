@@ -1,6 +1,8 @@
 import { postNewDocument} from '../composables/firebase/post/postDocument' 
 import {postMultipleFiles} from './dataBaseStorageMethods'
-import {serverTimestamp} from 'firebase/firestore'
+import {serverTimestamp,writeBatch,increment} from 'firebase/firestore'
+
+import {db} from '../firebase'
 import type { Issue} from '../types/issues' 
 
 interface ActionTypeIssue{
@@ -14,14 +16,24 @@ interface CommentTypeIssue{
     picturesURL:string[] | null,text:string
 }
 
-export async function postIssue ({newIssue,teamId,workspaceId}:{workspaceId:string,teamId:string,newIssue:Issue}){
- try{
+export async function postIssue ({newIssue,teamId,teamIdentified,workspaceId,issuesTeamNumber}:{workspaceId:string,teamId:string,teamIdentified:string,newIssue:Issue,issuesTeamNumber:number}){
+    const batch = writeBatch(db); 
+ 
+    try{
+        // post issue
      const postedIssue = await postNewDocument({
          collectionSelected:`workspaces/${workspaceId}/teams/${teamId}/issues`,
          useAddDocument:true,
-         inputObject:{...newIssue,updatedAt:serverTimestamp()},
+         inputObject:{...newIssue,identified:teamIdentified + `${issuesTeamNumber + 1}`,updatedAt:serverTimestamp()},useBatch:batch
         })
-    
+
+
+     // increment issues number
+    await postNewDocument({collectionSelected:`workspace/${workspaceId}/teams`,documentName:teamId,inputObject:{
+         issuesNumber:increment(1)
+     },useBatch:batch})
+
+        await batch.commit()
    return {data:{id:postedIssue.id},error:false}
  }catch(e:any){
     

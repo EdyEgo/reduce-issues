@@ -28,13 +28,11 @@ const AppArea: React.FC<AppAreaProps> = () => {
   const usersStore = useSelector((state: any) => state.users);
   const authStore = useSelector((state: any) => state.auth);
   const authStoreUser = useSelector((state: any) => state.auth.user);
-  const workspaceSelectedStore = useSelector((state: any) => state.workspace.selectedWorkSpace);
+
   const newIssueModalIsOpen = useSelector(
     (state: any) => state.issues.newIssueModalOpenStatus
   );
-  const selectedWorkSpace = useSelector(
-    (state: any) => state.selectedWorkSpace
-  );
+
 
   async function getCurrentUserAndSave() {
     const currentUser = authStore.user;
@@ -71,12 +69,12 @@ const AppArea: React.FC<AppAreaProps> = () => {
     return documents.data;
   }
 
-  async function getCurrentTeamListForWorkspace(workspaceId: string) {
+  async function getCurrentTeamListForWorkspace(workspaceId: string,workspaceMembersId:any) {
   
     
-    
-    const isUserAOwner = workspaceSelectedStore.membersId &&  workspaceSelectedStore.membersId[authStoreUser.uid].role === 'Owner' 
-    
+    // old : const document = await getTeams(workspaceId) 
+    const isUserAOwner = workspaceMembersId != null &&  workspaceMembersId[authStoreUser.uid].role === 'Owner' 
+    // if the user is owner then he can see all the teams from the current workspace
     const document = await getTeamsWhereTheUserMeetsTheRole(workspaceId,authStoreUser.uid,isUserAOwner);
     
     if (document.error) throw new Error(document.message);
@@ -109,6 +107,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
           console.log("error on loading current user object ", error.message)
         )
         .then(async (userData: any) => {
+          
           const selectedWorkspaceId = userData.data.workSpaceSelected.id;
           const userWorkSpaces = userData.data.workSpaces;
 
@@ -124,7 +123,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
             collectionUserWorkspace
           );
           // load team data from workspace nested collection
-          await getCurrentTeamListForWorkspace(selectedWorkspaceId);
+          await getCurrentTeamListForWorkspace(selectedWorkspaceId,workspaceData.membersId);
           // load members list from data base in users collection
           await getSelectedWorkspaceMembersAndSave(workspaceData.membersId);
         });

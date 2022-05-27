@@ -50,7 +50,7 @@ export default async function postDocumentSetupOnSugnUp(user:any,userObject:{fir
        collectionSelectedPath = `workspaces/${createdWorkSpace.id}/teams`
      
       const createdTeam =  await postNewDocument({collectionSelected:collectionSelectedPath,
-        inputObject:{membersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}},
+        inputObject:{issuesNumber:1,membersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}},
       
         name:'My First Team' ,photoURL:null,identified:'MFT' , timezone:browserDate
       }
@@ -108,7 +108,7 @@ export default async function postDocumentSetupOnSugnUp(user:any,userObject:{fir
         collectionSelectedPath = `workspaces/${createdWorkSpace.id}/teams`
      
         const secondCreatedTeam =  await postNewDocument({collectionSelected:collectionSelectedPath,
-          inputObject:{membersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}},
+          inputObject:{issuesNumber:1,membersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}},
         
           name:'My Second Team' ,photoURL:null,identified:'MST' , timezone:browserDate
         }
@@ -176,7 +176,7 @@ export default async function postDocumentSetupOnSugnUp(user:any,userObject:{fir
        collectionSelectedPath = `workspaces/${createdWorkSpaceSec.id}/teams`
      
       const createdTeamSec =  await postNewDocument({collectionSelected:collectionSelectedPath,
-        inputObject:{membersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}},
+        inputObject:{issuesNumber:1,membersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}},
       
         name:'My Second Team' ,photoURL:null,identified:'MST' , timezone:browserDate
       }

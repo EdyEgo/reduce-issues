@@ -81,8 +81,11 @@ export default function NewIssueModal() {
 
  
   const [loading,setLoading] = React.useState(false)
-  const [selectedTeamObject,setSelectedTeamObject] = React.useState([])
-  const [selectedTeam,setSelectedTeam] = React.useState('') 
+  // this is too much mate :(
+  const [selectedTeamObject,setSelectedTeamObject] = React.useState<any>(null)
+  const [selectedTeamObjectMembersId,setSelectedTeamObjectMembersId] = React.useState([])
+  const [selectedTeamId,setSelectedTeamId] = React.useState('') 
+  //this is realllyyyyy too much mate /:(
   const [selectedMemberObject,setSelectedMemberObject] = React.useState({photoURL:null,name:"Assignee",id:null})
   const [selectedStatus,setSelectedStatus] = React.useState(null)
   const [selectedPriority,setSelectedPriority] = React.useState(null)
@@ -126,8 +129,10 @@ export default function NewIssueModal() {
  const updateTeam = (teamId:string)=>{
   if(selectedMemberObject.id)setSelectedMemberObject({photoURL:null,name:"Assignee",id:null}) // delete old added member on changeing the team
   setValues({ ...values,  teamId});
-  setSelectedTeamObject(teamsList.find((team:any)=>team.id === teamId).membersId) 
-  setSelectedTeam(teamId)
+  const selectedTeamObject = teamsList.find((team:any)=>team.id === teamId)
+  setSelectedTeamObject(selectedTeamObject)
+  setSelectedTeamObjectMembersId(selectedTeamObject.membersId) 
+  setSelectedTeamId(teamId)
  } 
 
  
@@ -197,8 +202,13 @@ function createImgs(){
      // first post the issue then we add the pictures to the store if we have any , then we add the 
      // the urls to the issue
 
-
-   const postedIssue:any = await postIssue({newIssue:newIssueObject,workspaceId:selectedWorkspace.id,teamId}) // left here
+ 
+     if(selectedTeamObject === null) {
+      setLoading(false)
+      closeNewIssueModal()
+      return 
+     }
+   const postedIssue:any = await postIssue({newIssue:newIssueObject,workspaceId:selectedWorkspace.id,teamId,issuesTeamNumber:selectedTeamObject.issuesNumber,teamIdentified:selectedTeamObject.identified}) // left here
    
   
    
@@ -258,7 +268,7 @@ function createImgs(){
          <div className="title-and-select-team-container flex flex-col items-center">
            <div className="title"> Create a new issue</div>
             <div className="select-team">
-              <SelectDialogObjectBased disableButton={loading}  itemsList={teamsList} selectedItem={selectedTeam} setSelectedItem={updateTeam} labelTitle="Select Team" returnIdAsValue={true} />
+              <SelectDialogObjectBased disableButton={loading}  itemsList={teamsList} selectedItem={selectedTeamId} setSelectedItem={updateTeam} labelTitle="Select Team" returnIdAsValue={true} />
             </div>
          </div>
         </BootstrapDialogTitle>
@@ -322,7 +332,7 @@ function createImgs(){
          {<SelectDialogArrayBased disableButton={loading}  itemsList={labelsList} labelTitle={'No Label'} selectedItem={selectedLabel} setSelectedItem={setSelectedLabel} />}
          
        
-         <AssigneeSelector disableButton={loading} teamMembersList={selectedTeamObject} selectedMember={selectedMemberObject} setSelectedMember={setSelectedAssigneeTeamMember} labelTitle="Assignee" />
+         <AssigneeSelector disableButton={loading} teamMembersList={selectedTeamObjectMembersId} selectedMember={selectedMemberObject} setSelectedMember={setSelectedAssigneeTeamMember} labelTitle="Assignee" />
          </div>
            </div>
 
