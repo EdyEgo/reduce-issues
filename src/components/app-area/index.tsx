@@ -7,7 +7,7 @@ import {
   getWorkSpace,
   getWorkSpacesByIds,
 } from "../../api/dataBaseWorkSpaceMethods";
-import { getTeams } from "../../api/dataBaseTeamsMethods";
+import { getTeams ,getTeamsWhereTheUserMeetsTheRole} from "../../api/dataBaseTeamsMethods";
 import { changeCurrentUser } from "../../store/users";
 import {
   changeSelectedWorkSpace,
@@ -27,7 +27,8 @@ const AppArea: React.FC<AppAreaProps> = () => {
   const dispatch = useDispatch();
   const usersStore = useSelector((state: any) => state.users);
   const authStore = useSelector((state: any) => state.auth);
-  const workspaceStore = useSelector((state: any) => state.workspace);
+  const authStoreUser = useSelector((state: any) => state.auth.user);
+  const workspaceSelectedStore = useSelector((state: any) => state.workspace.selectedWorkSpace);
   const newIssueModalIsOpen = useSelector(
     (state: any) => state.issues.newIssueModalOpenStatus
   );
@@ -71,8 +72,13 @@ const AppArea: React.FC<AppAreaProps> = () => {
   }
 
   async function getCurrentTeamListForWorkspace(workspaceId: string) {
-    const document = await getTeams(workspaceId);
-
+  
+    
+    
+    const isUserAOwner = workspaceSelectedStore.membersId &&  workspaceSelectedStore.membersId[authStoreUser.uid].role === 'Owner' 
+    
+    const document = await getTeamsWhereTheUserMeetsTheRole(workspaceId,authStoreUser.uid,isUserAOwner);
+    
     if (document.error) throw new Error(document.message);
     const teamData = document.data;
 

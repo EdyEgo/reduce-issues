@@ -10,6 +10,10 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
           path="/"
           element={<div className="placeholder">content right</div>}
         />
+
+        {/* <Route path="">
+
+        </Route> */}
       </Routes>
     </>
   );
