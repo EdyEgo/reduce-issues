@@ -4,6 +4,7 @@ import {serverTimestamp,writeBatch,increment} from 'firebase/firestore'
 
 import {db} from '../firebase'
 import type { Issue} from '../types/issues' 
+import {getOneTeam} from './dataBaseTeamsMethods'
 
 interface ActionTypeIssue{
     iconType:string,//can be userAvatar or any other icon
@@ -14,17 +15,24 @@ interface ActionTypeIssue{
 
 interface CommentTypeIssue{
     picturesURL:string[] | null,text:string
-}
+} 
 
-export async function postIssue ({newIssue,teamId,teamIdentified,workspaceId,issuesTeamNumber}:{workspaceId:string,teamId:string,teamIdentified:string,newIssue:Issue,issuesTeamNumber:number}){
+
+
+
+export async function postIssue ({newIssue,teamId,workspaceId}:{workspaceId:string,teamId:string,newIssue:Issue,}){
     const batch = writeBatch(db); 
- 
+   
+    const teamDocument:any = await getOneTeam(workspaceId,teamId)
+    
+    // first get the team by id and workspace id , then take the number of issues
+    if(teamDocument.error) return{error:true,message:'Could not find team'}
     try{
         // post issue
      const postedIssue = await postNewDocument({
          collectionSelected:`workspaces/${workspaceId}/teams/${teamId}/issues`,
          useAddDocument:true,
-         inputObject:{...newIssue,identified:teamIdentified + `${issuesTeamNumber + 1}`,updatedAt:serverTimestamp()},useBatch:batch
+         inputObject:{...newIssue,identified:teamDocument.data.identified + `${teamDocument.data.issuesTeamNumber + 1}`,updatedAt:serverTimestamp()},useBatch:batch
         })
 
 

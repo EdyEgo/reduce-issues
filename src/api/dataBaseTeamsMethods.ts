@@ -1,6 +1,14 @@
 import {} from '../composables/firebase/teams/getUsersTeamMemebers'
-import {getTeamsFirebase,getTeamsFirebaseWithWhere} from '../composables/firebase/teams/getWorkspaceTeams'
+import {getTeamsFirebase,getTeamsFirebaseWithWhere,getOneTeamFirebase} from '../composables/firebase/teams/getWorkspaceTeams'
 
+
+export async function getOneTeam(workspaceId:string,teamId:string){
+  try{
+    return await getOneTeamFirebase(workspaceId,teamId)
+  }catch(e:any){
+    return {error:true,message:e.message}
+  }
+}
 
 export async function getTeams(workspaceId: string){
    

@@ -12,7 +12,7 @@ import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
+
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -82,7 +82,7 @@ export default function NewIssueModal() {
  
   const [loading,setLoading] = React.useState(false)
   // this is too much mate :(
-  const [selectedTeamObject,setSelectedTeamObject] = React.useState<any>(null)
+ 
   const [selectedTeamObjectMembersId,setSelectedTeamObjectMembersId] = React.useState([])
   const [selectedTeamId,setSelectedTeamId] = React.useState('') 
   //this is realllyyyyy too much mate /:(
@@ -130,7 +130,7 @@ export default function NewIssueModal() {
   if(selectedMemberObject.id)setSelectedMemberObject({photoURL:null,name:"Assignee",id:null}) // delete old added member on changeing the team
   setValues({ ...values,  teamId});
   const selectedTeamObject = teamsList.find((team:any)=>team.id === teamId)
-  setSelectedTeamObject(selectedTeamObject)
+  
   setSelectedTeamObjectMembersId(selectedTeamObject.membersId) 
   setSelectedTeamId(teamId)
  } 
@@ -203,12 +203,8 @@ function createImgs(){
      // the urls to the issue
 
  
-     if(selectedTeamObject === null) {
-      setLoading(false)
-      closeNewIssueModal()
-      return 
-     }
-   const postedIssue:any = await postIssue({newIssue:newIssueObject,workspaceId:selectedWorkspace.id,teamId,issuesTeamNumber:selectedTeamObject.issuesNumber,teamIdentified:selectedTeamObject.identified}) // left here
+    
+   const postedIssue:any = await postIssue({newIssue:newIssueObject,workspaceId:selectedWorkspace.id,teamId}) // left here
    
   
    

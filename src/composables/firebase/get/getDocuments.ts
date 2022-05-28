@@ -1,4 +1,4 @@
-import {  collection,getDocs,where,orderBy , query ,limit , startAt , } from 'firebase/firestore';
+import {  collection,getDocs,getDoc,doc,where,orderBy , query ,limit , startAt , } from 'firebase/firestore';
 
 import {db} from '../../../firebase'
 
@@ -17,6 +17,8 @@ export const getDocumentsWithWhere = async ({path,wherePropertyKey,whereValues,o
 
   }
 
+
+
  
  
 //where('membersId.KtTllXmMWzbi23F8EA0ivsSydtH2.role','in',['Owner','Member','TeamLeader'])
@@ -26,6 +28,12 @@ export const getDocumentsWithWhere = async ({path,wherePropertyKey,whereValues,o
    
     return docSnap
  
+}
+
+export const getDocument = async ({collectionName, documentName}:{collectionName:string,documentName:string})=>{
+  const docRef = doc(db,collectionName,documentName);
+const docSnap = await getDoc(docRef);
+return docSnap
 }
 
 export const getDocuments = async ({
