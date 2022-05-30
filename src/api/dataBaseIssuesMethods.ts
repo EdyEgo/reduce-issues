@@ -19,7 +19,7 @@ interface CommentTypeIssue{
 } 
 
 
-export async function getTeamIssues({callbackDocuments,teamId,workspaceId,valuesToIncludeInResult}:{valuesToIncludeInResult?:{[key:string]:any},workspaceId:string,teamId:string,callbackDocuments:(documents:{data?:any[],error:boolean,message?:string,[key:string]:any})=>void}){
+export async function getTeamIssues({callbackDocuments,teamId,workspaceId,valuesToIncludeInResult}:{valuesToIncludeInResult?:{[key:string]:any},workspaceId:string,teamId:string,callbackDocuments:(documents:{data?:any[],error:boolean,message?:string,unsub?:()=>void,[key:string]:any})=>void}){
    
      try{
          // will gonna take all the issues

@@ -4,8 +4,8 @@ interface TeamIssues{[key:string]:{[key:string]:any}[]}
 
 
 
-const initialState:{teamsIssues:TeamIssues,newIssueModalOpenStatus:boolean} = {
-    teamsIssues:{},newIssueModalOpenStatus:false
+const initialState:{teamsIssues:TeamIssues,newIssueModalOpenStatus:boolean,teamIssuesSubscriptions:(()=>void)[]} = {
+    teamsIssues:{},newIssueModalOpenStatus:false,teamIssuesSubscriptions:[]
 } 
 
 
@@ -34,6 +34,17 @@ export const usersSlice = createSlice({
             const teamId = action.payload.id
             state.teamsIssues[teamId] = action.payload.data
         },
+        addSubscription:(state,action)=>{
+            const unsub:()=>void = action.payload
+             state.teamIssuesSubscriptions.push(unsub)
+        },
+        removeSubscriptions:(state)=>{ // for now we don't need to remove an individual subscription
+              if(state.teamIssuesSubscriptions.length <= 0) return
+              state.teamIssuesSubscriptions.forEach((unsub)=>{
+                unsub()
+              })
+              state.teamIssuesSubscriptions = []
+        },
         removeOneIssueToTeam:(state,action)=>{
             const teamId = action.payload.teamId
             const issueId = action.payload.issueId
@@ -48,6 +59,7 @@ export const usersSlice = createSlice({
 
 })
 
-export const { loadTeamsIssues ,changeOneTeamIssues,addIssuesToOneTeam,addOneIssueToTeam,removeOneIssueToTeam , changenewIssueModalOpenStatus} = usersSlice.actions
+export const { loadTeamsIssues,addSubscription, removeSubscriptions,changeOneTeamIssues,addIssuesToOneTeam,addOneIssueToTeam,
+    removeOneIssueToTeam , changenewIssueModalOpenStatus} = usersSlice.actions
 
 export default usersSlice.reducer

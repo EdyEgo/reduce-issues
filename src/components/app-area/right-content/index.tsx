@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import {useSelector , useDispatch} from 'react-redux'
-import {addIssuesToOneTeam} from '../../../store/issues'
+import {addIssuesToOneTeam,addSubscription,removeSubscriptions} from '../../../store/issues'
 import {getTeamIssues} from '../../../api/dataBaseIssuesMethods'
 import {useState,useEffect} from 'react'
 
@@ -10,6 +10,7 @@ interface RightSideContentProps {}
 const RightSideContent: React.FC<RightSideContentProps> = () => {
   
 const [issues,setIssues] = useState<any>(null) // null | {data:any,error:boolean} | {error:boolean , message:string}
+const [errorMessage,setErrorMessage] = useState<null | string>(null)
 
 const dispatch = useDispatch()
 
@@ -19,16 +20,20 @@ const teamIssues = useSelector((state:any)=>state.issues.teamsIssues)
 
 
 
-function writeIssuesToOneTeam(teamId:string,data:any){
- 
+function writeIssuesToOneTeam(teamId:string,data:any,unsub:any){
+ // add team subscription
+  dispatch(addSubscription(unsub))
+
+  // add team issues
   dispatch(addIssuesToOneTeam({id:teamId,data}))
 }
 
-function callbackIssuesSnapShot({error,data,message,teamId}:any){
+function callbackIssuesSnapShot({error,data,message,teamId,unsub}:any){
  
 
   if(error) return 
-  writeIssuesToOneTeam(teamId,data)
+  setErrorMessage(`Could not get your issues , reason:,${message}`)
+  writeIssuesToOneTeam(teamId,data,unsub)
 
 }
 
@@ -44,12 +49,24 @@ function getTeamsIssues(){
 }
 
 useEffect(()=>{
-  console.log('use effect is exe mate')
+  let isSubscribed = true
+  
   // remember to unsub boy
   // and on sign out to unsub
 
+ if(isSubscribed){
 
+   // unsubscribe(if you have subscriptions)
+   dispatch(removeSubscriptions())
+
+   // get issues for all of user(workspace) teams
   getTeamsIssues()
+ }
+  
+
+  return () => {
+    isSubscribed = false;
+  };
 },[selectedWorkspace,teamsList])
 
 

@@ -21,7 +21,7 @@ export const getAllDocumentsWithPagination = async ({itemsLimitedAt,path,orderBy
 
 }
 
-export const getDocumentsWithSubscription =  ({path,valuesToIncludeInResult,callbackDocuments,orderByKey,wherePropertyKey,whereValues}:{callbackDocuments:(documents:{data?:any[],error:boolean,message?:string,unsub:()=>void,[key:string]:any})=>void,wherePropertyKey?:string,whereValues?:string[],path:string, orderByKey?:string,valuesToIncludeInResult?:{[key:string]:any}})=>{
+export const getDocumentsWithSubscription =  ({path,valuesToIncludeInResult,callbackDocuments,orderByKey,wherePropertyKey,whereValues}:{callbackDocuments:(documents:{data?:any[],error:boolean,message?:string,unsub?:()=>void,[key:string]:any})=>void,wherePropertyKey?:string,whereValues?:string[],path:string, orderByKey?:string,valuesToIncludeInResult?:{[key:string]:any}})=>{
   // later will add pagination
   let  collectionRef:any = collection(db,path)
   const orderItemsBy = orderByKey ? orderByKey : "registeredAt"
