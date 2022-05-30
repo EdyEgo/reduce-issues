@@ -5,7 +5,8 @@ interface selectedTabAppAreaTypes {
     link:string,workspaceId:string,
     teamId:null | string,
     isFavorites:boolean,
-    isSettings:boolean
+    isSettings:boolean,
+    isMyIssues:boolean
 }
 interface selectedTabClientAreaTypes{
     link:string,active:boolean
@@ -14,7 +15,7 @@ interface selectedTabClientAreaTypes{
 const initialState:{selectedTabAppArea:selectedTabAppAreaTypes,
     selectedTabClientArea:selectedTabClientAreaTypes} = 
     {
-   selectedTabAppArea:{active:false,link:'/',workspaceId:'',teamId:null,isFavorites:false,isSettings:false},
+   selectedTabAppArea:{active:false,link:'/',workspaceId:'',teamId:null,isFavorites:false,isSettings:false,isMyIssues:false},
    selectedTabClientArea:{link:'',active:true}
 } 
 
@@ -39,6 +40,14 @@ export const selectedTabSlice = createSlice({
        },
        changeSelectedTabClientAreaLink:(state,{payload})=>{
         state.selectedTabClientArea.link = payload
+       },
+       changeTabAreaStaticTabSelection:(state,{payload})=>{
+        state.selectedTabAppArea.isFavorites = false
+        state.selectedTabAppArea.isMyIssues = false
+        state.selectedTabAppArea.isSettings = false
+        const staticTabName:"isFavorites" | "isMyIssues" | "isSettings"= payload.name 
+        
+        state.selectedTabAppArea[staticTabName] = true
        }
         
       
@@ -47,6 +56,7 @@ export const selectedTabSlice = createSlice({
 
 })
 
-export const { changeSelectedTabAppAreaActiveStatus,changeSelectedTabClientAreaActiveStatus,changeSelectedTabClientAreaLink,changeSelectedTabAppAreaLink } = selectedTabSlice.actions
+export const { changeSelectedTabAppAreaActiveStatus,changeSelectedTabClientAreaActiveStatus,
+    changeSelectedTabClientAreaLink,changeSelectedTabAppAreaLink,changeTabAreaStaticTabSelection } = selectedTabSlice.actions
 
 export default selectedTabSlice.reducer

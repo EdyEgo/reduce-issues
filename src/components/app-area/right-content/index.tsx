@@ -9,7 +9,7 @@ interface RightSideContentProps {}
 
 const RightSideContent: React.FC<RightSideContentProps> = () => {
   
-const [issues,setIssues] = useState<any>(null) // null | {data:any,error:boolean} | {error:boolean , message:string}
+
 const [errorMessage,setErrorMessage] = useState<null | string>(null)
 
 const dispatch = useDispatch()
@@ -72,16 +72,30 @@ useEffect(()=>{
 
   return (
     <>
-      <Routes>
-        <Route
-          path="/"
-          element={<div className="placeholder">content right</div>}
-        />
+     <div className="content-right">
+       <div className="content-right__nav-bar">
+         nav placeholder
+       </div>
+    
+    <div className="content-container">
+      <Routes>  
+          <Route
+            path="/"
+            element={<div className="placeholder">content right</div>}
+          />
 
-        {/* <Route path="">
+          <Route  path="/:workspaceURL/filtered-issues" element={<div className="placeholder">filtered issues</div>}>
 
-        </Route> */}
-      </Routes>
+          </Route>
+          
+          <Route  path="/:workspaceURL/team/:teamURL/:teamTabSelected" element={<div className="placeholder">team tab</div>}>
+
+          </Route>
+
+        </Routes>
+    </div>
+
+     </div>
     </>
   );
 };

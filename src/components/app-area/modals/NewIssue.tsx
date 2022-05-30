@@ -184,6 +184,7 @@ function createImgs(){
         pictureListURL:null,// here are the urls that are gonna be stored in firebase ,
         text
       },
+      creatorId:authUser.uid,
       status:selectedStatus,
       priority:selectedPriority,
       label:selectedLabel,

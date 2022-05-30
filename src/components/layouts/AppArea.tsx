@@ -5,9 +5,7 @@ interface AppAreaLayoutProps {
 const AppAreaLayout: React.FC<AppAreaLayoutProps> = ({children}) => {
     return ( 
     <>
-     <div className="nav-bar">
-
-     </div>
+     
      <main>{children}</main>
     </> 
     

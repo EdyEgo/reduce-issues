@@ -2,10 +2,26 @@ import {createSlice } from '@reduxjs/toolkit'
 
 interface TeamIssues{[key:string]:{[key:string]:any}[]}
 
+//showViewOptions types
+// priority:boolean,
+// issueIdentified:boolean,
+// status:boolean,
+// label:boolean,
+// dueDate:boolean,
+// createdAt:boolean,
+// updatedAt:boolean,
+// assignee:boolean
 
-
-const initialState:{teamsIssues:TeamIssues,newIssueModalOpenStatus:boolean,teamIssuesSubscriptions:(()=>void)[]} = {
-    teamsIssues:{},newIssueModalOpenStatus:false,teamIssuesSubscriptions:[]
+const initialState:{teamsIssues:TeamIssues,availableFilters:any,showViewOptions:{[key:string]:boolean},
+grouping:string,// can be status , priority,assignee , no grouping
+      newIssueModalOpenStatus:boolean,teamIssuesSubscriptions:(()=>void)[]} = {
+    teamsIssues:{},availableFilters:{},//incomplete for now ,the idea is to show only filters that are available in your issues
+    showViewOptions:{assignee:true,
+        createdAt:true,dueDate:true,issueIdentified:true,
+        label:true,priority:true,status:true,updatedAt:true},
+    grouping:"status",
+    newIssueModalOpenStatus:false,
+    teamIssuesSubscriptions:[]
 } 
 
 
@@ -17,6 +33,14 @@ export const usersSlice = createSlice({
     name:'issues',
     initialState,
     reducers:{
+
+        changeGrouping(state,action){
+            state.grouping = action.payload
+        },
+        changeShowViewOption(state,action){
+            const selectedViewOption:string =  action.payload.name
+            state.showViewOptions[selectedViewOption] = !state.showViewOptions[selectedViewOption]
+        },
 
         loadTeamsIssues:(state,action)=>{
             state.teamsIssues = action.payload
@@ -59,7 +83,7 @@ export const usersSlice = createSlice({
 
 })
 
-export const { loadTeamsIssues,addSubscription, removeSubscriptions,changeOneTeamIssues,addIssuesToOneTeam,addOneIssueToTeam,
+export const {changeGrouping,changeShowViewOption, loadTeamsIssues,addSubscription, removeSubscriptions,changeOneTeamIssues,addIssuesToOneTeam,addOneIssueToTeam,
     removeOneIssueToTeam , changenewIssueModalOpenStatus} = usersSlice.actions
 
 export default usersSlice.reducer
