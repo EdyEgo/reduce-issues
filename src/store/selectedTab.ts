@@ -1,12 +1,14 @@
 import {createSlice } from '@reduxjs/toolkit'
 
 interface selectedTabAppAreaTypes {
-    active:boolean
-    link:string,workspaceId:string,
+    active:boolean,
+    name:string,// ex : Issues wit isTeamTab: true
+    link:string,
     teamId:null | string,
     isFavorites:boolean,
     isSettings:boolean,
-    isMyIssues:boolean
+    isMyIssues:boolean,
+    isTeamTab:boolean
 }
 interface selectedTabClientAreaTypes{
     link:string,active:boolean
@@ -15,7 +17,7 @@ interface selectedTabClientAreaTypes{
 const initialState:{selectedTabAppArea:selectedTabAppAreaTypes,
     selectedTabClientArea:selectedTabClientAreaTypes} = 
     {
-   selectedTabAppArea:{active:false,link:'/',workspaceId:'',teamId:null,isFavorites:false,isSettings:false,isMyIssues:false},
+   selectedTabAppArea:{active:false,name:'My Issues',link:'/',teamId:null,isFavorites:false,isSettings:false,isMyIssues:false,isTeamTab:false},
    selectedTabClientArea:{link:'',active:true}
 } 
 
@@ -41,11 +43,15 @@ export const selectedTabSlice = createSlice({
        changeSelectedTabClientAreaLink:(state,{payload})=>{
         state.selectedTabClientArea.link = payload
        },
+       changeSelectedTabAppAreaName:(state,{payload})=>{
+        state.selectedTabAppArea.name = payload
+       },
+
        changeTabAreaStaticTabSelection:(state,{payload})=>{
         state.selectedTabAppArea.isFavorites = false
         state.selectedTabAppArea.isMyIssues = false
         state.selectedTabAppArea.isSettings = false
-        const staticTabName:"isFavorites" | "isMyIssues" | "isSettings"= payload.name 
+        const staticTabName:"isFavorites" | "isMyIssues" | "isSettings" | "isTeamTab"= payload
         
         state.selectedTabAppArea[staticTabName] = true
        }
@@ -56,7 +62,7 @@ export const selectedTabSlice = createSlice({
 
 })
 
-export const { changeSelectedTabAppAreaActiveStatus,changeSelectedTabClientAreaActiveStatus,
+export const { changeSelectedTabAppAreaActiveStatus,changeSelectedTabAppAreaName,changeSelectedTabClientAreaActiveStatus,
     changeSelectedTabClientAreaLink,changeSelectedTabAppAreaLink,changeTabAreaStaticTabSelection } = selectedTabSlice.actions
 
 export default selectedTabSlice.reducer
