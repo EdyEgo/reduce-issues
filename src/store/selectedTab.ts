@@ -4,7 +4,6 @@ interface selectedTabAppAreaTypes {
     active:boolean,
     name:string,// ex : Issues wit isTeamTab: true
     link:string,
-    teamId:null | string,
     isFavorites:boolean,
     isSettings:boolean,
     isMyIssues:boolean,
@@ -17,7 +16,7 @@ interface selectedTabClientAreaTypes{
 const initialState:{selectedTabAppArea:selectedTabAppAreaTypes,
     selectedTabClientArea:selectedTabClientAreaTypes} = 
     {
-   selectedTabAppArea:{active:false,name:'My Issues',link:'/',teamId:null,isFavorites:false,isSettings:false,isMyIssues:false,isTeamTab:false},
+   selectedTabAppArea:{active:false,name:'My Issues',link:'/',isFavorites:false,isSettings:false,isMyIssues:false,isTeamTab:false},
    selectedTabClientArea:{link:'',active:true}
 } 
 

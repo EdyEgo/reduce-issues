@@ -27,7 +27,7 @@ const FilteredIssues: React.FC<FilteredIssuesProps> = () => {
     
   
 
-    return ( <><div className="cursor-pointer" onClick={changeRouteToFilteredIssues}>My issues</div></> );
+    return ( <div className="cursor-pointer" onClick={changeRouteToFilteredIssues}>My issues</div> );
 }
  
 export default FilteredIssues;
