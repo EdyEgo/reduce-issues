@@ -1,4 +1,5 @@
 import { postNewDocument} from '../composables/firebase/post/postDocument' 
+import {getTeamIssuesFirebase} from '../composables/firebase/issues/getTeamIssues'
 import {postMultipleFiles} from './dataBaseStorageMethods'
 import {serverTimestamp,writeBatch,increment} from 'firebase/firestore'
 
@@ -18,7 +19,15 @@ interface CommentTypeIssue{
 } 
 
 
-
+export async function getTeamIssues({callbackDocuments,teamId,workspaceId,valuesToIncludeInResult}:{valuesToIncludeInResult?:{[key:string]:any},workspaceId:string,teamId:string,callbackDocuments:(documents:{data?:any[],error:boolean,message?:string,[key:string]:any})=>void}){
+   
+     try{
+         // will gonna take all the issues
+         getTeamIssuesFirebase({workspaceId,teamId,callbackDocuments,valuesToIncludeInResult})
+     }catch(e:any){
+        callbackDocuments({error:true,message:e.message})
+     }
+}
 
 export async function postIssue ({newIssue,teamId,workspaceId}:{workspaceId:string,teamId:string,newIssue:Issue,}){
     const batch = writeBatch(db); 

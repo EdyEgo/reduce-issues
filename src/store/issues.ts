@@ -30,6 +30,10 @@ export const usersSlice = createSlice({
             const teamId = action.payload.id
             state.teamsIssues[teamId].push(action.payload.data)
         },
+        addIssuesToOneTeam:(state,action)=>{
+            const teamId = action.payload.id
+            state.teamsIssues[teamId] = action.payload.data
+        },
         removeOneIssueToTeam:(state,action)=>{
             const teamId = action.payload.teamId
             const issueId = action.payload.issueId
@@ -44,6 +48,6 @@ export const usersSlice = createSlice({
 
 })
 
-export const { loadTeamsIssues ,changeOneTeamIssues,addOneIssueToTeam,removeOneIssueToTeam , changenewIssueModalOpenStatus} = usersSlice.actions
+export const { loadTeamsIssues ,changeOneTeamIssues,addIssuesToOneTeam,addOneIssueToTeam,removeOneIssueToTeam , changenewIssueModalOpenStatus} = usersSlice.actions
 
 export default usersSlice.reducer
