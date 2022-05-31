@@ -5,7 +5,7 @@ import BacklogIcon from '@mui/icons-material/BlurOn'
 import ActiveIcon from '@mui/icons-material/HourglassTop';
 import {Link , useNavigate} from 'react-router-dom'
 import {useSelector,useDispatch} from 'react-redux'
-import {changeSelectedTabAppAreaLink,changeSelectedTabAppAreaName,changeTabAreaStaticTabSelection,} from '../../../../store/selectedTab'
+import {changeSelectedTabAppAreaLink,changeSelectedTabAppAreaName,changeTabAreaStaticTabSelection,changeSeletedTeamId} from '../../../../store/selectedTab'
 
 
 interface TeamOptionsTabsProps {
@@ -39,7 +39,9 @@ const TeamOptionsTabs: React.FC<TeamOptionsTabsProps> = ({teamObject}) => {
           const tabName = returnFitTabNameForEndLink(tabEndLinkName)
 
         dispatch(changeSelectedTabAppAreaName(tabName))
-    
+        
+        dispatch(changeSeletedTeamId(teamObject.id))
+        
         dispatch(changeTabAreaStaticTabSelection("isTeamTab"))
     
         navigate(generalLink)

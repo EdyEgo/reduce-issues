@@ -1,5 +1,5 @@
 import {useSelector,useDispatch} from 'react-redux'
-import {changeSelectedTabAppAreaLink,changeSelectedTabAppAreaName,changeTabAreaStaticTabSelection} from '../../../../store/selectedTab'
+import {changeSelectedTabAppAreaLink,changeSelectedTabAppAreaName,changeTabAreaStaticTabSelection,changeSeletedTeamId} from '../../../../store/selectedTab'
 import {Link,useNavigate} from 'react-router-dom'
 
 interface FilteredIssuesProps {
@@ -19,6 +19,8 @@ const FilteredIssues: React.FC<FilteredIssuesProps> = () => {
     dispatch(changeSelectedTabAppAreaLink(filteredIssuesLink))
 
     dispatch(changeSelectedTabAppAreaName("My Issues"))
+
+    dispatch(changeSeletedTeamId(null))
 
     dispatch(changeTabAreaStaticTabSelection("isMyIssues"))
 

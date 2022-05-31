@@ -27,6 +27,11 @@ export const filterIssuesSlice = createSlice({
             const item:fillterItem = payload
             state.filtersListOrder.push(item)
         },
+        removeItemAtUnkownedIndex(state,{payload}){
+            const removeItemAtIndex = state.filtersListOrder.indexOf(payload)
+            state.filtersListOrder.splice(removeItemAtIndex,1)
+
+        },
         removeFilterListItem(state,{payload}){
             const removeItemAtIndex = payload
             state.filtersListOrder.splice(removeItemAtIndex,1)
@@ -48,6 +53,6 @@ export const filterIssuesSlice = createSlice({
 
 })
 
-export const { addToFilterList, removeFilterListItem,modifyItemAtIndex} = filterIssuesSlice.actions
+export const { addToFilterList,removeItemAtUnkownedIndex, removeFilterListItem,modifyItemAtIndex} = filterIssuesSlice.actions
 
 export default filterIssuesSlice.reducer
