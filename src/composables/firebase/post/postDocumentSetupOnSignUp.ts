@@ -87,7 +87,7 @@ export default async function postDocumentSetupOnSugnUp(user:any,userObject:{fir
       inputObject:{ 
         type:'action',
         actionType:'create',
-        creatorId:'app',// if no id then the app has created the issue
+        creatorId:null// if no id then the app has created the issue
         
       },useBatch:batch})
   
@@ -213,7 +213,7 @@ export default async function postDocumentSetupOnSugnUp(user:any,userObject:{fir
       inputObject:{ 
         type:'action',
         actionType:'create',
-        creatorId:'app',// if no id then the app has created the issue
+        creatorId:null,// if no id then the app has created the issue
         
       },useBatch:batch})
   

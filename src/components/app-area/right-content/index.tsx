@@ -3,6 +3,7 @@ import {useSelector , useDispatch} from 'react-redux'
 import {addIssuesToOneTeam,addSubscription,removeSubscriptions} from '../../../store/issues'
 import {getTeamIssues} from '../../../api/dataBaseIssuesMethods'
 import {useState,useEffect} from 'react'
+import NavBar from './navbar'
 
 
 interface RightSideContentProps {}
@@ -74,7 +75,7 @@ useEffect(()=>{
     <>
      <div className="content-right">
        <div className="content-right__nav-bar">
-         nav placeholder
+        <NavBar/>
        </div>
     
     <div className="content-container">
