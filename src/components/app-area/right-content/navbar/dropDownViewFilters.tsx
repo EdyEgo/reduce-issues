@@ -15,6 +15,7 @@ import CheckboxList from '../../../selectors/checkboxList'
 import HeroItemsList from './menuHeroList'
 import MenuItem from "@mui/material/MenuItem";
 import ViewGrupingFilters from './ViewGrupingFilters'
+import ViewPropertiesFilters from './viewPropertiesFilters'
 
 
 
@@ -113,7 +114,7 @@ export default function MenuListComposition({
                     >
                     
                     
-                     <div className="gruping-row">
+                     <div className="gruping-row ">
                         <ViewGrupingFilters/>
                      </div>
                     </MenuItem>
@@ -124,7 +125,7 @@ export default function MenuListComposition({
                      
                      
                       <div className="issues-properies-row">
-
+                        <ViewPropertiesFilters/>
                       </div>
                      </MenuItem>
                   </MenuList>

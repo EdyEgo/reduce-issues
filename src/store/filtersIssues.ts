@@ -6,7 +6,7 @@ interface fillterItem{
 }
 
 interface defaultViewFilters{
-    groupingBy:string,
+    groupingBy:string | undefined,
     orderingBy:string,
     displayProperties:{
         status:boolean,
