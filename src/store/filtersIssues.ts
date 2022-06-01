@@ -2,7 +2,7 @@ import {createSlice } from '@reduxjs/toolkit'
 
 
 interface fillterItem{
-    name:string,is:boolean,value:any
+    about:{name:string,[key:string]:any},is:boolean,value:any
 }
 
 const initialState:{

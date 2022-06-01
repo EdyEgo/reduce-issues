@@ -29,7 +29,23 @@ export async function getTeamIssues({callbackDocuments,teamId,workspaceId,values
      }
 }
 
-export async function postIssue ({newIssue,teamId,workspaceId}:{workspaceId:string,teamId:string,newIssue:Issue,}){
+function returnFitLabelsObject(newIssueObject:Issue){
+
+      const fitLabels:any = {}
+      if(newIssueObject.status !== null)fitLabels['createdStatus'] = {[newIssueObject.status.name]:increment(1)}
+
+      if(newIssueObject.priority !== null)fitLabels['createdPriority'] = {[newIssueObject.priority.name]:increment(1)}
+      
+      if(newIssueObject.label !== null)fitLabels['createdLabel'] = {[newIssueObject.label.name]:increment(1)}
+
+     if(newIssueObject.assignedToUserId !== null) fitLabels['assignedIssues'] = increment(1)
+
+     if(newIssueObject.assignedToUserId === null) fitLabels['unassignedIssues'] = increment(-1)
+
+     return fitLabels
+}
+
+export async function postIssue ({creatorId,newIssue,teamId,workspaceId}:{creatorId:string,workspaceId:string,teamId:string,newIssue:Issue,}){
     const batch = writeBatch(db); 
    
     const teamDocument:any = await getOneTeam(workspaceId,teamId)
@@ -44,11 +60,21 @@ export async function postIssue ({newIssue,teamId,workspaceId}:{workspaceId:stri
          inputObject:{...newIssue,identified:teamDocument.data.identified + `${teamDocument.data.issuesTeamNumber + 1}`,updatedAt:serverTimestamp()},useBatch:batch
         })
 
+ 
+     // increment issues number increment in membersIds the createdIssues by this member and to status , or/ and priority
+   
+    
+     await postNewDocument({collectionSelected:`workspace/${workspaceId}/teams`,documentName:teamId,inputObject:{
+         issuesNumber:increment(1),
+         membersId:{[creatorId]:{createdIssues:increment(1)}},
+         ...returnFitLabelsObject(newIssue)
 
-     // increment issues number
-    await postNewDocument({collectionSelected:`workspace/${workspaceId}/teams`,documentName:teamId,inputObject:{
-         issuesNumber:increment(1)
      },useBatch:batch})
+
+    // 
+    
+    
+
 
         await batch.commit()
    return {data:{id:postedIssue.id},error:false}

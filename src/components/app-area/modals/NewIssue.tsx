@@ -205,7 +205,7 @@ function createImgs(){
 
  
     
-   const postedIssue:any = await postIssue({newIssue:newIssueObject,workspaceId:selectedWorkspace.id,teamId}) // left here
+   const postedIssue:any = await postIssue({creatorId:authUser.uid,newIssue:newIssueObject,workspaceId:selectedWorkspace.id,teamId}) // left here
    
   
    

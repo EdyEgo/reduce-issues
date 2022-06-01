@@ -39,26 +39,27 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
  
 
   function returnFitFilterValueByIndexAndcheckboxType(filterListIndex:number){
-       const filters:{[key:string]:()=>{name:string,icon:string}} = {
-           status:()=>{
+      //  const filters:{[key:string]:()=>{name:string,icon:string}} = {
+      //      status:()=>{
               
-               return statusList[filterListIndex]
-           },
-           priority:()=>{
-               return priorityList[filterListIndex]
-           },
-           label:()=>{
-               return labelsList[filterListIndex]
-           },
-           assignee:()=>{
-               return {icon:'idk',name:'ya mate'} // left here
-           }
-       }
+      //          return items[filterListIndex]
+      //      },
+      //      priority:()=>{
+      //          return items[filterListIndex]
+      //      },
+      //      label:()=>{
+      //          return items[filterListIndex]
+      //      },
+      //      assignee:()=>{
+      //          return items[filterListIndex]// left here
+      //      }
+      //  }
         if(checkboxType === null) return {name:'',icon:''}
-       return filters[checkboxType]()
+       return  items[filterListIndex]
+      //  return filters[checkboxType]()
   }
 
-  function handleSettingFiltersIssues({deselected,dueDate,assigneeId,creatorId,filterIndex}:{deselected:boolean , filterIndex?:number,assigneeId?:string,creatorId?:string,dueDate?:string}){
+  function handleSettingFiltersIssues({deselected,dueDate,assigneeId,creatorId,filterIndex}:{deselected:boolean , filterIndex:number,assigneeId?:string,creatorId?:string,dueDate?:string}){
      // can be : -->  assignee , creator , status , label , priority , dueDate <--
  
     if(checkboxType === null) return
@@ -66,23 +67,23 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
       // asignee first
 
       if(checkboxType === 'assignee') {
-         console.log('no error here mate') 
-
-        //  const filterItemObject = {name:checkboxType,is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex).name}// left here too
-        //  dispatch(addToFilterList(filterItemObject))
-         return
+       
+    const userObject = returnFitFilterValueByIndexAndcheckboxType(filterIndex)
+         const filterItemObject = {about:{name:checkboxType,assignee:{id:userObject.id}},is:true,value:{firstName:userObject.firstName,lastName:userObject.lastName,photoURL:userObject.photoURL}}// left here too
+         dispatch(addToFilterList(filterItemObject))
+         return 
       }
 
      if( filterIndex != null && deselected === false){
      // first search if 
-   const filterItemObject = {name:checkboxType,is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex).name}
+   const filterItemObject = {about:{name:checkboxType},is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex).name}
    
      dispatch(addToFilterList(filterItemObject))
      
      return 
      }
      if(filterIndex != null && deselected){ 
-        const filterItemObject = {name:checkboxType,is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex).name}
+        const filterItemObject = {about:{name:checkboxType},is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex).name}
         dispatch(removeItemAtUnkownedIndex(filterItemObject))
         return 
 
@@ -104,7 +105,9 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
     //   newChecked.push(value);
 
     copyItems[value] = {...copyItems[value],checked:true}
+    
       setItems(copyItems)
+      
     } else {
         handleSettingFiltersIssues({deselected:true,filterIndex:value})
     //   newChecked.splice(currentIndex, 1); 
@@ -137,14 +140,22 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
 
              setItems(availableItems)
             return createdElements
-            // items
-            // 14:30 interviu zoom 
+         
         },
         assignee:()=>{ 
 // left here
             // selectedTeamObject.membersId
             // for the assignee we have to look into the selected team membersIds and take from users the loaded team members
-            
+          
+
+            if(items.length > 0) {
+                  
+              return items.map((assignedUserObject:any,index:number)=>{ 
+               
+                  return returnElementOption({...assignedUserObject,index})
+              })
+           }
+
              const teamMembers =  Object.entries(selectedTeamObject.membersId)
 
              if(teamMembers.length <= 0) return ''
@@ -156,7 +167,8 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
                   const findMemberObjectInWorkspace = workspaceMembers.find((member:any)=>member.id === memberId)
                   
                   availableItems.push({...findMemberObjectInWorkspace,checked:false})
-
+ 
+                  
                   return returnElementOption({index,
                      name:findMemberObjectInWorkspace.firstName + ' ' + findMemberObjectInWorkspace.lastName,
                      firstName:findMemberObjectInWorkspace.firstName ,lastName:findMemberObjectInWorkspace.lastName,
@@ -230,11 +242,11 @@ return ''
 
 
 
-  function returnElementOption(item:{checked:boolean,icon?:string,name:string ,index:number,photoURL?:string,firstName?:string,lastName?:string}){
-    const {icon,name,index,photoURL,firstName,lastName,checked} = item
+  function returnElementOption(item:{checked:boolean,icon?:string,associatedNumber?:number,name:string ,index:number,photoURL?:string,firstName?:string,lastName?:string}){
+    const {icon,name,index,photoURL,firstName,lastName,checked,associatedNumber} = item
 
 
-    return      (<ListItem onClick={()=>{console.log('checking the list',filtersIssuesStore,'and selected team id',selectedTeamId,'workspace ',workspaceMembers)}}
+    return      (<ListItem onClick={()=>{console.log('checking the list',filtersIssuesStore,'index your mom',index,'and selected team id',selectedTeamId,'workspace ',workspaceMembers)}}
         key={name}
         secondaryAction={
           <Checkbox
@@ -266,7 +278,10 @@ return ''
                 </div>
             }
           </ListItemAvatar>
-          <ListItemText id={name} primary={name} />
+          {firstName == null &&<ListItemText id={name} primary={name} />} 
+          {firstName && lastName == null && <ListItemText id={firstName} primary={firstName} />}
+          {firstName && lastName && <ListItemText id={firstName} primary={firstName + ' ' + lastName} />}
+          {associatedNumber && <div className="associated-number ml-2">{associatedNumber}</div>}
         </ListItemButton>
       </ListItem>)
  
