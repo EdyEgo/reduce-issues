@@ -101,7 +101,7 @@ export default function MenuListComposition({
             >
               <Paper>
                 <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList
+                  {/* <MenuList
                     autoFocusItem={open}
                     id="composition-menu"
                     aria-labelledby="composition-button"
@@ -128,7 +128,17 @@ export default function MenuListComposition({
                         <ViewPropertiesFilters/>
                       </div>
                      </MenuItem>
-                  </MenuList>
+                  </MenuList> */}
+
+                  <div className="list-container p-4 m-2">
+                  <div className="gruping-row ">
+                        <ViewGrupingFilters/>
+                     </div>
+                     <div className="issues-properies-row">
+                        <ViewPropertiesFilters/>
+                      </div>
+
+                  </div>
                 </ClickAwayListener>
               </Paper>
             </Grow>

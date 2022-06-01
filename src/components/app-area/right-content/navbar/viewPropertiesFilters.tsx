@@ -33,8 +33,8 @@ const ViewDisplayProperties: React.FC<ViewDisplayPropertiesProps> = () => {
              <div className="display-properties__buttons grid grid-cols-2 grid-rows-2 gap-2 ">
                {Object.entries(displayProperties).map((property)=>{
                    
-                   const buttonStyleInactive  = " text-gray-500 cursor-pointer border-blue-200 rounded-md font-sans p-1 text-center border hover:border-blue-400 hover:bg-blue-100 transition-all ease"
-                   const buttonStyleActive  =" cursor-pointer border-gray-200 border text-center bg-gray-100 hover:bg-blue-100 hover:border-gray-400 transition-all ease rounded-md font-sans p-1"
+                   const buttonStyleInactive  = "text-gray-500 cursor-pointer border-gray-200 rounded-md font-sans p-1 text-center border hover:border-gray-200 hover:bg-gray-300 hover:text-black transition-all ease"
+                   const buttonStyleActive  ="cursor-pointer border-gray-300 border text-center bg-gray-100 hover:bg-white hover:border-gray-400 hover:text-gray-500 transition-all ease rounded-md font-sans p-1"
                    
                    // is selected
                    const buttonStyle = property[1] ? buttonStyleActive : buttonStyleInactive
