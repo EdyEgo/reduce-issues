@@ -74,24 +74,42 @@ useEffect(()=>{
   return (
     <>
      <div className="content-right">
-       <div className="content-right__nav-bar">
+       {/* <div className="content-right__nav-bar">
         <NavBar/>
-       </div>
+       </div> */}
     
     <div className="content-container">
       <Routes>  
           <Route
             path="/"
-            element={<div className="placeholder">content right</div>}
+            element={<div className="placeholder"> 
+                   <NavBar/>
+                      <div className="filtered-issues-container"></div>
+
+            </div>} 
+            // children={<div className="placeholder">content right</div>}
           />
 
-          <Route  path="/:workspaceURL/filtered-issues" element={<div className="placeholder">filtered issues</div>}>
+          <Route  path="/:workspaceURL/filtered-issues"
+          // children={<div className="placeholder">filtered issues</div>}
+          element={<div className="placeholder">
+            <NavBar/>
+          <div className="filtered-issues-container"></div>
+          </div>}
+          />
 
-          </Route>
+          {/* </Route> */}
           
-          <Route  path="/:workspaceURL/team/:teamURL/:teamTabSelected" element={<div className="placeholder">team tab</div>}>
+          <Route  path="/:workspaceURL/team/:teamURL/:teamTabSelected" 
+          // children={<div className="placeholder">team tab</div>}
+          element={<div className="placeholder">
+            <NavBar/>
+            <div className="filtered-issues-container"></div>
 
-          </Route>
+            </div>}
+          />
+
+          {/* </Route> */}
 
         </Routes>
     </div>

@@ -27,7 +27,7 @@ const ViewDisplayProperties: React.FC<ViewDisplayPropertiesProps> = () => {
 
     return (
         <div className="display-properties">
-             <div className="display-properties__title">
+             <div className="display-properties__title my-2">
                  Display properties
              </div>
              <div className="display-properties__buttons grid grid-cols-2 grid-rows-2 gap-2 ">

@@ -13,50 +13,42 @@ import ExtractFitIconNoDinamic from './helpers/extractFitIconNoDinamic'
 
 import {labelsList,priorityList,statusList} from '../../composables/modalOptions/issues'
 
+import { useParams } from 'react-router-dom'
+
 export default function CheckboxListSecondary({checkboxType}:{checkboxType:string | null}) {
 
-    // const [checked, setChecked] = React.useState< number[]>([]);
+    
     const [items,setItems]  = React.useState<any[]>([])
 
-   const dispatch = useDispatch()
+   const dispatch = useDispatch() 
+   const params = useParams() 
+   
   //  const filtersIssuesStore = useSelector((state:any)=>state.filtersIssues.filtersListOrder)// this one is here only for test reasons
 
    const teamsList = useSelector( // we are gonna use this list both for the assignee and the creator
     (state: any) => state.team.teamList
   ); // on an index , zero for example you can take the .membersId property to load the members of that selected  team
   
+ function findTeamId(teamList:any[]){
+   if(params?.teamURL == null) return null
+  return teamList.find((team)=>team.identified.toLowerCase() === params.teamURL).id
+ }
+
   const workspaceMembers = useSelector((state:any)=>state.workspace.members)
-  const selectedTeamId = useSelector((state:any)=>state.selectedTab.selectedTabAppArea.selectedTeamId)
+  const teamList = useSelector((state:any)=>state.team.teamList)
+  const selectedTeamId = findTeamId(teamList)//useSelector((state:any)=>state.selectedTab.selectedTabAppArea.selectedTeamId)
   const selectedTeamObject = teamsList.find((team:any)=>team.id === selectedTeamId)
 
-//   function extractSelectedTeam(){
-//       if(selectedTeamId === null) return 
-//     const selectedTeamObject = teamsList.find((team:any)=>team.id === selectedTeamId)
-//     return selectedTeamObject
-//   }
+ 
 
   
  
 
   function returnFitFilterValueByIndexAndcheckboxType(filterListIndex:number){
-      //  const filters:{[key:string]:()=>{name:string,icon:string}} = {
-      //      status:()=>{
-              
-      //          return items[filterListIndex]
-      //      },
-      //      priority:()=>{
-      //          return items[filterListIndex]
-      //      },
-      //      label:()=>{
-      //          return items[filterListIndex]
-      //      },
-      //      assignee:()=>{
-      //          return items[filterListIndex]// left here
-      //      }
-      //  }
+     
         if(checkboxType === null) return {name:'',icon:''}
        return  items[filterListIndex]
-      //  return filters[checkboxType]()
+      
   }
 
   function handleSettingFiltersIssues({deselected,dueDate,assigneeId,creatorId,filterIndex}:{deselected:boolean , filterIndex:number,assigneeId?:string,creatorId?:string,dueDate?:string}){
@@ -66,7 +58,7 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
 
       // asignee first
 
-      if(checkboxType === 'assignee') {
+      if(checkboxType === 'assignee' || checkboxType === 'creator') {
        
     const userObject = returnFitFilterValueByIndexAndcheckboxType(filterIndex)
          const filterItemObject = {about:{name:checkboxType,assignee:{id:userObject.id}},is:true,value:{firstName:userObject.firstName,lastName:userObject.lastName,photoURL:userObject.photoURL}}// left here too
