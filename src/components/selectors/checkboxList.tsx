@@ -120,22 +120,63 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
     
   };
 
+  function returnFilteredMember(assigned:boolean){
+    if(items.length > 0) {
+                  
+      return items.map((assignedUserObject:any,index:number)=>{ 
+       
+          return returnElementOption({...assignedUserObject,index})
+      })
+   }
+
+     const teamMembers =  Object.entries(selectedTeamObject.membersId)
+
+     if(teamMembers.length <= 0) return ''
+     const availableItems:any[] = []
+
+     const createdElements =  teamMembers.map((valueMember,index)=>{
+     
+          const memberId = valueMember[0]
+          const findMemberObjectInWorkspace = workspaceMembers.find((member:any)=>member.id === memberId)
+           
+          let associatedNumber = null
+          
+          if(assigned && selectedTeamObject?.assignedIssues)associatedNumber = selectedTeamObject.assignedIssues
+
+          if(!assigned && selectedTeamObject?.issuesNumber)associatedNumber = selectedTeamObject.issuesNumber
+
+          availableItems.push({...findMemberObjectInWorkspace,checked:false,associatedNumber})
+
+          
+          return returnElementOption({index,
+             name:findMemberObjectInWorkspace.firstName + ' ' + findMemberObjectInWorkspace.lastName,
+             firstName:findMemberObjectInWorkspace.firstName ,lastName:findMemberObjectInWorkspace.lastName,
+             photoURL:findMemberObjectInWorkspace.photoURL,checked:false,associatedNumber
+            })
+      })
+      setItems(availableItems)
+
+      return createdElements
+  }
+
   function returnListItemsByCheckBoxType(){
        const listTypes:{[key:string]:any} = {
         status:()=>{
-           
+            
 
              if(items.length > 0) {
                   
-                return items.map(({checked,icon,name}:{icon:string,name:string,checked:boolean},index:number)=>{
-                    return returnElementOption({icon,name,index,checked})
+                return items.map((objectItem:any,index:number)=>{
+                    return returnElementOption({...objectItem,index})
                 })
              }
        
              const availableItems:any[] = []
-            const createdElements =  statusList.map(({icon,name},index)=>{
-                availableItems.push({icon,name,checked:false})
-                return returnElementOption({icon,name,index,checked:false})
+            const createdElements =  statusList.map(({icon,name},index)=>{ 
+              const associatedNumber = selectedTeamObject?.createdStatus &&  selectedTeamObject.createdStatus[name] ?
+              selectedTeamObject.createdStatus[name] : null 
+                availableItems.push({icon,name,checked:false,associatedNumber})
+                return returnElementOption({icon,name,index,checked:false,associatedNumber})
             }) 
 
              setItems(availableItems)
@@ -143,65 +184,33 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
          
         },
         assignee:()=>{ 
-// left here
-            // selectedTeamObject.membersId
-            // for the assignee we have to look into the selected team membersIds and take from users the loaded team members
-          
 
-            if(items.length > 0) {
-                  
-              return items.map((assignedUserObject:any,index:number)=>{ 
-               
-                  return returnElementOption({...assignedUserObject,index})
-              })
-           }
-
-             const teamMembers =  Object.entries(selectedTeamObject.membersId)
-
-             if(teamMembers.length <= 0) return ''
-             const availableItems:any[] = []
-
-             const createdElements =  teamMembers.map((valueMember,index)=>{
-             
-                  const memberId = valueMember[0]
-                  const findMemberObjectInWorkspace = workspaceMembers.find((member:any)=>member.id === memberId)
-                  
-                  availableItems.push({...findMemberObjectInWorkspace,checked:false})
- 
-                  
-                  return returnElementOption({index,
-                     name:findMemberObjectInWorkspace.firstName + ' ' + findMemberObjectInWorkspace.lastName,
-                     firstName:findMemberObjectInWorkspace.firstName ,lastName:findMemberObjectInWorkspace.lastName,
-                     photoURL:findMemberObjectInWorkspace.photoURL,checked:false
-                    })
-              })
-              setItems(availableItems)
-
-              return createdElements
-
+          return returnFilteredMember(true)
          
          
         },
         creator:()=>{
-            //same for the  creator
-return ''
+            
+            return returnFilteredMember(false)
         },
         priority:()=>{ 
           
 
             if(items.length > 0) {
                   
-                return items.map(({checked,icon,name}:{icon:string,name:string,checked:boolean},index:number)=>{
-                    return returnElementOption({icon,name,index,checked})
+                return items.map((objectItem:any,index:number)=>{
+                    return returnElementOption({...objectItem,index})
                 })
              } 
 
              const availableItems:any[] = [] 
             const createdElements =  priorityList.map(({icon,name},index)=>{ 
-
-                availableItems.push({icon,name,checked:false})
+   
+              const associatedNumber = selectedTeamObject?.createdPriority &&  selectedTeamObject.createdPriority[name] ?
+              selectedTeamObject.createdPriority[name] : null 
+                availableItems.push({icon,name,checked:false,associatedNumber})
                 
-                return returnElementOption({icon,name,index,checked:false})
+                return returnElementOption({icon,name,index,checked:false,associatedNumber})
             }) 
 
             setItems(availableItems)
@@ -209,20 +218,21 @@ return ''
 
         },
         label:()=>{ 
-         
+         //add to returnElementOption the associatedNumber by checking the selected team object for status , priority , labels etc
 
             if(items.length > 0) {
                   
-                return items.map(({checked,icon,name}:{icon:string,name:string,checked:boolean},index:number)=>{
-                    return returnElementOption({icon,name,index,checked})
+                return items.map((objectItem:any,index:number)=>{
+                    return returnElementOption({...objectItem,index})
                 })
              } 
              const availableItems:any[] = [] 
             const createdElements =  labelsList.map(({icon,name},index)=>{ 
+              const associatedNumber = selectedTeamObject?.createdLabel &&  selectedTeamObject.createdLabel[name] ?
+              selectedTeamObject.createdLabel[name] : null 
+                availableItems.push({icon,name,checked:false,associatedNumber})
 
-                availableItems.push({icon,name,checked:false})
-
-                return returnElementOption({icon,name,index,checked:false})
+                return returnElementOption({icon,name,index,checked:false,associatedNumber})
             })
             setItems(availableItems)
             return createdElements
@@ -281,7 +291,7 @@ return ''
           {firstName == null &&<ListItemText id={name} primary={name} />} 
           {firstName && lastName == null && <ListItemText id={firstName} primary={firstName} />}
           {firstName && lastName && <ListItemText id={firstName} primary={firstName + ' ' + lastName} />}
-          {associatedNumber && <div className="associated-number ml-2">{associatedNumber}</div>}
+          {associatedNumber != null && <div className="associated-number ml-2">{associatedNumber}</div>}
         </ListItemButton>
       </ListItem>)
  

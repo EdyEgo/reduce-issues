@@ -1,4 +1,5 @@
 import DropDownFilter from './dropDownFilter'
+import ViewFiltersButton from './viewFiltersButton'
 import React,{Ref, useRef,useState} from 'react'
 
 interface ContentRightNavBarProps {
@@ -22,12 +23,12 @@ const ContentRightNavBar: React.FC<ContentRightNavBarProps> = () => {
           <div className="left-half flex justify-between">
                  <span className="nav-bar-title p-2">Filtered issues</span>
                  <span className="save-to-favorites p-2"></span>
-                 <span className="filter-button p-2 border cursor-pointer"   ref={anchorRefFilterDropDown} onClick={handleToggleFilter}>Filter</span>
+                 <span className="filter-button p-2 border cursor-pointer"   ref={anchorRefFilterDropDown} onClick={handleToggleFilter}><span className='plus-sign-filter mr-1'>+</span><span className='filter-title-btn'>Filter</span></span>
           </div>
           <div className="right-half">
-
+              <ViewFiltersButton/>
           </div>
-          <div className="drop-down-menus">
+          <div className="drop-down-menus absolute">
               <DropDownFilter anchorRef={anchorRefFilterDropDown} open={openFilter} setOpen={setOpenFilter}/>
           </div>
      </div>
