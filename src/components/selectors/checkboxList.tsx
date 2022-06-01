@@ -19,7 +19,7 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
     const [items,setItems]  = React.useState<any[]>([])
 
    const dispatch = useDispatch()
-   const filtersIssuesStore = useSelector((state:any)=>state.filtersIssues.filtersListOrder)// this one is here only for test reasons
+  //  const filtersIssuesStore = useSelector((state:any)=>state.filtersIssues.filtersListOrder)// this one is here only for test reasons
 
    const teamsList = useSelector( // we are gonna use this list both for the assignee and the creator
     (state: any) => state.team.teamList
@@ -256,7 +256,7 @@ return ''
     const {icon,name,index,photoURL,firstName,lastName,checked,associatedNumber} = item
 
 
-    return      (<ListItem onClick={()=>{console.log('checking the list',filtersIssuesStore,'index your mom',index,'and selected team id',selectedTeamId,'workspace ',workspaceMembers)}}
+    return      (<ListItem 
         key={name}
         secondaryAction={
           <Checkbox

@@ -1,14 +1,21 @@
 import ArrowDown from '@mui/icons-material/KeyboardArrowDownSharp';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import DropDownView from './dropDownViewFilters'
+import React,{useState,useRef} from 'react'
 
 
 interface FiltersButtonProps {
     
 } 
  
-const FiltersButton: React.FC<FiltersButtonProps> = () => {
-    return (  
-        <div className="view-button cursor-pointer flex text-sm items-center justify-between font-light border px-1 border-gray-200"> 
+const FiltersButton: React.FC<FiltersButtonProps> = () => { 
+  
+    const [dropDownOpen , setDropDownOpen] = useState(false)
+    const anchorViewButton = useRef(null)
+
+     return (  
+       <>
+        <div ref={anchorViewButton} onClick={()=>{setDropDownOpen(!dropDownOpen)}} className="view-button cursor-pointer flex text-sm items-center justify-between font-light border px-1 border-gray-200"> 
         <div className="view-button__icon pointer-events-none">
             <FormatListBulletedIcon fontSize='small'/>
         </div>
@@ -17,6 +24,11 @@ const FiltersButton: React.FC<FiltersButtonProps> = () => {
             <ArrowDown fontSize='small'/>
         </div>
    </div>
+
+   <div className="drop-down-view-menu-container absolute">
+  <DropDownView anchorRef={anchorViewButton} open={dropDownOpen} setOpen={setDropDownOpen} />
+   </div>
+       </>
     );
 }
  
