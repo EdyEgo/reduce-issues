@@ -91,6 +91,13 @@ const docSnap = await getDoc(docRef);
 return docSnap
 }
 
+export const getDocumentFromNestedCollection = async({firstCollectionName,firstDocumentsName,secondCollectionName,secondDocumentName}:{firstCollectionName:string,firstDocumentsName:string,secondCollectionName:string,secondDocumentName:string})=>{
+  const docRef = doc(db,firstCollectionName,firstDocumentsName,secondCollectionName,secondDocumentName);
+  // you ca also use the spred operator ...arguments/params in doc , 
+  const docSnap = await getDoc(docRef);
+  return docSnap
+}
+
 export const getDocuments = async ({
    path , queryPath , orderByKey ,limit
   }: {

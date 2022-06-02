@@ -58,6 +58,7 @@ export const postNewDocument = async ({
   }
 
   const documentRef = doc(db, collectionSelected, documentName) 
+ 
   //
       if(useBatch) {
         const newDocumentObject = useBatch.set(documentRef, copyObjectInput,{merge:true})
@@ -69,6 +70,39 @@ export const postNewDocument = async ({
   return resultPostedDoument;
 
 };
+
+export const postNewNestedDocument = async ({
+ 
+ inputObject,
+noRegister,useBatch ,firstCollectionName,firstDocumentName,secondCollectionName,secondDocumentName
+}: {
+
+ 
+ noRegister?:boolean;
+ inputObject: any;useBatch?:any | undefined;
+ firstCollectionName:string;firstDocumentName:string;secondCollectionName:string;secondDocumentName:string
+}) => {
+ let copyObjectInput:any
+ if(noRegister == null) copyObjectInput = { ...inputObject, ...{ registeredAt: serverTimestamp() } };
+ if(noRegister)copyObjectInput = {...inputObject}
+
+
+
+
+
+
+ const documentRef = doc(db, firstCollectionName, firstDocumentName,secondCollectionName,secondDocumentName) 
+
+ //
+     if(useBatch) {
+       const newDocumentObject = useBatch.set(documentRef, copyObjectInput,{merge:true})
+       return newDocumentObject
+     }
+ //
+ const resultPostedDoument = await setDoc(documentRef, copyObjectInput,{merge:true});
+
+ return resultPostedDoument;
  
 
 
+    }

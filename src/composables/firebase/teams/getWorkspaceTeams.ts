@@ -1,9 +1,10 @@
-import {getDocuments,getDocumentsWithWhere,getDocument} from '../get/getDocuments'
+import {getDocuments,getDocumentsWithWhere, getDocumentFromNestedCollection} from '../get/getDocuments'
  
 
 export async function getOneTeamFirebase(workspaceId:string,teamId:string){
    try{
-       const document = await getDocument({collectionName:`workspaces/${workspaceId}/teams`,documentName:teamId})
+   
+       const document = await getDocumentFromNestedCollection({firstCollectionName:'workspaces',firstDocumentsName:workspaceId,secondCollectionName:'teams',secondDocumentName:teamId})
      return {data:{...document.data(),id:document.id},error:false}
     }catch(e:any){
   return {error:true,message:e.message}

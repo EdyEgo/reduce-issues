@@ -49,34 +49,36 @@ export async function postIssue ({creatorId,newIssue,teamId,workspaceId}:{creato
     const batch = writeBatch(db); 
    
     const teamDocument:any = await getOneTeam(workspaceId,teamId)
-    
+ 
     // first get the team by id and workspace id , then take the number of issues
     if(teamDocument.error) return{error:true,message:'Could not find team'}
     try{
         // post issue
+        const newIssueNumberIndentifier = teamDocument.data.issuesNumber + 1
      const postedIssue = await postNewDocument({
          collectionSelected:`workspaces/${workspaceId}/teams/${teamId}/issues`,
          useAddDocument:true,
-         inputObject:{...newIssue,identified:teamDocument.data.identified + `${teamDocument.data.issuesTeamNumber + 1}`,updatedAt:serverTimestamp()},useBatch:batch
+         inputObject:{...newIssue,identified:teamDocument.data.identified + '-' + newIssueNumberIndentifier ,updatedAt:serverTimestamp()},useBatch:batch
         })
 
  
      // increment issues number increment in membersIds the createdIssues by this member and to status , or/ and priority
    
-    
-     await postNewDocument({collectionSelected:`workspace/${workspaceId}/teams`,documentName:teamId,inputObject:{
-         issuesNumber:increment(1),
-         membersId:{[creatorId]:{createdIssues:increment(1)}},
-         ...returnFitLabelsObject(newIssue)
+     const updateTeamObjectInput = {
+        issuesNumber:increment(1),
+        membersId:{[creatorId]:{createdIssues:increment(1)}},
+        ...returnFitLabelsObject(newIssue)
 
-     },useBatch:batch})
+    }
+     await postNewDocument({collectionSelected:`workspaces/${workspaceId}/teams`,documentName:teamId,inputObject:updateTeamObjectInput,useBatch:batch})
+  
 
-    // 
     
     
 
 
         await batch.commit()
+      
    return {data:{id:postedIssue.id},error:false}
  }catch(e:any){
     
