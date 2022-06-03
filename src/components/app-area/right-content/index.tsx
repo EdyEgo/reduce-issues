@@ -4,6 +4,7 @@ import {addIssuesToOneTeam,addSubscription,removeSubscriptions} from '../../../s
 import {getTeamIssues} from '../../../api/dataBaseIssuesMethods'
 import {useState,useEffect} from 'react'
 import NavBar from './navbar'
+import FilteredIssues from './filtered-issues'
 
 
 interface RightSideContentProps {}
@@ -84,7 +85,9 @@ useEffect(()=>{
             path="/"
             element={<div className="placeholder"> 
                    <NavBar/>
-                      <div className="filtered-issues-container"></div>
+                      <div className="filtered-issues-container">
+                        <FilteredIssues/>
+                      </div>
 
             </div>} 
             // children={<div className="placeholder">content right</div>}
@@ -94,7 +97,9 @@ useEffect(()=>{
           // children={<div className="placeholder">filtered issues</div>}
           element={<div className="placeholder">
             <NavBar/>
-          <div className="filtered-issues-container"></div>
+            <div className="filtered-issues-container">
+                <FilteredIssues/>
+            </div>
           </div>}
           />
 
@@ -104,7 +109,9 @@ useEffect(()=>{
           // children={<div className="placeholder">team tab</div>}
           element={<div className="placeholder">
             <NavBar/>
-            <div className="filtered-issues-container"></div>
+            <div className="filtered-issues-container">
+                <FilteredIssues/>
+            </div>
 
             </div>}
           />

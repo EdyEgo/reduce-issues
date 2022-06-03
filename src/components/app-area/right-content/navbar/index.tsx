@@ -8,8 +8,7 @@ interface ContentRightNavBarProps {
 }
  
 const ContentRightNavBar: React.FC<ContentRightNavBarProps> = () => {
-    // left here ,  next i will add the filter button (conditioned by team tab if you are in my issues then this filter must be hidden), and view button
-    // const  
+    
 
     const params = useParams() // if .teamURL then show + Filter
    const anchorRefFilterDropDown = useRef<any>(null)

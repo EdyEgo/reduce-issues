@@ -1,9 +1,28 @@
 import {createSlice } from '@reduxjs/toolkit'
 
 
+// interface fillterItem{
+//     about:{name:string,[key:string]:any},is:boolean,value:any
+// }
+
 interface fillterItem{
-    about:{name:string,[key:string]:any},is:boolean,value:any
+    is:boolean,value:any
+  }
+
+interface filteredUser{
+    userId:string,is:boolean ,value:any
+}  
+
+interface filtersListOrder{
+    status:fillterItem[],
+    priority:fillterItem[],
+    labels:fillterItem[],
+    creator:filteredUser[],
+    dueDate:any[],
+    assignee:filteredUser[]
 }
+
+
 
 interface defaultViewFilters{
     groupingBy:string | undefined,
@@ -30,7 +49,7 @@ interface customViewFiltersEmpty {
 }
 
 const initialState:{
-   filtersListOrder:fillterItem[],
+   filtersListOrder:filtersListOrder,
    viewFilters:{
        default:defaultViewFilters,
        custom:customViewFilters | customViewFiltersEmpty
@@ -40,14 +59,23 @@ const initialState:{
    
  = {
   
-  filtersListOrder:[],
+  filtersListOrder:{
+      status:[],
+      priority:[],
+      labels:[],
+      creator:[],
+      dueDate:[],
+      assignee:[]
+
+  },
     viewFilters:{
         default:{groupingBy:'status',orderingBy:'status'
         ,displayProperties:{assignee:true,
             dueDate:true,id:true,labels:true,
             priority:true,registeredAt:true,
             status:true,updatedAt:true}
-    },custom:{empty:true}
+    },custom:{empty:true}// custom is empty false and a copy of the default if the user has selected something,
+    // this method with custom is kin of stupid :( not gonna lie
   }
 } 
 
@@ -90,26 +118,60 @@ export const filterIssuesSlice = createSlice({
 
         ///
         addToFilterList(state,{payload}){
-            const item:fillterItem = payload
-            state.filtersListOrder.push(item)
+            const item:any = payload.item
+            const type: "status" |
+            "priority" |
+            "labels" |
+            "creator" |
+            "dueDate" |
+            "assignee"  = payload.type
+
+            state.filtersListOrder[type].push(item)
         },
-        removeItemAtUnkownedIndex(state,{payload}){
-            const removeItemAtIndex = state.filtersListOrder.indexOf(payload)
-            state.filtersListOrder.splice(removeItemAtIndex,1)
+        removeItemAtUnkownedIndex(state,{payload}){ 
+            const item:any = payload.item
+            const type: "status" |
+            "priority" |
+            "labels" |
+            "creator" |
+            "dueDate" |
+            "assignee"  = payload.type
+
+            const removeItemAtIndex = state.filtersListOrder[type].indexOf(item)
+            state.filtersListOrder[type].splice(removeItemAtIndex,1)
 
         },
-        removeFilterListItem(state,{payload}){
-            const removeItemAtIndex = payload
-            state.filtersListOrder.splice(removeItemAtIndex,1)
+        removeFilterListItem(state,{payload}){ 
+            const item:any = payload.item
+            const type: "status" |
+            "priority" |
+            "labels" |
+            "creator" |
+            "dueDate" |
+            "assignee"  = payload.type
+
+
+            const removeItemAtIndex = item
+            state.filtersListOrder[type].splice(removeItemAtIndex,1)
         },
-        modifyItemAtIndex(state,{payload}){
-            const index = payload.index
-            const keyObject = payload.keyObject
-            const newValueForKeyObject = payload.newValueForKeyObject
-            const copyOldObject = state.filtersListOrder[index]
+        modifyItemAtIndex(state,{payload}){ 
+            const item:any = payload.item
+            const itemIndex = item.itemIndex
+            const type: "status" |
+            "priority" |
+            "labels" |
+            "creator" |
+            "dueDate" |
+            "assignee"  = payload.type
+
+
+            const index = itemIndex
+            const keyObject = item.keyObject
+            const newValueForKeyObject = item.newValueForKeyObject
+            const copyOldObject = state.filtersListOrder[type][index]
             const newObject = {...copyOldObject,[keyObject]:newValueForKeyObject}
 
-            state.filtersListOrder.splice(index,1,newObject)
+            state.filtersListOrder[type].splice(index,1,newObject)
         }
 
        

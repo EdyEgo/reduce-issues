@@ -61,22 +61,22 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
       if(checkboxType === 'assignee' || checkboxType === 'creator') {
        
     const userObject = returnFitFilterValueByIndexAndcheckboxType(filterIndex)
-         const filterItemObject = {about:{name:checkboxType,assignee:{id:userObject.id}},is:true,value:{firstName:userObject.firstName,lastName:userObject.lastName,photoURL:userObject.photoURL}}// left here too
-         dispatch(addToFilterList(filterItemObject))
+         const filterItemObject = {userId:userObject.id,is:true,value:{firstName:userObject.firstName,lastName:userObject.lastName,photoURL:userObject.photoURL}}// left here too
+         dispatch(addToFilterList({item:filterItemObject,type:checkboxType}))
          return 
       }
 
      if( filterIndex != null && deselected === false){
      // first search if 
-   const filterItemObject = {about:{name:checkboxType},is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex).name}
+   const filterItemObject = {is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex).name}
    
-     dispatch(addToFilterList(filterItemObject))
+     dispatch(addToFilterList({item:filterItemObject,type:checkboxType}))
      
      return 
      }
      if(filterIndex != null && deselected){ 
-        const filterItemObject = {about:{name:checkboxType},is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex).name}
-        dispatch(removeItemAtUnkownedIndex(filterItemObject))
+        const filterItemObject = {is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex).name}
+        dispatch(removeItemAtUnkownedIndex({item:filterItemObject,type:checkboxType}))
         return 
 
      }
@@ -287,22 +287,7 @@ return ''
         </ListItemButton>
       </ListItem>)
  
-    //  return <div className='member-option pointer-events-none flex gap-2'>
-    //      <div className="icon-container">
-    //                <div className="icon"></div>
-    //                <React.Suspense fallback={<div></div>}>
-    //                {ExtractFitIcon({iconName:icon})}
-    //                </React.Suspense>
-               
-                   
-    //      </div>
-    //      <div className="name-container ">
-             
-    //          <div className="label-name">{ name}</div>
-             
-    //      </div>
-                
-    //  </div>
+ 
 
 
 
