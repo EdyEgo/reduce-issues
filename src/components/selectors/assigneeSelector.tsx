@@ -29,10 +29,10 @@ interface SelectProps{
 
 
 
-  function returnElementOption(userObject:any){
+  function returnElementOption(userObject:any,index:null | number){
     
  
-     return <div className='member-option pointer-events-none flex gap-2'>
+     return <div className='member-option pointer-events-none flex gap-2' key={index}>
          <div className="profile-container">
                     {userObject.photoURL == null && (
                     <div className="no-profile-picture">
@@ -82,13 +82,13 @@ interface SelectProps{
     const list = Object.entries(teamMembersList)
     if(list.length <= 0) return null
   
-     const membersList =  list.map((item)=>{
+     const membersList =  list.map((item,index)=>{
             const userObject = returnWorspaceMemberObjectById(item[0])
-          return (<MenuItem value={userObject} onClick={()=>{setSelectedMember(userObject);handleClose()}}>{returnElementOption(userObject)}</MenuItem>)
+          return (<MenuItem value={userObject} key={index} onClick={()=>{setSelectedMember(userObject);handleClose()}}>{returnElementOption(userObject,index)}</MenuItem>)
       })
       const unassignedObject = {firstName:'Unassigned',lastName:'',photoURL:null,id:null}
       membersList.unshift(
-        <MenuItem value={''} onClick={()=>{setSelectedMember(unassignedObject);handleClose()}}>{returnElementOption(unassignedObject)}</MenuItem>
+        <MenuItem key={null} value={''} onClick={()=>{setSelectedMember(unassignedObject);handleClose()}}>{returnElementOption(unassignedObject,null)}</MenuItem>
       )
       return membersList
 
@@ -109,7 +109,7 @@ interface SelectProps{
         disabled={disableButton}
       >
           {selectedMember.id === null && labelTitle}
-       {selectedMember.id !== null && <MenuItem value={selectedMember.id}>{returnElementOption(selectedMember)}</MenuItem>}
+       {selectedMember.id !== null && <MenuItem value={selectedMember.id}>{returnElementOption(selectedMember,null)}</MenuItem>}
       </Button>
       {Object.entries(teamMembersList).length >= 1 &&
       <Menu

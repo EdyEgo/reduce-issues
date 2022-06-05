@@ -23,7 +23,7 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
    const dispatch = useDispatch() 
    const params = useParams() 
    
-  //  const filtersIssuesStore = useSelector((state:any)=>state.filtersIssues.filtersListOrder)// this one is here only for test reasons
+   const filtersIssuesStore = useSelector((state:any)=>state.filtersIssues.filtersListOrder) // verifi if there is a selected property in  store
 
    const teamsList = useSelector( // we are gonna use this list both for the assignee and the creator
     (state: any) => state.team.teamList
@@ -112,10 +112,20 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
     
   };
 
-  function returnFilteredMember(assigned:boolean){
+  function returnFilteredMember(assigned:boolean){ 
+
+    let storeSelected:any  ;
+    if(checkboxType) storeSelected =filtersIssuesStore[checkboxType]
+
     if(items.length > 0) {
                   
       return items.map((assignedUserObject:any,index:number)=>{ 
+
+        const findStoredValue = storeSelected.find((user:any)=>user.userId === assignedUserObject.id)
+        
+                  
+        const checked = findStoredValue?.is 
+       if(checked != undefined) return returnElementOption({...assignedUserObject,index,checked})
        
           return returnElementOption({...assignedUserObject,index})
       })
@@ -151,7 +161,11 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
       return createdElements
   }
 
-  function returnListItemsByCheckBoxType(){
+  function returnListItemsByCheckBoxType(){ // filtersIssuesStore
+   
+    let storeSelected:any  ;
+    if(checkboxType) storeSelected =filtersIssuesStore[checkboxType]
+
        const listTypes:{[key:string]:any} = {
         status:()=>{
             
@@ -159,6 +173,12 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
              if(items.length > 0) {
                   
                 return items.map((objectItem:any,index:number)=>{
+                   const findStoredValue = storeSelected.find((item:any)=>item.value === objectItem.name)
+                  
+                  
+                   const checked = findStoredValue?.is 
+                  if(checked != undefined)return returnElementOption({...objectItem,index,checked})
+                   
                     return returnElementOption({...objectItem,index})
                 })
              }
@@ -168,6 +188,11 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
               const associatedNumber = selectedTeamObject?.createdStatus &&  selectedTeamObject.createdStatus[name] ?
               selectedTeamObject.createdStatus[name] : null 
                 availableItems.push({icon,name,checked:false,associatedNumber})
+                const findStoredValue = storeSelected.find((item:any)=>item.value === name)
+                  
+                  
+                const checked = findStoredValue?.is 
+                if(checked != undefined)return returnElementOption({icon,name,index,checked,associatedNumber})
                 return returnElementOption({icon,name,index,checked:false,associatedNumber})
             }) 
 
@@ -188,9 +213,17 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
         priority:()=>{ 
           
 
-            if(items.length > 0) {
+            if(items.length > 0) { 
+
+              
                   
-                return items.map((objectItem:any,index:number)=>{
+                return items.map((objectItem:any,index:number)=>{ 
+                  const findStoredValue = storeSelected.find((item:any)=>item.value === objectItem.name)
+                  
+                  
+                  const checked = findStoredValue?.is 
+                 if(checked != undefined)return returnElementOption({...objectItem,index,checked})
+                  
                     return returnElementOption({...objectItem,index})
                 })
              } 
@@ -200,7 +233,13 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
    
               const associatedNumber = selectedTeamObject?.createdPriority &&  selectedTeamObject.createdPriority[name] ?
               selectedTeamObject.createdPriority[name] : null 
-                availableItems.push({icon,name,checked:false,associatedNumber})
+                availableItems.push({icon,name,checked:false,associatedNumber}) 
+
+                const findStoredValue = storeSelected.find((item:any)=>item.value === name)
+                  
+                  
+                const checked = findStoredValue?.is 
+                if(checked != undefined)return returnElementOption({icon,name,index,checked,associatedNumber})
                 
                 return returnElementOption({icon,name,index,checked:false,associatedNumber})
             }) 
@@ -209,12 +248,18 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
             return createdElements
 
         },
-        label:()=>{ 
+        labels:()=>{ 
          //add to returnElementOption the associatedNumber by checking the selected team object for status , priority , labels etc
 
             if(items.length > 0) {
                   
-                return items.map((objectItem:any,index:number)=>{
+                return items.map((objectItem:any,index:number)=>{ 
+                  const findStoredValue = storeSelected.find((item:any)=>item.value === objectItem.name)
+                  
+                  
+                  const checked = findStoredValue?.is 
+                 if(checked != undefined)return returnElementOption({...objectItem,index,checked})
+
                     return returnElementOption({...objectItem,index})
                 })
              } 
@@ -223,6 +268,11 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
               const associatedNumber = selectedTeamObject?.createdLabel &&  selectedTeamObject.createdLabel[name] ?
               selectedTeamObject.createdLabel[name] : null 
                 availableItems.push({icon,name,checked:false,associatedNumber})
+                const findStoredValue = storeSelected.find((item:any)=>item.value === name)
+                  
+                  
+                const checked = findStoredValue?.is 
+                if(checked != undefined)return returnElementOption({icon,name,index,checked,associatedNumber})
 
                 return returnElementOption({icon,name,index,checked:false,associatedNumber})
             })
@@ -230,7 +280,7 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
             return createdElements
         },
         dueDate:()=>{
-return ''
+            return ''
         },
        } 
       
@@ -249,10 +299,10 @@ return ''
 
 
     return      (<ListItem 
-        key={name}
+        key={index}
         secondaryAction={
           <Checkbox
-
+           key={index + 1}
             edge="end"
             onChange={handleToggle(index)}
             checked={checked}
@@ -261,29 +311,29 @@ return ''
         }
         disablePadding
       >
-        <ListItemButton>
-          <ListItemAvatar>
+        <ListItemButton key={index + 2}>
+          <ListItemAvatar key={index + 3}>
             {photoURL && <Avatar
               alt={`name`}
               src={photoURL}
             />}
             {icon && 
                
-                ExtractFitIconNoDinamic({iconName:icon})
+                ExtractFitIconNoDinamic({iconName:icon,index})
             }
             {
                photoURL === null && firstName && 
-                <div className='icon-placeholder rounded-full'>
-                     <span className='first-name-letter'>{firstName[0]}</span>
-                     {lastName && <span className='last-name-letter'>{lastName[0]}</span>}
+                <div className='icon-placeholder rounded-full' key={index + 4}>
+                     <span className='first-name-letter' key={index + 5}>{firstName[0]}</span>
+                     {lastName && <span className='last-name-letter' key={index + 6}>{lastName[0]}</span>}
                 
                 </div>
             }
           </ListItemAvatar>
-          {firstName == null &&<ListItemText id={name} primary={name} />} 
-          {firstName && lastName == null && <ListItemText id={firstName} primary={firstName} />}
-          {firstName && lastName && <ListItemText id={firstName} primary={firstName + ' ' + lastName} />}
-          {associatedNumber != null && <div className="associated-number ml-2">{associatedNumber}</div>}
+          {firstName == null &&<ListItemText id={name} primary={name} key={index + 7}/>} 
+          {firstName && lastName == null && <ListItemText id={firstName} primary={firstName} key={index + 8}/>}
+          {firstName && lastName && <ListItemText key={index + 9} id={firstName} primary={firstName + ' ' + lastName} />}
+          {associatedNumber != null && <div className="associated-number ml-2" key={index + 10}>{associatedNumber}</div>}
         </ListItemButton>
       </ListItem>)
  

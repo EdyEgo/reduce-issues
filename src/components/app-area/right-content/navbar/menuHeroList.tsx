@@ -61,7 +61,7 @@ const MenuHeroList: React.FC<MenuHeroListProps> = ({handleClickItem}) => {
                      </span>
                     </MenuItem>
 
-                    <MenuItem   onClick={()=>{handleClickItem('label')}} >
+                    <MenuItem   onClick={()=>{handleClickItem('labels')}} >
                     <span className="icon">
                         <LabelIcon/>
                      </span>

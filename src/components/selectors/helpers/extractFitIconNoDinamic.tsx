@@ -12,51 +12,51 @@ import LabelBug from '@mui/icons-material/BugReportRounded'
 import LabelFeature from '@mui/icons-material/OpenInBrowserRounded'
 
  
-export default  function extractFitIcon({iconName}:{iconName:string}){
-    const lazy = React.lazy
+export default  function extractFitIcon({iconName,index}:{iconName:string,index:number}){
+  
     const icons:{[key:string]:any} = {
         priorityUrgent:()=>{
            
-           return <PriorityUrgent/>
+           return <PriorityUrgent key={index + 17}/>
         },
         priorityHigh:()=>{
            
-           return <PriorityHigh/>
+           return <PriorityHigh key={index + 17}/>
         },
         priorityMedium:()=>{
        
-           return <PriorityMedium/>
+           return <PriorityMedium key={index + 17}/>
         },
         priorityLow:()=>{
          
-           return <PriorityLow/>
+           return <PriorityLow key={index + 17}/>
         },
         /// status
 
         backlog:()=>{
         
            
-           return <BackLog/>
+           return <BackLog key={index + 17}/>
         },
         todo:()=>{
         
      
-         return <Todo/>
+         return <Todo key={index + 17}/>
         },
         inProgress:()=>{
          
        
-         return <InProgress/>
+         return <InProgress key={index + 17}/>
         },
         done:()=>{
          
         
-         return <Done/>
+         return <Done key={index + 17}/>
         },
         canceled:()=>{
         
       
-         return <Canceled/>
+         return <Canceled key={index + 17}/>
         },
 
         // labels
@@ -64,17 +64,17 @@ export default  function extractFitIcon({iconName}:{iconName:string}){
         labelBug:()=>{
        
        
-         return <LabelBug/>
+         return <LabelBug key={index + 17}/>
         },
         labelFeature:()=>{
       
          
-         return <LabelFeature/>
+         return <LabelFeature key={index + 17}/>
         },
         labelImprovement:()=>{
         
        
-         return <Done/>
+         return <Done key={index + 17}/>
         },
 
     }
