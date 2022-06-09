@@ -31,7 +31,7 @@ const ViewDisplayProperties: React.FC<ViewDisplayPropertiesProps> = () => {
                  Display properties
              </div>
              <div className="display-properties__buttons grid grid-cols-2 grid-rows-2 gap-2 ">
-               {Object.entries(displayProperties).map((property)=>{
+               {Object.entries(displayProperties).map((property,index)=>{
                    
                    const buttonStyleInactive  = "text-gray-500 cursor-pointer border-gray-200 rounded-md font-sans p-1 text-center border hover:border-gray-200 hover:bg-gray-300 hover:text-black transition-all ease"
                    const buttonStyleActive  ="cursor-pointer border-gray-300 border text-center bg-gray-100 hover:bg-white hover:border-gray-400 hover:text-gray-500 transition-all ease rounded-md font-sans p-1"
@@ -39,7 +39,7 @@ const ViewDisplayProperties: React.FC<ViewDisplayPropertiesProps> = () => {
                    // is selected
                    const buttonStyle = property[1] ? buttonStyleActive : buttonStyleInactive
                 
-                   return   <div className={buttonStyle} onClick={()=>{handleChangePropertyValue(property[0])}}>{retunrFitButtonText(property[0]).toUpperCase()}</div>
+                   return   <div className={buttonStyle} key={index} onClick={()=>{handleChangePropertyValue(property[0])}}>{retunrFitButtonText(property[0]).toUpperCase()}</div>
                })}
              </div>
         </div> 

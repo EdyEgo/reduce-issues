@@ -53,10 +53,19 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
 
   function handleSettingFiltersIssues({deselected,dueDate,assigneeId,creatorId,filterIndex}:{deselected:boolean , filterIndex:number,assigneeId?:string,creatorId?:string,dueDate?:string}){
      // can be : -->  assignee , creator , status , label , priority , dueDate <--
- 
+
     if(checkboxType === null) return
 
       // asignee first
+
+      if(deselected && checkboxType === 'assignee' ||  deselected && checkboxType === 'creator'){
+        const filterItemObject = {is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex)}
+        
+        dispatch(removeItemAtUnkownedIndex({item:filterItemObject,type:checkboxType}))
+        return 
+         
+      
+      }
 
       if(checkboxType === 'assignee' || checkboxType === 'creator') {
        
@@ -68,14 +77,16 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
 
      if( filterIndex != null && deselected === false){
      // first search if 
-   const filterItemObject = {is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex).name}
+   const filterItemObject = {is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex)}
    
      dispatch(addToFilterList({item:filterItemObject,type:checkboxType}))
      
      return 
      }
      if(filterIndex != null && deselected){ 
-        const filterItemObject = {is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex).name}
+   
+        const filterItemObject = {is:true,value:returnFitFilterValueByIndexAndcheckboxType(filterIndex)}
+      
         dispatch(removeItemAtUnkownedIndex({item:filterItemObject,type:checkboxType}))
         return 
 
@@ -173,8 +184,8 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
              if(items.length > 0) {
                   
                 return items.map((objectItem:any,index:number)=>{
-                   const findStoredValue = storeSelected.find((item:any)=>item.value === objectItem.name)
-                  
+                   const findStoredValue = storeSelected.find((item:any)=>item.value.name === objectItem.name)
+                 
                   
                    const checked = findStoredValue?.is 
                   if(checked != undefined)return returnElementOption({...objectItem,index,checked})
@@ -188,7 +199,7 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
               const associatedNumber = selectedTeamObject?.createdStatus &&  selectedTeamObject.createdStatus[name] ?
               selectedTeamObject.createdStatus[name] : null 
                 availableItems.push({icon,name,checked:false,associatedNumber})
-                const findStoredValue = storeSelected.find((item:any)=>item.value === name)
+                const findStoredValue = storeSelected.find((item:any)=>item.value.name === name)
                   
                   
                 const checked = findStoredValue?.is 
@@ -218,7 +229,7 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
               
                   
                 return items.map((objectItem:any,index:number)=>{ 
-                  const findStoredValue = storeSelected.find((item:any)=>item.value === objectItem.name)
+                  const findStoredValue = storeSelected.find((item:any)=>item.value.name === objectItem.name)
                   
                   
                   const checked = findStoredValue?.is 
@@ -235,7 +246,7 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
               selectedTeamObject.createdPriority[name] : null 
                 availableItems.push({icon,name,checked:false,associatedNumber}) 
 
-                const findStoredValue = storeSelected.find((item:any)=>item.value === name)
+                const findStoredValue = storeSelected.find((item:any)=>item.value.name === name)
                   
                   
                 const checked = findStoredValue?.is 
@@ -254,7 +265,7 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
             if(items.length > 0) {
                   
                 return items.map((objectItem:any,index:number)=>{ 
-                  const findStoredValue = storeSelected.find((item:any)=>item.value === objectItem.name)
+                  const findStoredValue = storeSelected.find((item:any)=>item.value.name === objectItem.name)
                   
                   
                   const checked = findStoredValue?.is 
@@ -268,7 +279,7 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
               const associatedNumber = selectedTeamObject?.createdLabel &&  selectedTeamObject.createdLabel[name] ?
               selectedTeamObject.createdLabel[name] : null 
                 availableItems.push({icon,name,checked:false,associatedNumber})
-                const findStoredValue = storeSelected.find((item:any)=>item.value === name)
+                const findStoredValue = storeSelected.find((item:any)=>item.value.name === name)
                   
                   
                 const checked = findStoredValue?.is 

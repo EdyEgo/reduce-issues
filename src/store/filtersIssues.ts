@@ -126,7 +126,7 @@ export const filterIssuesSlice = createSlice({
             "dueDate" |
             "assignee"  = payload.type
 
-            state.filtersListOrder[type].push(item)
+            state.filtersListOrder[type].push({...item,value:{...item.value,checked:true}})
         },
         removeItemAtUnkownedIndex(state,{payload}){ 
             const item:any = payload.item
@@ -138,8 +138,10 @@ export const filterIssuesSlice = createSlice({
             "assignee"  = payload.type
 
             const removeItemAtIndex = state.filtersListOrder[type].indexOf(item)
+         
             state.filtersListOrder[type].splice(removeItemAtIndex,1)
 
+       
         },
         removeFilterListItem(state,{payload}){ 
             const item:any = payload.item
