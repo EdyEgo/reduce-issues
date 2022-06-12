@@ -12,6 +12,7 @@ import { signOut } from "../../../../api/dataBaseAuthMethods";
 import { authSlice, changeErrorStatus } from "../../../../store/auth";
 import { useSelector, useDispatch } from "react-redux";
 import CheckboxList from '../../../selectors/checkboxList'
+import CheckboxListAtl from '../../../selectors/checkboxListAlt'
 import HeroItemsList from './menuHeroList'
 
 
@@ -116,7 +117,7 @@ function handleClickOnHeroItem(selectedItem:string){
                     onKeyDown={handleListKeyDown}
                   >
                    {showHeroMenu && <HeroItemsList handleClickItem={handleClickOnHeroItem}/>}
-                    {showCheckBoxMenu && <CheckboxList checkboxType={checkboxType}/>}
+                    {showCheckBoxMenu && <CheckboxListAtl checkboxType={checkboxType}/>}
                   </MenuList>
                 </ClickAwayListener>
               </Paper>

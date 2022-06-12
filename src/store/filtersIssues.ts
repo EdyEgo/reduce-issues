@@ -122,13 +122,44 @@ export const filterIssuesSlice = createSlice({
             const type: "status" |
             "priority" |
             "labels" |
-            "creator" |
-            "dueDate" |
-            "assignee"  = payload.type
+           
+            "dueDate" 
+              = payload.type
+           
+        const addedObject = {is:true,value:{...item,checked:true}}
+     
+            state.filtersListOrder[type].push(addedObject)
+        }, 
+        addToFilterListUser(state,{payload}){
+            const item:any = payload.item
+            const type: "creator" |"assignee"  = payload.type
+          
 
-            state.filtersListOrder[type].push({...item,value:{...item.value,checked:true}})
+            state.filtersListOrder[type].push({userId:item.id,is:true,value:{...item,checked:true}})
+        },
+        removeUserAtUnkownedIndex(state,{payload}){ 
+            
+            const item:any = payload.item
+            const type: "creator" | "assignee"  = payload.type
+           
+
+            
+            const removeItemAtIndex = state.filtersListOrder[type].findIndex((selectedElement)=>{
+                
+                    //  if(selectedElement.value.icon ===  item.value.icon) return true
+                     if(item?.userId != null && selectedElement.userId === item.userId) return true
+
+                  
+            })
+   
+           
+         
+            state.filtersListOrder[type].splice(removeItemAtIndex,1)
+
+       
         },
         removeItemAtUnkownedIndex(state,{payload}){ 
+            
             const item:any = payload.item
             const type: "status" |
             "priority" |
@@ -136,8 +167,18 @@ export const filterIssuesSlice = createSlice({
             "creator" |
             "dueDate" |
             "assignee"  = payload.type
+           
 
-            const removeItemAtIndex = state.filtersListOrder[type].indexOf(item)
+            
+            const removeItemAtIndex = state.filtersListOrder[type].findIndex((selectedElement)=>{
+                
+                     if(selectedElement.value.icon ===  item.value.icon) return true
+                    //  if(item?.userId != null && selectedElement.userId === item.userId) return true
+
+                  
+            })
+   
+           
          
             state.filtersListOrder[type].splice(removeItemAtIndex,1)
 
@@ -183,6 +224,6 @@ export const filterIssuesSlice = createSlice({
 
 })
 
-export const { addCustomViewGrupingBy,addCustomViewOrderingBy,addCustomViewDisplayPropertie, addToFilterList,removeItemAtUnkownedIndex, removeFilterListItem,modifyItemAtIndex} = filterIssuesSlice.actions
+export const { addCustomViewGrupingBy,addToFilterListUser,removeUserAtUnkownedIndex,addCustomViewOrderingBy,addCustomViewDisplayPropertie, addToFilterList,removeItemAtUnkownedIndex, removeFilterListItem,modifyItemAtIndex} = filterIssuesSlice.actions
 
 export default filterIssuesSlice.reducer
