@@ -117,6 +117,15 @@ export const filterIssuesSlice = createSlice({
 
 
         ///
+        removeAllFilterListItemsByType(state,{payload}){
+            const type: "status" |
+            "priority" |
+            "labels" |
+            "creator" |"assignee" | 
+            "dueDate" 
+              = payload
+            state.filtersListOrder[type] = []
+        },
         addToFilterList(state,{payload}){
             const item:any = payload.item
             const type: "status" |
@@ -224,6 +233,6 @@ export const filterIssuesSlice = createSlice({
 
 })
 
-export const { addCustomViewGrupingBy,addToFilterListUser,removeUserAtUnkownedIndex,addCustomViewOrderingBy,addCustomViewDisplayPropertie, addToFilterList,removeItemAtUnkownedIndex, removeFilterListItem,modifyItemAtIndex} = filterIssuesSlice.actions
+export const { removeAllFilterListItemsByType, addCustomViewGrupingBy,addToFilterListUser,removeUserAtUnkownedIndex,addCustomViewOrderingBy,addCustomViewDisplayPropertie, addToFilterList,removeItemAtUnkownedIndex, removeFilterListItem,modifyItemAtIndex} = filterIssuesSlice.actions
 
 export default filterIssuesSlice.reducer

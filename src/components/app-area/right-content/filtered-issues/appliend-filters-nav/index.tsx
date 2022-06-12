@@ -1,5 +1,6 @@
 import {useSelector} from 'react-redux'
 import LabelFilterTab from './labelFilterTab'
+import UsersFilterTab from './userFilterTab'
 
 interface AppliedFiltersNavBarProps {
     
@@ -24,6 +25,20 @@ const AppliedFiltersNavBar: React.FC<AppliedFiltersNavBarProps> = () => {
                  {filtersListOrder.priority.length >= 1 &&<div className="priority-filter">
                      <LabelFilterTab labelStatesPlural='priorities' labelTitle='Priority' labelType='priority' representativLabelIconName='priorityHigh' />
                  </div>}
+
+                 {
+                    filtersListOrder.assignee.length >= 1 && 
+                        <div className="assignee-filter">
+                            <UsersFilterTab type='assignee'/>
+                        </div>
+                 }
+
+                 {
+                    filtersListOrder.creator.length >= 1 && 
+                        <div className="creator-filter">
+                            <UsersFilterTab type='creator'/>
+                        </div>
+                 }
             </div>
         </div>
     );

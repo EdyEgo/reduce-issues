@@ -1,5 +1,7 @@
 import * as React from 'react';
-import {useSelector} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
+import ClearIcon from '@mui/icons-material/Clear';
+import {removeAllFilterListItemsByType} from '../../../../../store/filtersIssues'
 
 import extractFitIconNoDinamic from  '.././../../../../components/selectors/helpers/extractFitIconNoDinamic'
 
@@ -13,6 +15,13 @@ interface LabelFilterTabProps {
 const LabelFilterTab: React.FC<LabelFilterTabProps> = ({labelType, representativLabelIconName,labelTitle,labelStatesPlural}) => {
   
     const filtersListOrder = useSelector((state:any)=>state.filtersIssues.filtersListOrder)
+    const dispatch  = useDispatch()
+
+    function removeAllItems(){
+      
+   
+        dispatch(removeAllFilterListItemsByType(labelType))
+    }
  
    function labelStatusSelectorDisplay(){
        // add a function that makes them all false or true , on .is properties
@@ -93,7 +102,9 @@ const LabelFilterTab: React.FC<LabelFilterTabProps> = ({labelType, representativ
                   {labelSelectorHandler()}
              </div>
 
-
+             <div className="label-cancel cursor-pointer hover:bg-gray-200 p-1 rounded-sm" onClick={removeAllItems}>
+                 <ClearIcon className='pointer-events-none'/>
+             </div>
         </div>
     );
 }
