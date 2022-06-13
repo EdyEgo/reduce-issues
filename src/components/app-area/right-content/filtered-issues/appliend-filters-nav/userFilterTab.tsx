@@ -3,6 +3,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import ClearIcon from '@mui/icons-material/Clear';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Avatar from '@mui/material/Avatar';
+import DropDownTabIs from './dropDownTabIsSelector'
 import {removeAllFilterListItemsByType} from '../../../../../store/filtersIssues'
 
 
@@ -18,6 +19,9 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
     const dispatch = useDispatch()
     const filtersListOrder = useSelector((state:any)=>state.filtersIssues.filtersListOrder)
 
+    const isTabDropDownMenu =  React.useRef(null)
+    const [tabDropDownIsOpen,setTabDropDownIsOpen] = React.useState(false)
+
     function labelStatusSelectorDisplay(){
         // add a function that makes them all false or true , on .is properties
      const statesNumber = filtersListOrder[type].length 
@@ -25,7 +29,7 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
      
    if(statesArePositive){
      return (
-         <div className="status-text cursor-pointer hover:bg-gray-200 p-1 rounded-sm">
+         <div className="status-text cursor-pointer hover:bg-gray-100 p-1 rounded-sm">
              {statesNumber > 1 && <span>is either of </span>}
              {statesNumber <= 1 && <span>is </span>}
             
@@ -34,7 +38,7 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
    }
  
    return (
-     <div className="status-text cursor-pointer hover:bg-gray-200 p-1 rounded-sm" >
+     <div className="status-text cursor-pointer hover:bg-gray-100 p-1 rounded-sm" >
           <span>is not </span>
      </div>
    )
@@ -47,7 +51,7 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
     function labelSelectorHandler(){
         const statesNumber = filtersListOrder[type].length 
         if(statesNumber > 1){
-            return (<div className="label-states-number  cursor-pointer hover:bg-gray-200 p-1 rounded-sm">
+            return (<div className="label-states-number  cursor-pointer hover:bg-gray-100 p-1 rounded-sm">
                 <div className="states-number">{statesNumber} </div>
                 <div className="label-states-plural">members</div>
             </div>) 
@@ -58,7 +62,7 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
         }
  
         return    (
-            <div className="selected-label-title flex gap-1 text-center cursor-pointer hover:bg-gray-200 p-1">
+            <div className="selected-label-title flex gap-1 text-center cursor-pointer hover:bg-gray-100 p-1">
                <div className="icon-container flex items-center">
                   
                 {  filtersListOrder[type][0].value.photoURL != null && <div className="photo flex items-center">
@@ -107,7 +111,7 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
              
              </div>
              
-             <div className="label-filter-status-selector">
+             <div className="label-filter-status-selector w-2/12" ref={isTabDropDownMenu} onClick={()=>{setTabDropDownIsOpen(!tabDropDownIsOpen)}}>
                    {labelStatusSelectorDisplay()}
              </div>
 
@@ -115,8 +119,12 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
                   {labelSelectorHandler()}
              </div>
 
-             <div className="label-cancel cursor-pointer hover:bg-gray-200 p-1 rounded-sm" onClick={removeAllItems}>
+             <div className="label-cancel cursor-pointer hover:bg-gray-100 p-1 rounded-sm" onClick={removeAllItems}>
                  <ClearIcon className='pointer-events-none'/>
+             </div>
+
+             <div className="drop-down-menu-is-selector">
+                   <DropDownTabIs anchorRef={isTabDropDownMenu} labelType={type} open={tabDropDownIsOpen} setOpen={setTabDropDownIsOpen}/>
              </div>
         </div>
     );

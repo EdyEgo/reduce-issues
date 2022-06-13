@@ -126,6 +126,20 @@ export const filterIssuesSlice = createSlice({
               = payload
             state.filtersListOrder[type] = []
         },
+        changeAllAllFilterListIsValueByType(state,{payload}){
+            // is properti can be true or false on each  selected filter
+            const type: "status" |
+            "priority" |
+            "labels" |
+            "creator" |"assignee" | 
+            "dueDate" 
+              = payload.type 
+            const newValue = payload.newValue
+    
+              state.filtersListOrder[type].forEach((item)=>{
+                    item.is = newValue
+              })
+        },
         addToFilterList(state,{payload}){
             const item:any = payload.item
             const type: "status" |
@@ -233,6 +247,6 @@ export const filterIssuesSlice = createSlice({
 
 })
 
-export const { removeAllFilterListItemsByType, addCustomViewGrupingBy,addToFilterListUser,removeUserAtUnkownedIndex,addCustomViewOrderingBy,addCustomViewDisplayPropertie, addToFilterList,removeItemAtUnkownedIndex, removeFilterListItem,modifyItemAtIndex} = filterIssuesSlice.actions
+export const { removeAllFilterListItemsByType, changeAllAllFilterListIsValueByType,addCustomViewGrupingBy,addToFilterListUser,removeUserAtUnkownedIndex,addCustomViewOrderingBy,addCustomViewDisplayPropertie, addToFilterList,removeItemAtUnkownedIndex, removeFilterListItem,modifyItemAtIndex} = filterIssuesSlice.actions
 
 export default filterIssuesSlice.reducer
