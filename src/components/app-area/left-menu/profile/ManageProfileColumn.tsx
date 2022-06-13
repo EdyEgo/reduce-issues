@@ -1,23 +1,22 @@
-import { useStore, useSelector, useDispatch } from "react-redux";
-import { authSlice, changeErrorStatus } from "../../../../store/auth";
+import {  useSelector, useDispatch } from "react-redux";
+
 import { useState, useRef } from "react";
-import PersonIcon from "@mui/icons-material/Person";
-import Avatar from "@mui/material/Avatar";
+
 import DropDownProfileMenu from "./dropDownProfile";
-import { signOut } from "../../../../api/dataBaseAuthMethods";
+
+import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
 
 interface ManageProfileColumnProps {}
 
 const ManageProfileColumn: React.FC<ManageProfileColumnProps> = () => {
   const authStore = useSelector((state: any) => state.auth);
-  const dispatch = useDispatch();
+  const userObject = useSelector((state: any) => state.auth.user);
 
-  const [photoUrl, setPhotoUrl] = useState(authStore.user?.photoURL);
-  // const [photoUrl, setPhotoUrl] = useState(null);
+  // if the photoURL is present but the img gives an error , on img error this will be set to true ..
+  // ..so you can have the avatar default img as if the user is not haveing an img URL
+  const [hideBrokenProfileImgWithSrc , setHideBrokenProfileImgWithSrc] = useState(false) 
 
-  //{authStore.user.email} , photoURL , can be null or string
 
-  // drop down menu logic
 
   const [open, setOpen] = useState(false);
 
@@ -34,17 +33,22 @@ const ManageProfileColumn: React.FC<ManageProfileColumnProps> = () => {
         ref={anchorRef}
         onClick={handleToggle}
       >
-        {photoUrl == null && (
+        {userObject?.photoURL == null || hideBrokenProfileImgWithSrc && (
           <div className="no-profile-picture">
-            <PersonIcon />
+            <AccountCircleSharpIcon />
           </div>
         )}
-        {photoUrl && (
+        {userObject?.photoURL && hideBrokenProfileImgWithSrc === false && (
           <div className="profile-picture ">
-            {/* <Avatar alt={photoUrl} src={photoUrl} /> */}
+         
             <img
-              alt={photoUrl}
-              src={photoUrl}
+              alt={"profile"}
+              src={userObject.photoURL}
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null; // prevents looping (not really /:} )
+                // currentTarget.src="image_path_here";
+                setHideBrokenProfileImgWithSrc(true)
+              }}
               className="rounded-full max-w-5 max-h-5"
             />
           </div>

@@ -144,7 +144,7 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
         const findStoredValue = storeSelected.find((item:any)=>item.value.id === findMemberObjectInWorkspace.id)
                   
                 
-        const checked = findStoredValue?.is ? true : false
+        const checked = findStoredValue != null ? true : false
          
           return returnElementOption({index,
              name:findMemberObjectInWorkspace.firstName + ' ' + findMemberObjectInWorkspace.lastName,id:findMemberObjectInWorkspace.id
@@ -173,7 +173,7 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
                 const findStoredValue = storeSelected.find((item:any)=>item.value.name === name)
                   
                   
-                const checked = findStoredValue?.is 
+                const checked = findStoredValue != null
                 if(checked != undefined)return returnElementOption({icon,name,index,checked,associatedNumber})
                 return returnElementOption({icon,name,index,checked:false,associatedNumber})
             }) 
@@ -207,7 +207,7 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
                 const findStoredValue = storeSelected.find((item:any)=>item.value.name === name)
                   
                   
-                const checked = findStoredValue?.is 
+                const checked = findStoredValue != null
                 if(checked != undefined)return returnElementOption({icon,name,index,checked,associatedNumber})
                 
                 return returnElementOption({icon,name,index,checked:false,associatedNumber})
@@ -226,7 +226,7 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
                 const findStoredValue = storeSelected.find((item:any)=>item.value.name === name)
                   
                   
-                const checked = findStoredValue?.is 
+                const checked = findStoredValue != null
                 if(checked != undefined)return returnElementOption({icon,name,index,checked,associatedNumber})
 
                 return returnElementOption({icon,name,index,checked:false,associatedNumber})

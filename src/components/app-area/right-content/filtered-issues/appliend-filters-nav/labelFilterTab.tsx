@@ -3,7 +3,7 @@ import {useSelector, useDispatch } from 'react-redux'
 import ClearIcon from '@mui/icons-material/Clear';
 import DropDownTabIs from './dropDownTabIsSelector'
 import {removeAllFilterListItemsByType } from '../../../../../store/filtersIssues'
-
+import DropDownTabProperySelector from './dropDownPropertySelector'
 import extractFitIconNoDinamic from  '.././../../../../components/selectors/helpers/extractFitIconNoDinamic'
 
 interface LabelFilterTabProps {
@@ -16,8 +16,12 @@ interface LabelFilterTabProps {
 const LabelFilterTab: React.FC<LabelFilterTabProps> = ({labelType, representativLabelIconName,labelTitle,labelStatesPlural}) => {
   
     const filtersListOrder = useSelector((state:any)=>state.filtersIssues.filtersListOrder)
+
     const isTabDropDownMenu =  React.useRef(null)
     const [tabDropDownIsOpen,setTabDropDownIsOpen] = React.useState(false)
+    const propertiesSelectorTabDropDown =  React.useRef(null)
+    const [propertiesSelectorTabDropDownIsOpen,setPropertiesSelectorTabDropDownIsOpen] = React.useState(false)
+
     const dispatch  = useDispatch()
 
     function removeAllItems(){
@@ -104,7 +108,7 @@ const LabelFilterTab: React.FC<LabelFilterTabProps> = ({labelType, representativ
                    {labelStatusSelectorDisplay()}
              </div>
 
-             <div className="label-selector" >
+             <div className="label-selector" ref={propertiesSelectorTabDropDown} onClick={()=>{setPropertiesSelectorTabDropDownIsOpen(true)}}>
                   {labelSelectorHandler()}
              </div>
 
@@ -114,6 +118,10 @@ const LabelFilterTab: React.FC<LabelFilterTabProps> = ({labelType, representativ
 
              <div className="drop-down-menu-is-selector">
                    <DropDownTabIs anchorRef={isTabDropDownMenu} labelType={labelType} open={tabDropDownIsOpen} setOpen={setTabDropDownIsOpen}/>
+             </div>
+
+             <div className="label-selector-drop-down-menu">
+                <DropDownTabProperySelector anchorRef={propertiesSelectorTabDropDown} checkboxType={labelType} open={propertiesSelectorTabDropDownIsOpen} setOpen={setPropertiesSelectorTabDropDownIsOpen} />
              </div>
         </div>
     );

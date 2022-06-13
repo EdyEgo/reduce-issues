@@ -4,6 +4,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Avatar from '@mui/material/Avatar';
 import DropDownTabIs from './dropDownTabIsSelector'
+import DropDownTabProperySelector from './dropDownPropertySelector'
 import {removeAllFilterListItemsByType} from '../../../../../store/filtersIssues'
 
 
@@ -21,6 +22,8 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
 
     const isTabDropDownMenu =  React.useRef(null)
     const [tabDropDownIsOpen,setTabDropDownIsOpen] = React.useState(false)
+    const propertiesSelectorTabDropDown =  React.useRef(null)
+    const [propertiesSelectorTabDropDownIsOpen,setPropertiesSelectorTabDropDownIsOpen] = React.useState(false)
 
     function labelStatusSelectorDisplay(){
         // add a function that makes them all false or true , on .is properties
@@ -115,7 +118,7 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
                    {labelStatusSelectorDisplay()}
              </div>
 
-             <div className="label-selector w-5/12 text-center">
+             <div className="label-selector w-5/12 text-center" ref={propertiesSelectorTabDropDown} onClick={()=>{setPropertiesSelectorTabDropDownIsOpen(true)}}>
                   {labelSelectorHandler()}
              </div>
 
@@ -125,6 +128,10 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
 
              <div className="drop-down-menu-is-selector">
                    <DropDownTabIs anchorRef={isTabDropDownMenu} labelType={type} open={tabDropDownIsOpen} setOpen={setTabDropDownIsOpen}/>
+             </div>
+
+             <div className="label-selector-drop-down-menu">
+                <DropDownTabProperySelector anchorRef={propertiesSelectorTabDropDown} checkboxType={type} open={propertiesSelectorTabDropDownIsOpen} setOpen={setPropertiesSelectorTabDropDownIsOpen} />
              </div>
         </div>
     );
