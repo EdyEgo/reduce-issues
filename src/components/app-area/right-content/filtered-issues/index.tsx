@@ -1,4 +1,5 @@
 import AppliendFilters from './appliend-filters-nav'
+import IssuesListViewMode from './issuesList/issuesListViewModeList'
 
 interface FilteredIssuesProps {
     
@@ -6,6 +7,10 @@ interface FilteredIssuesProps {
  
 const FilteredIssues: React.FC<FilteredIssuesProps> = () => {
    // a grouping component , and an issue component 
+
+
+   // later we can add another view mode , ex card
+
    
 
     return (  
@@ -14,7 +19,7 @@ const FilteredIssues: React.FC<FilteredIssuesProps> = () => {
                 <AppliendFilters/>
             </div>
             <div className="issues-list">
-        
+              <IssuesListViewMode/>
             </div>
         </div>
     );

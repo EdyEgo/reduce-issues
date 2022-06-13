@@ -61,7 +61,7 @@ export default function DropDownLabelSelector({
 
   
 
-console.log('my checkbox type is ' ,checkboxType, 'and open',open)
+
 
 
 

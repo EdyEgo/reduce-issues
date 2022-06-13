@@ -62,8 +62,8 @@ const LabelFilterTab: React.FC<LabelFilterTabProps> = ({labelType, representativ
     function labelSelectorHandler(){
         const statesNumber = filtersListOrder[labelType].length 
         if(statesNumber > 1){
-            return (<div className="label-states-number flex gap-2 cursor-pointer hover:bg-gray-100 rounded-sm p-1 items-center">
-                <div className="states-number">{statesNumber} </div>
+            return (<div className="label-states-number flex  cursor-pointer hover:bg-gray-100 rounded-sm p-1 items-center">
+                <div className="states-number mr-1">{statesNumber} </div>
                 <div className="label-states-plural">{labelStatesPlural}</div>
             </div>) 
 
@@ -90,8 +90,8 @@ const LabelFilterTab: React.FC<LabelFilterTabProps> = ({labelType, representativ
 
     }
 
-    return (  
-        <div className="font-serif label-container flex   border border-gray-200 rounded-md gap-2 pl-1 ">
+    return (  <>
+        <div className="font-serif label-container flex  border border-gray-200 rounded-md  pl-1 ">
              <div className="label-title flex items-center gap-1 ">
                  <div className="icon-container ">
                   
@@ -104,11 +104,11 @@ const LabelFilterTab: React.FC<LabelFilterTabProps> = ({labelType, representativ
              
              </div>
              
-             <div className="label-filter-status-selector" ref={isTabDropDownMenu} onClick={()=>{setTabDropDownIsOpen(!tabDropDownIsOpen)}}>
+             <div className="label-filter-status-selector mx-2" ref={isTabDropDownMenu} onClick={()=>{setTabDropDownIsOpen(!tabDropDownIsOpen)}}>
                    {labelStatusSelectorDisplay()}
              </div>
 
-             <div className="label-selector" ref={propertiesSelectorTabDropDown} onClick={()=>{setPropertiesSelectorTabDropDownIsOpen(true)}}>
+             <div className="label-selector mx-1" ref={propertiesSelectorTabDropDown} onClick={()=>{setPropertiesSelectorTabDropDownIsOpen(true)}}>
                   {labelSelectorHandler()}
              </div>
 
@@ -120,10 +120,12 @@ const LabelFilterTab: React.FC<LabelFilterTabProps> = ({labelType, representativ
                    <DropDownTabIs anchorRef={isTabDropDownMenu} labelType={labelType} open={tabDropDownIsOpen} setOpen={setTabDropDownIsOpen}/>
              </div>
 
-             <div className="label-selector-drop-down-menu">
+           
+        </div>
+        <div className="label-selector-drop-down-menu ">
                 <DropDownTabProperySelector anchorRef={propertiesSelectorTabDropDown} checkboxType={labelType} open={propertiesSelectorTabDropDownIsOpen} setOpen={setPropertiesSelectorTabDropDownIsOpen} />
              </div>
-        </div>
+        </>
     );
 }
  
