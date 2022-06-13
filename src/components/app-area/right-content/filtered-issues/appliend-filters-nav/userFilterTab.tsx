@@ -47,7 +47,7 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
     function labelSelectorHandler(){
         const statesNumber = filtersListOrder[type].length 
         if(statesNumber > 1){
-            return (<div className="label-states-number flex gap-2 cursor-pointer hover:bg-gray-200 p-1 rounded-sm">
+            return (<div className="label-states-number  cursor-pointer hover:bg-gray-200 p-1 rounded-sm">
                 <div className="states-number">{statesNumber} </div>
                 <div className="label-states-plural">members</div>
             </div>) 
@@ -56,21 +56,21 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
 
             
         }
- console.log('picture',filtersListOrder[type][0])
+ 
         return    (
-            <div className="selected-label-title flex gap-2 cursor-pointer hover:bg-gray-200 p-1">
+            <div className="selected-label-title flex gap-1 text-center cursor-pointer hover:bg-gray-200 p-1">
                <div className="icon-container flex items-center">
                   
-                {  filtersListOrder[type][0].value.photoURL != null && <div className="photo">
+                {  filtersListOrder[type][0].value.photoURL != null && <div className="photo flex items-center">
                     
-                     <Avatar sizes="small"  alt="user img" src={filtersListOrder[type][0].value.photoURL} />
+                     <Avatar  sx={{ width: 20, height: 20 }}  alt="user img" src={filtersListOrder[type][0].value.photoURL} />
                  </div>}
                  {  filtersListOrder[type][0].value.photoURL === null && <div className="photo">
                      <AccountCircleIcon/>
                  </div>}
                    
                  </div>
-                 <div className="label-name text-sm">
+                 <div className="label-name text-xs w-full flex items-center gap-1">
                      <div className="first-name">{filtersListOrder[type][0].value.firstName}</div>
                      <div className="last-name">{filtersListOrder[type][0].value.lastName}</div>
                  
@@ -94,10 +94,10 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
 
 
     return (     
-        <div className=" font-serif label-container flex justify-between items-center border border-gray-200 rounded-md">
+        <div className="font-serif label-container flex justify-between items-center border border-gray-200 rounded-md gap-2 pl-1">
              <div className="label-title flex items-center gap-1">
                  <div className="icon-container ">
-                  
+                  <AccountCircleIcon />
                    
                 
                  </div>
@@ -111,7 +111,7 @@ const UserFilterTab: React.FC<UserFilterTabProps> = ({type}) => {
                    {labelStatusSelectorDisplay()}
              </div>
 
-             <div className="label-selector">
+             <div className="label-selector w-5/12 text-center">
                   {labelSelectorHandler()}
              </div>
 

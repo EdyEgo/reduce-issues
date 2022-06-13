@@ -81,7 +81,7 @@ const LabelFilterTab: React.FC<LabelFilterTabProps> = ({labelType, representativ
     }
 
     return (  
-        <div className=" font-serif label-container flex justify-between items-center border border-gray-200 rounded-md">
+        <div className="font-serif label-container flex justify-between items-center border border-gray-200 rounded-md gap-2 pl-1">
              <div className="label-title flex items-center gap-1">
                  <div className="icon-container ">
                   

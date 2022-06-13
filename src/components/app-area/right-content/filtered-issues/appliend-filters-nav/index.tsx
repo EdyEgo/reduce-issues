@@ -13,7 +13,7 @@ const AppliedFiltersNavBar: React.FC<AppliedFiltersNavBarProps> = () => {
  console.log('hey mate',customFilters,'kk',filtersListOrder)
     return (  
         <div className="appliend-filters-container border-t mt-2 pt-2">
-            <div className="applied-filters-list grid grid-cols-2 grid-row-2">
+            <div className="applied-filters-list flex flex-1 flex-wrap gap-4">
                  {filtersListOrder.status.length >= 1 &&<div className="status-filter ">
                      <LabelFilterTab labelStatesPlural='states' labelTitle='Status' labelType='status' representativLabelIconName='backlog' />
                  </div>}
