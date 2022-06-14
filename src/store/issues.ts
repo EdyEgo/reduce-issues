@@ -14,13 +14,14 @@ interface TeamIssues{[key:string]:{[key:string]:any}[]}
 
 const initialState:{teamsIssues:TeamIssues,availableFilters:any,showViewOptions:{[key:string]:boolean},
 grouping:string,// can be status , priority,assignee , no grouping
-      newIssueModalOpenStatus:boolean,teamIssuesSubscriptions:(()=>void)[]} = {
+      newIssueModalOpenStatus:boolean,openModalWithPreloadedData:{[key:string]:any},teamIssuesSubscriptions:(()=>void)[]} = {
     teamsIssues:{},availableFilters:{},//incomplete for now ,the idea is to show only filters that are available in your issues
     showViewOptions:{assignee:true,
         createdAt:true,dueDate:true,issueIdentified:true,
         label:true,priority:true,status:true,updatedAt:true},
     grouping:"status",
     newIssueModalOpenStatus:false,
+    openModalWithPreloadedData:{},
     teamIssuesSubscriptions:[]
 } 
 
@@ -75,8 +76,17 @@ export const usersSlice = createSlice({
            const issueToRemoveId =  state.teamsIssues[teamId].findIndex((issue)=>issue.id === issueId)
            state.teamsIssues[teamId].splice(issueToRemoveId,1)
         },
-        changenewIssueModalOpenStatus:(state,action)=>{
-            state.newIssueModalOpenStatus = action.payload
+        changenewIssueModalOpenStatus:(state,{payload})=>{
+            const open = payload.open 
+            const preloadedData = payload?.preloadedData
+            state.newIssueModalOpenStatus = open
+            
+            if(preloadedData){
+                state.openModalWithPreloadedData = preloadedData
+                return 
+            }
+
+            state.openModalWithPreloadedData = {}
         }
       
     },

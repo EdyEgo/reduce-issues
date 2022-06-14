@@ -13,7 +13,7 @@ const CreateNewIssue: React.FC<CreateNewIssueProps> = () => {
   const dispatch = useDispatch();
 
   function openNewIssueModal() {
-    dispatch(changenewIssueModalOpenStatus(true));
+    dispatch(changenewIssueModalOpenStatus({open:true}));
   }
 
   return (
@@ -26,7 +26,7 @@ const CreateNewIssue: React.FC<CreateNewIssueProps> = () => {
           <span>
             <WritePen className="pointer-events-none" />
           </span>
-          <span className="pointer-events-none">Create a new Issue</span>
+          <span className="pointer-events-none">Create a new Issue </span>
         </div>
         <Link
           className="search-btn   my-4 border rounded-sm py-1 px-2 hover:bg-gray-100 "

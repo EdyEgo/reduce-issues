@@ -73,12 +73,42 @@ export default function NewIssueModal() {
     (state: any) => state.issues.newIssueModalOpenStatus
   ); 
 
+  const newIssueModalIsOpenWithPreloadedData = useSelector(
+    (state: any) => state.issues.openModalWithPreloadedData
+  ); 
+
+  console.log('i have openend with this preloaded data mate ',newIssueModalIsOpenWithPreloadedData)
+
  const selectedWorkspace = useSelector((state:any)=>state.workspace.selectedWorkSpace)
 
   const teamsList = useSelector(
     (state: any) => state.team.teamList
   );
 
+  
+
+
+  const openWithSelectedUser = newIssueModalIsOpenWithPreloadedData?.assignee 
+        ? newIssueModalIsOpenWithPreloadedData?.assignee : {photoURL:null,name:"Assignee",id:null}
+
+
+        function detectPreselectedTypeLabel(){
+          if(newIssueModalIsOpenWithPreloadedData?.assignee || newIssueModalIsOpenWithPreloadedData?.noAssignee) return null
+          const labelObject:any = Object.entries(newIssueModalIsOpenWithPreloadedData)[0]
+          
+          const type = labelObject[1].grupByName
+      
+          return {type,objectValue:labelObject[1]}
+        }      
+
+  const preSelectedTypeLabe =  detectPreselectedTypeLabel()
+
+  const openWithPreselectedStatus = preSelectedTypeLabe != null && preSelectedTypeLabe.type === "status" ?  preSelectedTypeLabe.objectValue : null
+  const openWithPreselectedPriority = preSelectedTypeLabe != null && preSelectedTypeLabe.type === "priority" ?  preSelectedTypeLabe.objectValue : null
+  const openWithPreselectedLabel = preSelectedTypeLabe != null && preSelectedTypeLabe.type === "label" ?  preSelectedTypeLabe.objectValue : null
+  // const openWithPreselectedDueDate = preSelectedTypeLabe != null && preSelectedTypeLabe.type === "status" ?  preSelectedTypeLabe.objectValue : null
+
+  
  
   const [loading,setLoading] = React.useState(false)
   // this is too much mate :(
@@ -86,10 +116,10 @@ export default function NewIssueModal() {
   const [selectedTeamObjectMembersId,setSelectedTeamObjectMembersId] = React.useState([])
   const [selectedTeamId,setSelectedTeamId] = React.useState('') 
   //this is realllyyyyy too much mate /:(
-  const [selectedMemberObject,setSelectedMemberObject] = React.useState({photoURL:null,name:"Assignee",id:null})
-  const [selectedStatus,setSelectedStatus] = React.useState(null)
-  const [selectedPriority,setSelectedPriority] = React.useState(null)
-  const [selectedLabel,setSelectedLabel] = React.useState(null)
+  const [selectedMemberObject,setSelectedMemberObject] = React.useState(openWithSelectedUser)
+  const [selectedStatus,setSelectedStatus] = React.useState(openWithPreselectedStatus)
+  const [selectedPriority,setSelectedPriority] = React.useState(openWithPreselectedPriority)
+  const [selectedLabel,setSelectedLabel] = React.useState(openWithPreselectedLabel)
  const [selectedDueDate,setSelectedDueDate] = React.useState(null)
   
 
@@ -160,7 +190,7 @@ function createImgs(){
 }
 
   function closeNewIssueModal() {
-    dispatch(changenewIssueModalOpenStatus(false));
+    dispatch(changenewIssueModalOpenStatus({open:false}));
   }
   
   async function handleSaveChanges(){ 
