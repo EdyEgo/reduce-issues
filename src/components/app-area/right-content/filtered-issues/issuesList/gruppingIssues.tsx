@@ -2,6 +2,7 @@ import {useSelector} from 'react-redux'
 
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import Avatar from '@mui/material/Avatar';
+import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
 
 import filterTeamIssues from '../../../../../services/issues/filterIssues'
 
@@ -59,6 +60,14 @@ const GrouppingIssues: React.FC<GrouppingIssuesProps> = () => {
                 groups[propertyIcon].list.push(currentIssue)
                 continue
             }
+
+            if(currentIssue.assignedToUserId == null && grupByName === "assignee"){
+                const propertyIcon = "noAssignee"
+                const propertyName = "No Assignee"
+                if(groups[propertyIcon] == null)groups[propertyIcon] =  {list:[],name:propertyName,icon:propertyIcon}
+                groups[propertyIcon].list.push(currentIssue)
+                continue
+            }
             if(currentIssue[grupByName]?.icon != null){
                 const propertyName = currentIssue[grupByName].name
                 const propertyIcon = currentIssue[grupByName].icon
@@ -87,7 +96,8 @@ function returnFoundedWorkspaceMemberById(searchedId:string){
                                 {headIcon !== '' && headIcon}
 
                                 {headIcon === '' && hasPhotoURL != null && <Avatar src={hasPhotoURL}   sx={{ width: 20, height: 20 }}  alt=""/>}
-
+                                 
+                                 {propertyTypeName === 'noAssignee' && <AccountCircleSharpIcon/>}
                                
 
                             </div>
@@ -122,7 +132,7 @@ function returnFoundedWorkspaceMemberById(searchedId:string){
        <>
         {listIsGrouped && 
 
-            <div className="grouped-issues-list" title='add issue'>
+            <div className="grouped-issues-list">
                {returnIssuesGruped()}
             </div>
         

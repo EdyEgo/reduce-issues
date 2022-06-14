@@ -4,6 +4,8 @@ import extractFitIconNoDinamic from '../../../selectors/helpers/extractFitIconNo
 import NoAssignee from '@mui/icons-material/AccountCircleSharp';
 import Avatar from '@mui/material/Avatar';
 
+
+
  export default function returnIssueListElement({index,issue,teamMembersObject}:{issue:any,index:number,teamMembersObject:{id:string,photoURL:string | null}[]}){
 
 
@@ -29,7 +31,19 @@ import Avatar from '@mui/material/Avatar';
      const momentFormatForUpdatedAt = yearDiffUpdatedAtAt >= 1 ? 'MMMM d, YYYY' : 'MMMM d' // show year if the at least one year has passed
       updatedAtHumanize = moment(updatedAtDate).format(momentFormatForUpdatedAt)
     }
- 
+
+    // const dueDateExists = issue.dueDate != null 
+
+    // let humanizeDueDate;
+
+    // if(dueDateExists){
+    //     const dueDate = issue.dueDate.toDate()
+    //     const yearDiffDueDate =moment().diff(dueDate, 'years');
+    //     const momentFormatForUpdatedAt = yearDiffDueDate >= 1 ? 'MMMM d, YYYY' : 'MMMM d' // show year if the at least one year has passed
+    //     humanizeDueDate = moment(dueDate).format(momentFormatForUpdatedAt)
+
+    // }
+
     const assigneeUserObject =issue.assignedToUserId != null ?  returnFoundedWorkspaceMemberById(issue.assignedToUserId) : null
   
 
@@ -50,19 +64,29 @@ import Avatar from '@mui/material/Avatar';
                    </div>
  
                    <div className="issue-title-container">
-                     {issue.title}
+                     {issue.title.length > 50 ? issue.title.slice(0,50) + '...' : issue.title}
                    </div>
                </div>
  
                <div className="issue-list-item__right-half flex items-center gap-2">
-                    <div className="issue-label-type-container">
+
+                    {/* {dueDateExists != null &&
+                        <div className="issue-due-date border p-1 rounded-md">
+                            {humanizeDueDate }
+                        </div>
+                    } */}
+
+                    {issue?.label != null && issue.label?.icon != null && <div className="issue-label-type-container border p-1 rounded-md" title={issue.label?.name || ""}>
                         {/* bug , improvement , etc */}
-                        {issue?.label != null && issue.label?.icon != null && extractFitIconNoDinamic({iconName:issue.label.icon ,index:index+3 })}
-                    </div>
+                        { extractFitIconNoDinamic({iconName:issue.label.icon ,index:index+3 })}
+                    </div>}
  
                     <div className="issue-created-at">
                          {createdAtHumanizeDate}
                     </div>
+
+                   
+                    
  
                     <div className="issue-updated-at">
                            {updatedAtExists && updatedAtHumanize}
