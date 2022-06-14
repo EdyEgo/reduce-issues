@@ -12,9 +12,12 @@ interface ViewDisplayPropertiesProps {
 const ViewDisplayProperties: React.FC<ViewDisplayPropertiesProps> = () => {
   
     const dispatch = useDispatch()
-    const displayProperties = useSelector((state:any)=>state.filtersIssues.viewFilters.default.displayProperties)// this one is here only for test reasons
- 
-  const retunrFitButtonText = (property:string)=>{
+    
+  
+    const viewFiltersStore = useSelector((state:any)=>state.filtersIssues.viewFilters)// this one is here only for test reasons
+    const displayProperties = viewFiltersStore.custom.empty === true ? viewFiltersStore.default.displayProperties : viewFiltersStore.custom.displayProperties
+  
+    const retunrFitButtonText = (property:string)=>{
       if(property === 'registeredAt' ) return 'register'
       if(property === 'updatedAt') return 'update'
       if(property === 'dueDate') return 'date'

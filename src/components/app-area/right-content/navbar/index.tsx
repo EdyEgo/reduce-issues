@@ -21,7 +21,7 @@ const ContentRightNavBar: React.FC<ContentRightNavBarProps> = () => {
 
     return ( 
     
-     <div className="nav-bar-inner-container flex justify-between">
+     <div className="nav-bar-inner-container flex justify-between pb-4 border-b">
           <div className="left-half flex justify-between">
                  {/* <span className="nav-bar-title p-2">Filtered issues</span> */}
                  <span className="save-to-favorites p-2"></span>

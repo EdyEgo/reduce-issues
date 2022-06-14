@@ -52,7 +52,7 @@ const initialState:{
    filtersListOrder:filtersListOrder,
    viewFilters:{
        default:defaultViewFilters,
-       custom:customViewFilters | customViewFiltersEmpty
+       custom:any//customViewFilters | customViewFiltersEmpty
        },
       
    }
@@ -91,10 +91,17 @@ export const filterIssuesSlice = createSlice({
 
         addCustomViewGrupingBy(state,{payload}){
             
+            if(state.viewFilters.custom.empty === false){
+                state.viewFilters.custom.groupingBy = payload
+                return 
+            }
         state.viewFilters.custom = {...state.viewFilters.default,empty:false,groupingBy:payload}
         },
         addCustomViewOrderingBy(state,{payload}){
-            
+            if(state.viewFilters.custom.empty === false){
+                state.viewFilters.custom.orderingBy = payload
+                return 
+            }
             state.viewFilters.custom = {...state.viewFilters.default,empty:false,orderingBy:payload}
         },
 
@@ -107,9 +114,15 @@ export const filterIssuesSlice = createSlice({
             "registeredAt" |
             "updatedAt" |
             "assignee"  = payload
-            const modifiedObject = {...state.viewFilters.default,empty:false,
+            if(state.viewFilters.custom.empty === false){
                 
+             state.viewFilters.custom.displayProperties[propertyName] = !state.viewFilters.custom.displayProperties[propertyName]
+                
+             return 
             }
+            
+            const modifiedObject = {...state.viewFilters.default,empty:false}
+  
             modifiedObject.displayProperties[propertyName] =  !modifiedObject.displayProperties[propertyName]
             state.viewFilters.custom = modifiedObject
         },

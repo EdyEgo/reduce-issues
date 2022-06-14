@@ -11,7 +11,7 @@ const FilteredIssues: React.FC<FilteredIssuesProps> = () => {
 
    // later we can add another view mode , ex card
 
-   
+
 
     return (  
         <div className="filtered-issues-content-container">

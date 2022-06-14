@@ -10,9 +10,17 @@ interface ViewGrupingFiltersProps {
 }
  
 const ViewGrupingFilters: React.FC<ViewGrupingFiltersProps> = () => {
- 
-  const [grupingValue,setGrupingValue] = React.useState('status') 
-  const [orderingValue,setOrderingValue] = React.useState('status')
+
+    const viewFilters = useSelector((state:any)=>state.filtersIssues.viewFilters)
+
+    // const customViewFilters = !viewFilters.empty 
+
+    const useGrupingValue = viewFilters.custom.groupingBy != null ? viewFilters.custom.groupingBy : "status"
+    const useOrderingValue = viewFilters.custom.orderingBy != null ? viewFilters.custom.orderingBy : "status"
+  
+    console.log('wth',viewFilters)
+  const [grupingValue,setGrupingValue] = React.useState(useGrupingValue) 
+  const [orderingValue,setOrderingValue] = React.useState(useOrderingValue)
 
    const dispatch = useDispatch()
 

@@ -157,17 +157,17 @@ function returnFoundedWorkspaceMemberById(searchedId:string){
 
     return (  
        <>
-        {listIsGrouped && 
+        {listIsGrouped && filteredIssuesList.length >= 1 &&
 
-            <div className="grouped-issues-list">
+            <div className="grouped-issues-list border-t">
                {returnIssuesGruped()}
             </div>
         
         }
 
-       {listIsGrouped === false &&
+       {listIsGrouped === false && filteredIssuesList.length >= 1 &&
 
-            <div className="ungrouped-issues-list">
+            <div className="ungrouped-issues-list border-t">
                 {filteredIssuesList.map((issue,index)=><IssueListElement index={index} issue={issue} teamMembersObject={teamMembersObject}/>)}
             </div>
         }

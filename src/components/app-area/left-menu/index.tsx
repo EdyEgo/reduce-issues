@@ -12,8 +12,9 @@ const LeftSideMenu: React.FC<LeftSideMenuProps> = () => {
 
 
   return (
-    <>
-      <div className="profile-row flex justify-between">
+    <> 
+    <div className="left-side-continer border-r px-2 h-full">
+    <div className="profile-row flex justify-between">
         <Profile />
       </div>
       <div className="create-new-issue-row">
@@ -28,6 +29,8 @@ const LeftSideMenu: React.FC<LeftSideMenuProps> = () => {
         */}
         <YourTeams/>
       </div>
+    </div>
+
     </>
   );
 };

@@ -1,4 +1,5 @@
 import {useSelector} from 'react-redux'
+import * as React from 'react'
 import LabelFilterTab from './labelFilterTab'
 import UsersFilterTab from './userFilterTab'
 
@@ -10,9 +11,12 @@ const AppliedFiltersNavBar: React.FC<AppliedFiltersNavBarProps> = () => {
   
   
     const filtersListOrder = useSelector((state:any)=>state.filtersIssues.filtersListOrder)
+    
+
+
 
     return (  
-        <div className="appliend-filters-container border-t my-3 py-3 border-b">
+        <div className="appliend-filters-container py-3">
             <div className="applied-filters-list flex flex-1 flex-wrap gap-4 ml-2">
                  {filtersListOrder.status.length >= 1 &&<div className="status-filter ">
                      <LabelFilterTab labelStatesPlural='states' labelTitle='Status' labelType='status' representativLabelIconName='backlog' />
