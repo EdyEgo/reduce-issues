@@ -93,9 +93,8 @@ export default function NewIssueModal() {
 
 
         function detectPreselectedTypeLabel(){ 
-          // labelsList,priorityList,statusList // detect the right index 
-        
-          if(newIssueModalIsOpenWithPreloadedData?.assignee || newIssueModalIsOpenWithPreloadedData?.noAssignee == null) return null
+         
+          if(newIssueModalIsOpenWithPreloadedData?.assignee || Object.hasOwn(newIssueModalIsOpenWithPreloadedData,'noAssignee') === true) return null
           const labelObject:any = Object.entries(newIssueModalIsOpenWithPreloadedData)[0]
           
           const type = labelObject[1].grupByName 
