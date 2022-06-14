@@ -6,6 +6,10 @@
 
 export default function filterIssues(filtersListOrder:{[key:string]:any[]},selectedTeamIssues:any[]){
    let filteredTeamIssues:any[] = []; 
+ 
+   if(filtersListOrder.status.length === 0 && filtersListOrder.labels.length === 0 && 
+    filtersListOrder.assignee.length === 0 && filtersListOrder.priority.length === 0 
+    && filtersListOrder.creator.length === 0 ) return selectedTeamIssues
 
    for(let issueIndex= 0; issueIndex < selectedTeamIssues.length;issueIndex++){
            const issue = selectedTeamIssues[issueIndex]

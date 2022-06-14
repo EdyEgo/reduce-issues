@@ -79,5 +79,6 @@ export default  function extractFitIcon({iconName,index}:{iconName:string,index:
 
     }
     if(iconName === '') return ''
+    if(icons[iconName] == null) return ''
     return icons[iconName]()
 }

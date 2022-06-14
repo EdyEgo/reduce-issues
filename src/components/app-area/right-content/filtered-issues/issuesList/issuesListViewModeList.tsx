@@ -12,8 +12,8 @@ const IssuesListViewModeList: React.FC<IssuesListViewModeListProps> = () => {
 
 
 //    const customFilters = useSelector()
-   const viewFilters = useSelector((state:any)=>state.filtersIssues.viewFilters)
-   console.log('my filters',viewFilters)
+//    const viewFilters = useSelector((state:any)=>state.filtersIssues.viewFilters)
+
 
     return (  
         <div className="issues-list-view-mode-list">

@@ -67,7 +67,7 @@ export default async function postDocumentSetupOnSugnUp(user:any,userObject:{fir
             text:'Fell free to explore the app'
           },
           status:{name:'Backlog',icon:'backlog'},
-          priority:{name:'Low',icon:'low'},
+          priority:{name:'Low',icon:'priorityLow'},
           label:null,
           dueDate:'',
           blockByIssueId:'',
@@ -125,7 +125,7 @@ export default async function postDocumentSetupOnSugnUp(user:any,userObject:{fir
               text:'Fell free to explore the app'
             },
             status:{name:'Backlog',icon:'backlog'},
-            priority:{name:'Low',icon:'low'},
+            priority:{name:'Low',icon:'priorityLow'},
             label:null,
             dueDate:'',
             blockByIssueId:'',
@@ -165,7 +165,7 @@ export default async function postDocumentSetupOnSugnUp(user:any,userObject:{fir
         inputObject:{
       
         name:'My Second Workspace' ,photoURL:null,identified:'MSW' ,
-        labels:[{name:'Feature',icon:'purpleDot',},{name:'Improvement',icon:'blueDot'},{name:'Bug',icon:'redDot'} ], timezone:browserDate , workspaceURL:'mysecond' , 
+        labels:[{name:'Feature',icon:'labelFeature',},{name:'Improvement',icon:'labelImprovement'},{name:'Bug',icon:'labelBug'} ], timezone:browserDate , workspaceURL:'mysecond' , 
         membersId:{[user.uid]:{role:'Owner',invitedAt:serverTimestamp()}}
       }
         ,useAddDocument:true,useBatch:batch}) //  setDoc does not return the doc only the addDoc
@@ -193,7 +193,7 @@ export default async function postDocumentSetupOnSugnUp(user:any,userObject:{fir
             text:'Fell free to explore the app,..again :)'
           },
           status:{name:'Backlog',icon:'backlog'},
-          priority:{name:'Low',icon:'low'},
+          priority:{name:'Low',icon:'priorityLow'},
           label:null,
           dueDate:'',
           blockByIssueId:'',
