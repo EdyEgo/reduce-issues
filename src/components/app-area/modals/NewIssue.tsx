@@ -77,7 +77,7 @@ export default function NewIssueModal() {
     (state: any) => state.issues.openModalWithPreloadedData
   ); 
 
-  console.log('i have openend with this preloaded data mate ',newIssueModalIsOpenWithPreloadedData)
+  
 
  const selectedWorkspace = useSelector((state:any)=>state.workspace.selectedWorkSpace)
 
@@ -92,13 +92,23 @@ export default function NewIssueModal() {
         ? newIssueModalIsOpenWithPreloadedData?.assignee : {photoURL:null,name:"Assignee",id:null}
 
 
-        function detectPreselectedTypeLabel(){
-          if(newIssueModalIsOpenWithPreloadedData?.assignee || newIssueModalIsOpenWithPreloadedData?.noAssignee) return null
+        function detectPreselectedTypeLabel(){ 
+          // labelsList,priorityList,statusList // detect the right index 
+        
+          if(newIssueModalIsOpenWithPreloadedData?.assignee || newIssueModalIsOpenWithPreloadedData?.noAssignee == null) return null
           const labelObject:any = Object.entries(newIssueModalIsOpenWithPreloadedData)[0]
           
-          const type = labelObject[1].grupByName
-      
-          return {type,objectValue:labelObject[1]}
+          const type = labelObject[1].grupByName 
+          let objectValue = labelObject[1]
+          let listToExtractIndex;
+          if(type === 'status' ) listToExtractIndex = statusList 
+          if(type === 'priority' ) listToExtractIndex = priorityList 
+          
+          if(type === 'labels' ) listToExtractIndex = labelsList 
+
+          const labelTypeIndex = listToExtractIndex?.findIndex((item)=>item.icon === objectValue.icon)
+          objectValue = {...objectValue , index:labelTypeIndex}
+          return {type,objectValue}
         }      
 
   const preSelectedTypeLabe =  detectPreselectedTypeLabel()
@@ -121,7 +131,8 @@ export default function NewIssueModal() {
   const [selectedPriority,setSelectedPriority] = React.useState(openWithPreselectedPriority)
   const [selectedLabel,setSelectedLabel] = React.useState(openWithPreselectedLabel)
  const [selectedDueDate,setSelectedDueDate] = React.useState(null)
-  
+   
+
 
  
 

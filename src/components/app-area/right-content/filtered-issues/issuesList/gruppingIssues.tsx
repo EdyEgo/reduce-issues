@@ -101,9 +101,9 @@ function returnFoundedWorkspaceMemberById(searchedId:string){
 
 
    function callOpenNewIssueModalWithTheRightPreloadedData(){
-       console.log('ce plm',propertyTypeName)
+       
        if(propertyTypeName === 'noAssignee'){
-            dispatch(changenewIssueModalOpenStatus({open:true,preloadedData:{}}));
+            dispatch(changenewIssueModalOpenStatus({open:true,preloadedData:{noAssignee:null}}));
             return 
        }
        if(isUser != null){
