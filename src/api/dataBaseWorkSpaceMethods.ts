@@ -76,15 +76,16 @@ export async function createNewWorkspace(workspaceName:string,userObject:any,bat
     }
 }
 
-export async function createNewWorkspaceWithTeam(workspaceName:string,userObject:any,teamName:string,workspace:{id:string}){
+export async function createNewWorkspaceWithTeam(workspaceName:string,userObject:any,teamName:string){
     try{
   
       const batch = writeBatch(db); 
     
       const createdWorkspace = await createNewWorkspace(workspaceName,userObject,batch)
-      const createdTeam = await createOneTeam(teamName,workspace,userObject,batch) 
+      const createdTeam = await createOneTeam(teamName,createdWorkspace.data,userObject,batch)
 
       await batch.commit()
+  
       return {error:false,data:{workspace:createdWorkspace,team:createdTeam}}
     }catch(e:any){
       return {error:true,message:e.message}

@@ -21,7 +21,7 @@ export default function CreateNewWorkspace() {
    
     const navigate = useNavigate()
     const authUser = useSelector((state:any)=>state.auth.user)
-    const selectedWorkspace = useSelector((state:any)=>state.workspace.selectedWorkSpace)  
+   
     const [loading , setLoading] = React.useState(false)
     const [errorMessage,setErrorMessage] = React.useState<null | string>(null)
  const [workspaceName,setWorkspaceName] = React.useState('')
@@ -58,7 +58,7 @@ export default function CreateNewWorkspace() {
     return 
   }
   
-   const result =  await createNewWorkspaceWithTeam(workspaceName,authUser,teamName,selectedWorkspace)
+   const result =  await createNewWorkspaceWithTeam(workspaceName,authUser,teamName)
    navigate('/')
    // if error:false then extract result.data.team(same here  .error an .data)
    // and  result.data.workspace(same here  .error an .data)  ////////// LEFT HERE
