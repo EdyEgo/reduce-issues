@@ -1,4 +1,5 @@
 import {useState , useRef} from 'react'
+import {Link} from 'react-router-dom'
 import moment from 'moment'
 import NoPriority from '@mui/icons-material/MoreHorizSharp';
 import extractFitIconNoDinamic from '../../../selectors/helpers/extractFitIconNoDinamic'
@@ -7,15 +8,19 @@ import Avatar from '@mui/material/Avatar';
 import DropDownChangeLabel from './dropDownChangeLabelOnTheGo'
 import DropDownChangeAssignee from './dropDownChangeAssigneeOnTheGo'
 import {useSelector} from 'react-redux'
-
+import { useParams } from 'react-router-dom'
 
 
  export default function ReturnIssueListElement({index,issue,teamMembersObject}:{issue:any,index:number,teamMembersObject:{id:string,photoURL:string | null}[]}){
 
  // left here , add drop downs for modifying the issue  on the go
- 
+ const params = useParams() 
+ const teamURL =  params.teamURL
+
    const displayFilter= useSelector((state:any)=>state.filtersIssues.viewFilters.custom)
-  
+   const selectedWorkspace = useSelector(
+    (state: any) => state.workspace.selectedWorkSpace
+  )
 
     const [dropDownPriorityIsOpen,setDropDownPriorityIsOpen] = useState(false)
     const priorityRef = useRef(null)
@@ -69,9 +74,12 @@ import {useSelector} from 'react-redux'
      return displayElement
  }
 
+ const issueIdentifier = issue.identified
 
+ const generalLink = teamURL ? `/${selectedWorkspace.workspaceURL.toLowerCase()}/team/${teamURL.toLowerCase()}/${issueIdentifier}` : ""
+ 
        return (
-           <div className="issue-list-item flex justify-between font-serif items-center p-4 hover:bg-gray-50 cursor-default" key={index}>
+           <div className="issue-list-item border-b border-gray-100 flex justify-between font-serif items-center p-4 hover:bg-gray-50 cursor-default" key={index}>
                <div className="issue-list-item__left-half flex items-center gap-2">
                 {checkDisplayElement("priority") && <div className="priority-container" ref={priorityRef} onClick={()=>{setDropDownPriorityIsOpen(!dropDownPriorityIsOpen)}}>
                     {issue?.priority != null  && extractFitIconNoDinamic({iconName:issue.priority.icon ,index:index+1 })}
@@ -86,9 +94,10 @@ import {useSelector} from 'react-redux'
                      {issue?.status != null && issue.status?.icon != null && extractFitIconNoDinamic({iconName:issue.status.icon ,index:index+2 })}
                    </div>}
  
-                   <div className="issue-title-container">
+                   {/* <div className="issue-title-container">
                      {issue.title.length > 50 ? issue.title.slice(0,50) + '...' : issue.title}
-                   </div>
+                   </div> */}
+                   <Link to={generalLink}>{issue.title.length > 50 ? issue.title.slice(0,50) + '...' : issue.title}</Link>
                </div>
  
                <div className="issue-list-item__right-half flex items-center gap-2">

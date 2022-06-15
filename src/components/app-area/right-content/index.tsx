@@ -6,6 +6,8 @@ import {useState,useEffect} from 'react'
 import NavBar from './navbar'
 import FilteredIssues from './filtered-issues'
 
+import CreateNewWorspace from './new-workspace/create-workspace'
+
 
 interface RightSideContentProps {}
 
@@ -82,12 +84,11 @@ useEffect(()=>{
     <div className="content-container">
       <Routes>  
           <Route
-            path="/"
+            path="/addworkspace"
             element={<div className="placeholder"> 
-                   <NavBar/>
-                      <div className="filtered-issues-container">
-                        <FilteredIssues/>
-                      </div>
+                 
+                     
+                       <CreateNewWorspace/>
 
             </div>} 
             // children={<div className="placeholder">content right</div>}

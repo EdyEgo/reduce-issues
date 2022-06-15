@@ -103,7 +103,7 @@ export default function DropDownChangeLabelOnTheGo({
      {
      listOfTypes[selectBoxType]().map(({icon,name},index)=>{
            return (
-           <MenuItem key={index} onClick={async(event)=>{await changeIssuePropertiesOnTheGo({icon,name});handleClose(event)}}
+           <MenuItem key={index} className="gap-2" onClick={async(event)=>{await changeIssuePropertiesOnTheGo({icon,name});handleClose(event)}}
                 >
                     <div className="icon-container">{ExtractFitIconNoDinamic({iconName:icon,index})}</div>
                     <div className="name-container">{name}</div>
