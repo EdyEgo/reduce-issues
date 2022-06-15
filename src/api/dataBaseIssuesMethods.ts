@@ -45,6 +45,22 @@ function returnFitLabelsObject(newIssueObject:Issue){
      return fitLabels
 }
 
+
+export async function updateIssue({inputObject,issueId,teamId,workspaceId}:{workspaceId:string,teamId:string,issueId:string,inputObject:any}){
+     
+   try{ 
+       
+    await postNewDocument({
+        collectionSelected:`workspaces/${workspaceId}/teams/${teamId}/issues`,
+        documentName:issueId,noRegister:true,
+        inputObject
+       })
+       return {error:false}
+    }catch(e:any){
+        return {error:true,message:'Could not update the issue'}
+    }
+}
+
 export async function postIssue ({creatorId,newIssue,teamId,workspaceId}:{creatorId:string,workspaceId:string,teamId:string,newIssue:Issue,}){
     const batch = writeBatch(db); 
    

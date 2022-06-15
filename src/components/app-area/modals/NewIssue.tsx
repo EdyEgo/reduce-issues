@@ -206,7 +206,7 @@ function createImgs(){
   async function handleSaveChanges(){ 
 
     
-
+console.log('wth is due date',selectedDueDate)
    
     setLoading(true)
  
@@ -279,7 +279,7 @@ function createImgs(){
     const mapPicturesURL = picturesData.data.files.map((pictureFile:{snapshot:any,downloadURL:string})=>pictureFile.downloadURL)
     // add pictures URL to the created issue
  
-   const updatedIssue = await addPicturesURLToIssue({issueId:postedIssue.data.id,
+ await addPicturesURLToIssue({issueId:postedIssue.data.id,
     teamId,workspaceId:selectedWorkspace.id,
     pictureListURL:mapPicturesURL})
    

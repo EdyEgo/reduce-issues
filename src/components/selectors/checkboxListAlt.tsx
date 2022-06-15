@@ -35,8 +35,8 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
  }
 
   const workspaceMembers = useSelector((state:any)=>state.workspace.members)
-  const teamList = useSelector((state:any)=>state.team.teamList)
-  const selectedTeamId = findTeamId(teamList)//useSelector((state:any)=>state.selectedTab.selectedTabAppArea.selectedTeamId)
+  
+  const selectedTeamId = findTeamId(teamsList)//useSelector((state:any)=>state.selectedTab.selectedTabAppArea.selectedTeamId)
   const selectedTeamObject = teamsList.find((team:any)=>team.id === selectedTeamId)
 
  
@@ -44,12 +44,6 @@ export default function CheckboxListSecondary({checkboxType}:{checkboxType:strin
   
  
 
-  function returnFitFilterValueByIndexAndcheckboxType(filterListIndex:number){
-     
-        if(checkboxType === null) return {name:'',icon:''}
-       return  items[filterListIndex]
-      
-  }
 
   function handleSettingFiltersIssues({deselected,addItem,removeItem}:{deselected:boolean , addItem?:any,removeItem?:any}){
      // can be : -->  assignee , creator , status , label , priority , dueDate <--

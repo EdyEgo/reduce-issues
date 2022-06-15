@@ -1,6 +1,5 @@
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
+
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Grow from "@mui/material/Grow";
 import Paper from "@mui/material/Paper";
@@ -8,10 +7,7 @@ import Popper from "@mui/material/Popper";
 
 import MenuList from "@mui/material/MenuList";
 import Stack from "@mui/material/Stack";
-import { signOut } from "../../../../api/dataBaseAuthMethods";
-import { authSlice, changeErrorStatus } from "../../../../store/auth";
-import { useSelector, useDispatch } from "react-redux";
-import CheckboxList from '../../../selectors/checkboxList'
+
 import CheckboxListAtl from '../../../selectors/checkboxListAlt'
 import HeroItemsList from './menuHeroList'
 
@@ -29,21 +25,14 @@ export default function MenuListComposition({
   
   anchorRef: any;
 }) {
-  //   const [open, setOpen] = React.useState(false);
-
-  //   const handleToggle = () => {
-  //     setOpen((prevOpen) => !prevOpen);
-  //   };
+  
 
   const [showHeroMenu,setShowHeroMenu] = React.useState(true)
   const [showCheckBoxMenu,setShowCheckBoxMenu] = React.useState(false)
   const [checkboxType,setCheckboxType] = React.useState<null | string>(null)
 
-  const authStore = useSelector((state: any) => state.auth);
-  const workSpaceStore = useSelector((state: any) => state.workspace);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
+ 
   const handleClose = (event: Event | React.SyntheticEvent) => {
     if (
       anchorRef.current &&
