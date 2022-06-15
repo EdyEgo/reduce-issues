@@ -66,6 +66,10 @@ export default function CreateNewWorkspace() {
    // btw the new created workspace is the selected workspace , may just go to home and use that useEffect to reFetch for a refresh on data , 
    //with unsubs from the issues , and useNavigate to go to "/"
    // you can just create a variable in the store so that useEffect to be able to watch it so he can refresh
+
+   //  TEAM IS NOT CREATED AS A SUB COLLECTION 
+
+   // REEEEEEMEMBER TO CHECK FOR THE NAMES TO BE AT LEAST 4 CHARACTERS LONG
    console.log("have i created a new workspace dang it",result)
 
 

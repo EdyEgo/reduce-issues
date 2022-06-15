@@ -105,4 +105,42 @@ noRegister,useBatch ,firstCollectionName,firstDocumentName,secondCollectionName,
  
 
 
-    }
+    } 
+
+
+
+    export const postNewNestedDocumentNoDocumentName = async ({
+ 
+      inputObject,
+     noRegister,useBatch ,firstCollectionName,firstDocumentName,secondCollectionName
+     }: {
+     
+      
+      noRegister?:boolean;
+      inputObject: any;useBatch?:any | undefined;
+      firstCollectionName:string;firstDocumentName:string;secondCollectionName:string
+     }) => {
+      let copyObjectInput:any
+      if(noRegister == null) copyObjectInput = { ...inputObject, ...{ registeredAt: serverTimestamp() } };
+      if(noRegister)copyObjectInput = {...inputObject}
+     
+     
+     
+     
+     
+     
+      const documentRef = doc(collection(db, firstCollectionName, firstDocumentName,secondCollectionName)) 
+     
+      //
+          if(useBatch) {
+            const newDocumentObject = useBatch.set(documentRef, copyObjectInput,{merge:true})
+            return newDocumentObject
+          }
+      //
+      const resultPostedDoument = await setDoc(documentRef, copyObjectInput,{merge:true});
+     
+      return resultPostedDoument;
+      
+     
+     
+         }

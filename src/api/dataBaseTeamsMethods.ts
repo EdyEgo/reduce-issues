@@ -1,8 +1,9 @@
 import {} from '../composables/firebase/teams/getUsersTeamMemebers'
 import {getTeamsFirebase,getTeamsFirebaseWithWhere,getOneTeamFirebase} from '../composables/firebase/teams/getWorkspaceTeams'
-import {postNewDocument} from '../composables/firebase/post/postDocument'
+import {postNewDocument,postNewNestedDocument,postNewNestedDocumentNoDocumentName} from '../composables/firebase/post/postDocument'
 import { serverTimestamp} from 'firebase/firestore'
 import { tz} from 'moment-timezone'
+
 
 export async function createOneTeam(teamName:string,workspace:{id:string},userObject:any,batch?:any){
    try{ 
@@ -15,6 +16,17 @@ export async function createOneTeam(teamName:string,workspace:{id:string},userOb
     const createIdentified = teamURL.slice(0,3).toUpperCase()
 
     if(batch){
+ // test -->
+
+      // test 1
+  //     const createdTeam = await postNewNestedDocumentNoDocumentName({firstCollectionName:"workspaces",
+  //     firstDocumentName:workspace.id,inputObject:{issuesNumber:1,membersId:{[userObject.uid]:{role:'Owner',invitedAt:serverTimestamp()}},
+    
+  //     name: teamNameTrimed,teamURL,photoURL:null,identified:createIdentified , timezone:browserDate
+  //   } , secondCollectionName:"teams",noRegister:true,useBatch:batch
+   
+  // })
+      /// test 2
       const createdTeam =  await postNewDocument({collectionSelected:`workspaces/${workspace.id}/teams`,
       inputObject:{issuesNumber:1,membersId:{[userObject.uid]:{role:'Owner',invitedAt:serverTimestamp()}},
     
@@ -22,6 +34,9 @@ export async function createOneTeam(teamName:string,workspace:{id:string},userOb
     }
       ,useAddDocument:true,useBatch:batch}) 
 
+
+    /// <---test
+      console.log('hello ???',workspace.id,'why',createdTeam,'what',createIdentified,browserDate,teamNameTrimed,teamURL)
       return {error:false,data:createdTeam}
       
     }
