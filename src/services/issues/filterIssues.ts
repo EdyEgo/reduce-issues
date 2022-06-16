@@ -64,6 +64,39 @@ export function filterIssueBySearch({teamIssues,searchedText}:{teamIssues:any[],
 
 }
 
+
+export function countMyInProgressIssues({teamIssues,loggedUserId}:{teamIssues:any[],loggedUserId:string}){
+ 
+   let countedIssues = 0
+
+   function filterByUserId(teamIssuesList:any[]){
+      for(let issueIndex= 0; issueIndex < teamIssuesList.length;issueIndex++){
+         const issue = teamIssuesList[issueIndex]
+   
+         const issueIsActive = issue.status != null && issue.status.icon === "inProgress"//&& issue.status.icon !== "done" && issue.status.icon !== "canceled" 
+   
+            if(issue.assignedToUserId != null && issue.assignedToUserId === loggedUserId && issueIsActive){
+               countedIssues += 1
+   
+            }
+        
+      
+      
+      } 
+   
+   }
+   
+    for(const teamKey in teamIssues){
+       const teamValueIssuesList  =teamIssues[teamKey]
+   
+       if(teamValueIssuesList.length <= 0) continue
+       filterByUserId(teamValueIssuesList)
+      
+    }
+
+    return countedIssues
+}
+
 export function filterMyIssues({teamIssues,loggedUserId}:{teamIssues:any[],loggedUserId:string}){
    let filteredTeamIssues:any[] = []; 
 
@@ -73,7 +106,7 @@ function filterByUserId(teamIssuesList:any[]){
    for(let issueIndex= 0; issueIndex < teamIssuesList.length;issueIndex++){
       const issue = teamIssuesList[issueIndex]
 
-      const issueIsActive = issue.status != null && issue.status.icon !== "done" && issue.status.icon !== "canceled" 
+      const issueIsActive = issue.status != null //&& issue.status.icon !== "done" && issue.status.icon !== "canceled" 
 
          if(issue.assignedToUserId != null && issue.assignedToUserId === loggedUserId && issueIsActive){
             filteredTeamIssues.push(issue)

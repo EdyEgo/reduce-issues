@@ -6,6 +6,7 @@ import usersReducer from './users'
 import issuesReducer from './issues'
 import selectedTabReducer from './selectedTab'
 import filtersIssuesReducer from './filtersIssues'
+import profileReducer from './profile'
 
 export const store = configureStore({
     reducer:{
@@ -14,6 +15,7 @@ export const store = configureStore({
         workspace:workspaceReducer,
         users:usersReducer,
         issues:issuesReducer,
+        profile:profileReducer,
         selectedTab:selectedTabReducer,
         filtersIssues:filtersIssuesReducer
     }

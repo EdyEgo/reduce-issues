@@ -11,6 +11,7 @@ import Stack from "@mui/material/Stack";
 import { signOut } from "../../../../api/dataBaseAuthMethods";
 import { authSlice, changeErrorStatus } from "../../../../store/auth";
 import { useSelector, useDispatch } from "react-redux";
+import { changeProfileBarStatus } from "../../../../store/profile";
 
 
 
@@ -24,13 +25,7 @@ export default function MenuListComposition({
   setOpen: (argument: any) => void;
   anchorRef: any;
 }) {
-  //   const [open, setOpen] = React.useState(false);
-
-  //   const handleToggle = () => {
-  //     setOpen((prevOpen) => !prevOpen);
-  //   };
-
-  const authStore = useSelector((state: any) => state.auth);
+  
   const workSpaceStore = useSelector((state: any) => state.workspace);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -56,13 +51,10 @@ export default function MenuListComposition({
   }
 
   function directUserToProfilePage() {
-    const extractEmailName = authStore.user.email.slice(
-      0,
-      authStore.user.email.indexOf("@")
-    );
+    dispatch(changeProfileBarStatus())
 
     navigate(
-      `/${workSpaceStore.selectedWorkSpace.workspaceURL}/profiles/${extractEmailName}`
+      `/${workSpaceStore.selectedWorkSpace.workspaceURL}/profile`
     );
   }
 

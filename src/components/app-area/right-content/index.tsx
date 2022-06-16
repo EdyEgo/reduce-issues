@@ -6,6 +6,7 @@ import {useState,useEffect} from 'react'
 import NavBar from './navbar'
 import SearchBar from './search-bar'
 import FilteredIssues from './filtered-issues'
+import ProfileDetails from './profile-details'
 
 import CreateNewWorspace from './new-workspace/create-workspace'
 
@@ -22,6 +23,7 @@ const dispatch = useDispatch()
 const selectedWorkspace = useSelector((state:any)=>state.workspace.selectedWorkSpace)
 const teamsList = useSelector((state:any)=>state.team.teamList)
 const teamIssues = useSelector((state:any)=>state.issues.teamsIssues)
+const profileLeftMenuStatus = useSelector((state:any)=>state.profile.profileStatus)
 
 
 
@@ -102,6 +104,18 @@ useEffect(()=>{
            <NavBar />
            <div className="filtered-issues-container">
                <FilteredIssues useSearch={true}/>
+           </div>
+         </div>}
+         /> 
+
+        <Route  path="/:workspaceURL/profile"
+         
+         element={<div className="placeholder">
+          
+           <NavBar noPlustFilter={true} replaceFilterWithTitle={"My Profile"}/>
+           <div className="filtered-issues-container">
+               <FilteredIssues filterMyIssue={true}/>
+               {profileLeftMenuStatus === true &&<ProfileDetails/>}
            </div>
          </div>}
          />

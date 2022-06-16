@@ -64,12 +64,15 @@ const  CustomizedAccordions: React.FC<TeamItem> = ({expanded,setExpanded,teamObj
   return (
     <div>
       <Accordion expanded={expanded } onChange={()=>handleChange()}>
-        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-          <div className="team-photo flex gap-2">
-           {teamObject.photoURL && <img className='m-2' src={teamObject.photoURL} alt="" />} 
-           {teamObject.photoURL === null && <TeamIcon className='m-2'/>}
+        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" >
+          <div className="container flex items-center ">
+              <div className="team-photo flex  items-center">
+              {teamObject.photoURL && <img className='m-2' src={teamObject.photoURL} alt="" />} 
+              {teamObject.photoURL === null && <TeamIcon className='m-2'/>}
+              </div>
+              <div className="team-name">{teamObject.name}</div>
           </div>
-          <div className="team-name">{teamObject.name}</div>
+         
          
         </AccordionSummary>
         <AccordionDetails>
