@@ -4,6 +4,7 @@ import {addIssuesToOneTeam,addSubscription,removeSubscriptions} from '../../../s
 import {getTeamIssues} from '../../../api/dataBaseIssuesMethods'
 import {useState,useEffect} from 'react'
 import NavBar from './navbar'
+import SearchBar from './search-bar'
 import FilteredIssues from './filtered-issues'
 
 import CreateNewWorspace from './new-workspace/create-workspace'
@@ -91,13 +92,24 @@ useEffect(()=>{
                        <CreateNewWorspace/>
 
             </div>} 
-            // children={<div className="placeholder">content right</div>}
+            
           />
 
+       <Route  path="/:workspaceURL/search"
+         
+         element={<div className="placeholder">
+           <SearchBar/>
+           <NavBar />
+           <div className="filtered-issues-container">
+               <FilteredIssues useSearch={true}/>
+           </div>
+         </div>}
+         />
+
           <Route  path="/:workspaceURL/filtered-issues"
-          // children={<div className="placeholder">filtered issues</div>}
+         
           element={<div className="placeholder">
-            <NavBar/>
+            <NavBar noPlustFilter={true} replaceFilterWithTitle={"My Issues"}/>
             <div className="filtered-issues-container">
                 <FilteredIssues filterMyIssue={true}/>
             </div>
@@ -106,19 +118,10 @@ useEffect(()=>{
 
           
           
-          {/* <Route  path="/:workspaceURL/team/:teamURL/:teamTabSelected" 
-          // children={<div className="placeholder">team tab</div>}
-          element={<div className="placeholder">
-            <NavBar/>
-            <div className="filtered-issues-container">
-                <FilteredIssues/>
-            </div>
-
-            </div>}
-          /> */}
+          
 
          <Route  path="/:workspaceURL/team/:teamURL/all" 
-          // children={<div className="placeholder">team tab</div>}
+         
           element={<div className="placeholder">
             <NavBar/>
             <div className="filtered-issues-container">
@@ -130,9 +133,9 @@ useEffect(()=>{
 
 
         <Route  path="/:workspaceURL/team/:teamURL/active" 
-          // children={<div className="placeholder">team tab</div>}
+          
           element={<div className="placeholder">
-            <NavBar/>
+            <NavBar noPlustFilter={true} replaceFilterWithTitle={"Active Issues"}/>
             <div className="filtered-issues-container">
                 <FilteredIssues filterActiveIssues={true}/>
             </div>
@@ -141,9 +144,9 @@ useEffect(()=>{
           />
 
          <Route  path="/:workspaceURL/team/:teamURL/backlog" 
-          // children={<div className="placeholder">team tab</div>}
+         
           element={<div className="placeholder">
-            <NavBar/>
+            <NavBar noPlustFilter={true} replaceFilterWithTitle={"Backlog Issues"}/>
             <div className="filtered-issues-container">
                 <FilteredIssues filterBackLogIssues={true}/>
             </div>

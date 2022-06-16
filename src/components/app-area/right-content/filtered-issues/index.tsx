@@ -4,10 +4,11 @@ import IssuesListViewMode from './issuesList/issuesListViewModeList'
 interface FilteredIssuesProps {
     filterMyIssue?:boolean,
     filterActiveIssues?:boolean,
-    filterBackLogIssues?:boolean
+    filterBackLogIssues?:boolean,
+    useSearch?:true
 }
  
-const FilteredIssues: React.FC<FilteredIssuesProps> = ({filterMyIssue,filterActiveIssues,filterBackLogIssues}) => {
+const FilteredIssues: React.FC<FilteredIssuesProps> = ({filterMyIssue,filterActiveIssues,filterBackLogIssues,useSearch}) => {
    // a grouping component , and an issue component 
 
 
@@ -21,7 +22,7 @@ const FilteredIssues: React.FC<FilteredIssuesProps> = ({filterMyIssue,filterActi
                 <AppliendFilters/>
             </div>
             <div className="issues-list">
-              <IssuesListViewMode filterMyIssue={filterMyIssue} 
+              <IssuesListViewMode filterMyIssue={filterMyIssue} useSearch={useSearch}
               filterActiveIssues={filterActiveIssues} filterBackLogIssues={filterBackLogIssues}/>
             </div>
         </div>

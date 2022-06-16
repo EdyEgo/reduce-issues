@@ -1,5 +1,68 @@
 
 
+export function  findWorspaceByURL(workspaceURL:string,workspaceList:{[key:string]:any}){
+   for(const workspaceId in workspaceList){
+      const workspaceValue  =workspaceList[workspaceId]
+      if(workspaceURL === workspaceValue.workspaceURL) return workspaceValue
+   
+   }
+}
+
+
+
+export function filterIssueBySearch({teamIssues,searchedText}:{teamIssues:any[],searchedText:string}){
+  
+   let filteredTeamIssues:any[] = []; 
+
+   function filterBySearch(teamValueIssuesList:any[]){
+         
+      teamValueIssuesList.forEach((issue)=>{
+        const issueTitleLowerCase = issue.title.toLowerCase().trim()
+        const issueTextLoserCase = issue.content.text.toLowerCase().trim()
+        const serachedTextLowerCase = searchedText.toLowerCase().trim()
+
+        const serachedTextHasSpaces = serachedTextLowerCase.indexOf(" ")
+        if(serachedTextHasSpaces === -1){
+         const issueTitleChecksSearchedText = issueTitleLowerCase.includes(serachedTextLowerCase)
+         const issueTextChecksSearchedText = issueTextLoserCase.includes(serachedTextLowerCase)
+       
+         if(issueTitleChecksSearchedText || issueTextChecksSearchedText)filteredTeamIssues.push(issue)
+        }
+
+        if(serachedTextHasSpaces !== -1){
+            const splitWords = serachedTextLowerCase.split(" ")
+
+            for(let indexSplitedWordIndex = 0;indexSplitedWordIndex < splitWords.length;indexSplitedWordIndex++){
+               // get out of the loop i an word has been found
+               const indexSplitedWord = splitWords[indexSplitedWordIndex]
+               const issueTitleChecksSearchedTextSplitWord = issueTitleLowerCase.includes(indexSplitedWord)
+               const issueTextChecksSearchedTextSplitWord = issueTextLoserCase.includes(indexSplitedWord)
+               if(issueTitleChecksSearchedTextSplitWord || issueTextChecksSearchedTextSplitWord){
+                  filteredTeamIssues.push(issue)
+                  break
+               }
+
+            }
+          
+        }
+ 
+        
+      })
+
+   }   
+
+
+   for(const teamKey in teamIssues){
+      const teamValueIssuesList  =teamIssues[teamKey]
+  
+      if(teamValueIssuesList.length <= 0) continue
+      filterBySearch(teamValueIssuesList)
+     
+   }
+
+   return filteredTeamIssues
+
+}
 
 export function filterMyIssues({teamIssues,loggedUserId}:{teamIssues:any[],loggedUserId:string}){
    let filteredTeamIssues:any[] = []; 

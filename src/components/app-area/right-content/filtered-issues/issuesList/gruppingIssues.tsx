@@ -4,25 +4,35 @@ import AddSharpIcon from '@mui/icons-material/AddSharp';
 import Avatar from '@mui/material/Avatar';
 import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
 
-import {filterTeamIssues,filterMyIssues,filterActiveIssuesFunction,filterBacklogIssues} from '../../../../../services/issues/filterIssues'
+import {filterIssueBySearch,findWorspaceByURL,filterTeamIssues,filterMyIssues,filterActiveIssuesFunction,filterBacklogIssues} from '../../../../../services/issues/filterIssues'
 
 import IssueListElement from '../../issue/IssueListElement'
 
 import extractFitIconNoDinamic from '../../../../selectors/helpers/extractFitIconNoDinamic'
 import { useDispatch } from 'react-redux';
+import {useParams,useSearchParams} from 'react-router-dom'
 
 import { changenewIssueModalOpenStatus } from "../../../../../store/issues";
+import { changeSelectedWorkSpace } from "../../../../../store/workspace";
 
 interface GrouppingIssuesProps {
     filterMyIssue?:boolean,
     filterActiveIssues?:boolean,
-    filterBackLogIssues?:boolean
+    filterBackLogIssues?:boolean,
+    useSearch?:boolean
 }
  
-const GrouppingIssues: React.FC<GrouppingIssuesProps> = ({filterMyIssue,filterActiveIssues,filterBackLogIssues}) => {
+const GrouppingIssues: React.FC<GrouppingIssuesProps> = ({filterMyIssue,filterActiveIssues,filterBackLogIssues,useSearch}) => {
     const dispatch = useDispatch();
+    
+    const params = useParams()
+    const [searchParams,setSearchParams] = useSearchParams()// we could just let a comma and delete the set you know
    
+
     const authUser = useSelector((state:any)=>state.auth.user)
+
+    const worspacesList =  useSelector((state:any)=>state.workspace.userWorkspaces)
+    const selectedWorkspace = useSelector((state:any)=>state.workspace.selectedWorkSpace)
  
     const viewFilters = useSelector((state:any)=>state.filtersIssues.viewFilters)
     
@@ -33,6 +43,25 @@ const GrouppingIssues: React.FC<GrouppingIssuesProps> = ({filterMyIssue,filterAc
     const selectedTeamIssues = teamIssues[selectedTeamId] != null ? teamIssues[selectedTeamId] : []
 
     function FilterIssuesByTabSelected(){
+        if(useSearch){
+          
+            const searchedTextIs = searchParams.get("q")
+            const searchWithWorkspaceURL = params.workspaceURL
+            if(typeof searchWithWorkspaceURL !== "string" || searchedTextIs == null || searchedTextIs.trim() === "") return []
+            const newSelectedWorkspace = findWorspaceByURL(searchWithWorkspaceURL,worspacesList)
+ // on search change the selected workspace , as you change it on click
+          
+
+            // const filteredByFilterList= //teamIssues
+        
+            if(selectedWorkspace.workspaceURL !== searchWithWorkspaceURL)dispatch(changeSelectedWorkSpace(newSelectedWorkspace))
+              
+            const filterWithText:any[] = filterIssueBySearch({searchedText:searchedTextIs,teamIssues})
+            const filteredWithFilterList = filterTeamIssues({filtersListOrder,selectedTeamIssues:filterWithText})
+
+            return filteredWithFilterList
+        }
+
         if(filterMyIssue){
 
             return filterMyIssues({teamIssues,loggedUserId:authUser.uid})
