@@ -36,10 +36,65 @@ export default function DropDownChangeLabelOnTheGo({
   
 
     const params = useParams() 
+    const workspacesTeams = useSelector(
+      (state: any) => state.issues.teamsIssues
+    )
+
+    const teamList = useSelector(
+      (state: any) => state.team.teamList
+    )
+
+    function findIssueTeam(){
+      // this function is just a lot of nonsense just because i don t want to store at least in the objects the link , jesus , wth man
+    const selectedWorkspaceUrl = selectedWorkspace.workspaceURL
+    const searchedIssueId = issueObject.id
+    let foundedIssue =  null
+    let foundedTeamNeededId = null
+    let teamURLNeeded = null
+    let foundedTeamObject = null
+    // i need the issue identified and the team url and workspace
+   
+    
+    // search thorugh teams 
+   
+    teamLoop: for(const teamId in workspacesTeams){
+       const teamIssuesList = workspacesTeams[teamId]
+       if(teamIssuesList.length <= 0) continue
+       
+       for(let issueIndex = 0;issueIndex < teamIssuesList.length;issueIndex++){
+          const currentInLoopIssue = teamIssuesList[issueIndex]
+          if(currentInLoopIssue.id === searchedIssueId){
+           foundedTeamNeededId = teamId
+           foundedIssue = currentInLoopIssue
+           break teamLoop 
+          }
+       }
+        
+    }
+   
+    
+    for(let teamIndex = 0;teamIndex < teamList.length;teamIndex++){
+       const currentTeamValue = teamList[teamIndex]
+       
+       if(currentTeamValue.id === foundedTeamNeededId){
+         foundedTeamObject = currentTeamValue
+         teamURLNeeded = currentTeamValue.identified
+         break
+       }
+   
+    }
+   
+   
+    return foundedTeamObject
+   
+    }
 
 
     function findTeamId(teamList:any[]){
-        if(params?.teamURL == null) return null
+        if(params?.teamURL == null)  {
+         return findIssueTeam().id
+
+        }
        return teamList.find((team)=>team.identified.toLowerCase() === params.teamURL).id
       }
   
@@ -82,7 +137,7 @@ export default function DropDownChangeLabelOnTheGo({
       const issueId = issueObject.id
       const workspaceId = selectedWorkspace.id
      
-     
+     console.log('what ????',workspaceId,selectedTeamId,issueId,selectBoxType)
    const {error} =  await updateIssue({inputObject:{[selectBoxType]:{icon,name}},issueId,teamId:selectedTeamId,workspaceId})
   
    if(error) console.log('error on updateing the issue',error)
@@ -99,7 +154,7 @@ export default function DropDownChangeLabelOnTheGo({
     }
 
  
-    return(<>
+    return(<div>
      {
      listOfTypes[selectBoxType]().map(({icon,name},index)=>{
            return (
@@ -115,7 +170,7 @@ export default function DropDownChangeLabelOnTheGo({
      
      }
     
-    </>)
+    </div>)
   }
   
 

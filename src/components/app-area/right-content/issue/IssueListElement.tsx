@@ -22,6 +22,14 @@ import { useParams } from 'react-router-dom'
    const selectedWorkspace = useSelector(
     (state: any) => state.workspace.selectedWorkSpace
   )
+  const workspacesTeams = useSelector(
+    (state: any) => state.issues.teamsIssues
+  )
+
+  const teamList = useSelector(
+    (state: any) => state.team.teamList
+  )
+  const bruh = useSelector((state:any)=>state)
 
     const [dropDownPriorityIsOpen,setDropDownPriorityIsOpen] = useState(false)
     const priorityRef = useRef(null)
@@ -75,9 +83,54 @@ import { useParams } from 'react-router-dom'
      return displayElement
  }
 
- const issueIdentifier = issue.identified
+ const issueIdentifier = issue.identified == null ? "" : issue.identified
 
- const generalLink = teamURL ? `/${selectedWorkspace.workspaceURL.toLowerCase()}/team/${teamURL.toLowerCase()}/${issueIdentifier}` : ""
+ function findIssueTeamURL(){
+   // this function is just a lot of nonsense just because i don t want to store at least in the objects the link , jesus , wth man
+ const selectedWorkspaceUrl = selectedWorkspace.workspaceURL
+ const searchedIssueId = issue.id
+ let foundedIssue =  null
+ let foundedTeamNeededId = null
+ let teamURLNeeded = null
+ let foundedTeamObject = null
+ // i need the issue identified and the team url and workspace
+
+ 
+ // search thorugh teams 
+
+ teamLoop: for(const teamId in workspacesTeams){
+    const teamIssuesList = workspacesTeams[teamId]
+    if(teamIssuesList.length <= 0) continue
+    
+    for(let issueIndex = 0;issueIndex < teamIssuesList.length;issueIndex++){
+       const currentInLoopIssue = teamIssuesList[issueIndex]
+       if(currentInLoopIssue.id === searchedIssueId){
+        foundedTeamNeededId = teamId
+        foundedIssue = currentInLoopIssue
+        break teamLoop 
+       }
+    }
+     
+ }
+
+ 
+ for(let teamIndex = 0;teamIndex < teamList.length;teamIndex++){
+    const currentTeamValue = teamList[teamIndex]
+    
+    if(currentTeamValue.id === foundedTeamNeededId){
+      foundedTeamObject = currentTeamValue
+      teamURLNeeded = currentTeamValue.identified
+      break
+    }
+
+ }
+
+
+ return `/${selectedWorkspaceUrl}/team/${teamURLNeeded}/${issueIdentifier}`
+
+ }
+
+ const generalLink = teamURL ? `/${selectedWorkspace.workspaceURL.toLowerCase()}/team/${teamURL.toLowerCase()}/${issueIdentifier}` : findIssueTeamURL()
  
        return (
            <div className="issue-list-item border-b border-gray-100 flex justify-between font-serif items-center p-4 hover:bg-gray-50 cursor-default" key={index}>
