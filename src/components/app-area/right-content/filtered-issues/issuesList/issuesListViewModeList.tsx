@@ -1,4 +1,3 @@
-import {useSelector} from 'react-redux'
 import GroupedIssuesList from './gruppingIssues'
 
 interface IssuesListViewModeListProps {

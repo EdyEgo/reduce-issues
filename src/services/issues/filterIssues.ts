@@ -10,8 +10,9 @@ function filterByUserId(teamIssuesList:any[]){
    for(let issueIndex= 0; issueIndex < teamIssuesList.length;issueIndex++){
       const issue = teamIssuesList[issueIndex]
 
-      
-         if(issue.assignedToUserId != null && issue.assignedToUserId === loggedUserId){
+      const issueIsActive = issue.status != null && issue.status.icon !== "done" && issue.status.icon !== "canceled" 
+
+         if(issue.assignedToUserId != null && issue.assignedToUserId === loggedUserId && issueIsActive){
             filteredTeamIssues.push(issue)
 
          }

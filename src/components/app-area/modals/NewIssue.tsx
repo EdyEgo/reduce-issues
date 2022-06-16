@@ -89,14 +89,14 @@ export default function NewIssueModal() {
 
 
   const openWithSelectedUser = newIssueModalIsOpenWithPreloadedData?.assignee 
-        ? newIssueModalIsOpenWithPreloadedData?.assignee : {photoURL:null,name:"Assignee",id:null}
+        ? newIssueModalIsOpenWithPreloadedData.assignee : {photoURL:null,name:"Assignee",id:null}
 
 
         function detectPreselectedTypeLabel(){ 
          
           if(newIssueModalIsOpenWithPreloadedData?.assignee || Object.hasOwn(newIssueModalIsOpenWithPreloadedData,'noAssignee') === true) return null
           const labelObject:any = Object.entries(newIssueModalIsOpenWithPreloadedData)[0]
-          
+          if(labelObject == null) return null
           const type = labelObject[1].grupByName 
           let objectValue = labelObject[1]
           let listToExtractIndex;
