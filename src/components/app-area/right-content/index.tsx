@@ -99,14 +99,25 @@ useEffect(()=>{
           element={<div className="placeholder">
             <NavBar/>
             <div className="filtered-issues-container">
-                <FilteredIssues/>
+                <FilteredIssues filterMyIssue={true}/>
             </div>
           </div>}
           />
 
-          {/* </Route> */}
           
-          <Route  path="/:workspaceURL/team/:teamURL/:teamTabSelected" 
+          
+          {/* <Route  path="/:workspaceURL/team/:teamURL/:teamTabSelected" 
+          // children={<div className="placeholder">team tab</div>}
+          element={<div className="placeholder">
+            <NavBar/>
+            <div className="filtered-issues-container">
+                <FilteredIssues/>
+            </div>
+
+            </div>}
+          /> */}
+
+         <Route  path="/:workspaceURL/team/:teamURL/all" 
           // children={<div className="placeholder">team tab</div>}
           element={<div className="placeholder">
             <NavBar/>
@@ -117,9 +128,37 @@ useEffect(()=>{
             </div>}
           />
 
-          {/* </Route> */}
 
-        </Routes>
+        <Route  path="/:workspaceURL/team/:teamURL/active" 
+          // children={<div className="placeholder">team tab</div>}
+          element={<div className="placeholder">
+            <NavBar/>
+            <div className="filtered-issues-container">
+                <FilteredIssues filterActiveIssues={true}/>
+            </div>
+
+            </div>}
+          />
+
+         <Route  path="/:workspaceURL/team/:teamURL/backlog" 
+          // children={<div className="placeholder">team tab</div>}
+          element={<div className="placeholder">
+            <NavBar/>
+            <div className="filtered-issues-container">
+                <FilteredIssues filterBackLogIssues={true}/>
+            </div>
+
+            </div>}
+          />
+
+         
+
+        </Routes> 
+ 
+
+ 
+
+        
     </div>
 
      </div>

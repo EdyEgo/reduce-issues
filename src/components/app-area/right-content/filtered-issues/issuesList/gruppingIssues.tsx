@@ -4,7 +4,7 @@ import AddSharpIcon from '@mui/icons-material/AddSharp';
 import Avatar from '@mui/material/Avatar';
 import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
 
-import filterTeamIssues from '../../../../../services/issues/filterIssues'
+import {filterTeamIssues,filterMyIssues,filterActiveIssuesFunction,filterBacklogIssues} from '../../../../../services/issues/filterIssues'
 
 import IssueListElement from '../../issue/IssueListElement'
 
@@ -14,21 +14,41 @@ import { useDispatch } from 'react-redux';
 import { changenewIssueModalOpenStatus } from "../../../../../store/issues";
 
 interface GrouppingIssuesProps {
-    
+    filterMyIssue?:boolean,
+    filterActiveIssues?:boolean,
+    filterBackLogIssues?:boolean
 }
  
-const GrouppingIssues: React.FC<GrouppingIssuesProps> = () => {
+const GrouppingIssues: React.FC<GrouppingIssuesProps> = ({filterMyIssue,filterActiveIssues,filterBackLogIssues}) => {
     const dispatch = useDispatch();
-
+   
+    const authUser = useSelector((state:any)=>state.auth.user)
+ 
     const viewFilters = useSelector((state:any)=>state.filtersIssues.viewFilters)
     
    const filtersListOrder  = useSelector((state:any)=>state.filtersIssues.filtersListOrder)
-
+   
     const selectedTeamId = useSelector((state:any)=>state.selectedTab.selectedTabAppArea.selectedTeamId)
     const teamIssues = useSelector((state:any)=>state.issues.teamsIssues)
     const selectedTeamIssues = teamIssues[selectedTeamId] != null ? teamIssues[selectedTeamId] : []
+
+    function FilterIssuesByTabSelected(){
+        if(filterMyIssue){
+
+            return filterMyIssues({teamIssues,loggedUserId:authUser.uid})
+        }
+        if(filterActiveIssues){
+
+            return filterActiveIssuesFunction({selectedTeamIssues})
+        }
+        if(filterBackLogIssues){
+
+            return filterBacklogIssues({selectedTeamIssues})
+        }
+        return filterTeamIssues({filtersListOrder,selectedTeamIssues})
+    }
      
-    const filteredIssuesList = filterTeamIssues(filtersListOrder,selectedTeamIssues)
+    const filteredIssuesList = FilterIssuesByTabSelected()
    
     const useDefaultViewFilters = viewFilters.custom.empty ? viewFilters.default : viewFilters.custom
     const listIsGrouped = useDefaultViewFilters.groupingBy !== "none" 

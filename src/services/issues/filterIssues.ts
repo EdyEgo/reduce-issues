@@ -1,10 +1,84 @@
 
 
 
+export function filterMyIssues({teamIssues,loggedUserId}:{teamIssues:any[],loggedUserId:string}){
+   let filteredTeamIssues:any[] = []; 
 
 
 
-export default function filterIssues(filtersListOrder:{[key:string]:any[]},selectedTeamIssues:any[]){
+function filterByUserId(teamIssuesList:any[]){
+   for(let issueIndex= 0; issueIndex < teamIssuesList.length;issueIndex++){
+      const issue = teamIssuesList[issueIndex]
+
+      
+         if(issue.assignedToUserId != null && issue.assignedToUserId === loggedUserId){
+            filteredTeamIssues.push(issue)
+
+         }
+     
+   
+   
+   } 
+
+}
+
+ for(const teamKey in teamIssues){
+    const teamValueIssuesList  =teamIssues[teamKey]
+
+    if(teamValueIssuesList.length <= 0) continue
+    filterByUserId(teamValueIssuesList)
+   
+ }
+
+
+   return filteredTeamIssues
+
+}
+
+export function filterActiveIssuesFunction({selectedTeamIssues}:{selectedTeamIssues:any[]}){
+   // const statusIsnotNull = issue.status != null && issue.status.icon !== "done" && issue.status.icon !== "canceled" issue.status.icon && !== "backlog"
+   
+   let filteredTeamIssues:any[] = []; 
+
+   for(let issueIndex= 0; issueIndex < selectedTeamIssues.length;issueIndex++){
+      const issue = selectedTeamIssues[issueIndex]
+      const statusIsnotNull = issue.status != null && issue.status.icon !== "done" && issue.status.icon !== "canceled" &&  issue.status.icon  !== "backlog"
+      
+         if(statusIsnotNull){
+            filteredTeamIssues.push(issue)
+
+         }
+     
+   
+   
+   } 
+
+   return filteredTeamIssues
+
+}
+
+export function filterBacklogIssues({selectedTeamIssues}:{selectedTeamIssues:any[]}){
+   // const statusMeetsCondition = issue.status != null &&  issue.status.icon === "backlog"
+
+   let filteredTeamIssues:any[] = []; 
+
+   for(let issueIndex= 0; issueIndex < selectedTeamIssues.length;issueIndex++){
+      const issue = selectedTeamIssues[issueIndex]
+
+      const statusMeetsCondition = issue.status != null &&  issue.status.icon  === "backlog"
+         if(statusMeetsCondition){
+            filteredTeamIssues.push(issue)
+
+         }
+     
+   
+   
+   } 
+   return filteredTeamIssues
+}
+
+
+export  function filterTeamIssues({filtersListOrder,selectedTeamIssues}:{filtersListOrder:{[key:string]:any[]},selectedTeamIssues:any[]}){
    let filteredTeamIssues:any[] = []; 
  
    if(filtersListOrder.status.length === 0 && filtersListOrder.labels.length === 0 && 
