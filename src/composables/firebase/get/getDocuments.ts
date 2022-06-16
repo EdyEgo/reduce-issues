@@ -31,7 +31,7 @@ export const getDocumentsWithSubscription =  ({path,valuesToIncludeInResult,call
     const unsub = onSnapshot(collectionRef,
       (snapshot:any)=>{
         
-        
+       
         if(snapshot.empty) {
           if(valuesToIncludeInResult){
             callbackDocuments({error:false,data:[],unsub,...valuesToIncludeInResult})

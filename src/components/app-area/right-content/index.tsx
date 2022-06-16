@@ -7,6 +7,8 @@ import NavBar from './navbar'
 import SearchBar from './search-bar'
 import FilteredIssues from './filtered-issues'
 import ProfileDetails from './profile-details'
+import RedirectToMyIssues from './RedirectToMyIssues'
+import SignleIssuePage from './issue/single-issue-page'
 
 import CreateNewWorspace from './new-workspace/create-workspace'
 
@@ -64,10 +66,10 @@ useEffect(()=>{
  if(isSubscribed){
 
    // unsubscribe(if you have subscriptions)
-   dispatch(removeSubscriptions())
+    dispatch(removeSubscriptions())
 
    // get issues for all of user(workspace) teams
-  getTeamsIssues()
+    getTeamsIssues()
  }
   
 
@@ -96,6 +98,19 @@ useEffect(()=>{
             </div>} 
             
           />
+ 
+
+        <Route
+            path="*"
+            element={<div className="placeholder"> 
+                 
+                     
+                       <RedirectToMyIssues/>
+
+            </div>} 
+            
+          />
+          
 
        <Route  path="/:workspaceURL/search"
          
@@ -148,7 +163,7 @@ useEffect(()=>{
 
         <Route  path="/:workspaceURL/team/:teamURL/active" 
           
-          element={<div className="placeholder">
+          element={<div >
             <NavBar noPlustFilter={true} replaceFilterWithTitle={"Active Issues"}/>
             <div className="filtered-issues-container">
                 <FilteredIssues filterActiveIssues={true}/>
@@ -159,7 +174,7 @@ useEffect(()=>{
 
          <Route  path="/:workspaceURL/team/:teamURL/backlog" 
          
-          element={<div className="placeholder">
+          element={<div >
             <NavBar noPlustFilter={true} replaceFilterWithTitle={"Backlog Issues"}/>
             <div className="filtered-issues-container">
                 <FilteredIssues filterBackLogIssues={true}/>
@@ -167,6 +182,15 @@ useEffect(()=>{
 
             </div>}
           />
+
+      <Route  path="/:workspaceURL/team/:teamURL/:issueIdentified" 
+         
+         element={
+           <div >  
+             <SignleIssuePage/>
+           </div>
+           }
+         />
 
          
 

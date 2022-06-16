@@ -57,7 +57,17 @@ export const usersSlice = createSlice({
         },
         addIssuesToOneTeam:(state,action)=>{
             const teamId = action.payload.id
-            state.teamsIssues[teamId] = action.payload.data
+            // for each issue add the team id 
+            const copy= [...action.payload.data]
+          
+              copy.forEach((issue:any,index:number)=>{
+                  
+                copy[index] = {...issue,teamId}
+                
+            })
+
+
+            state.teamsIssues[teamId] = copy
         },
         addSubscription:(state,action)=>{
             const unsub:()=>void = action.payload
