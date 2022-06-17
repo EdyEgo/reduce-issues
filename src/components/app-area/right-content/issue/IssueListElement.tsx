@@ -29,7 +29,6 @@ import { useParams } from 'react-router-dom'
   const teamList = useSelector(
     (state: any) => state.team.teamList
   )
-  const bruh = useSelector((state:any)=>state)
 
     const [dropDownPriorityIsOpen,setDropDownPriorityIsOpen] = useState(false)
     const priorityRef = useRef(null)
