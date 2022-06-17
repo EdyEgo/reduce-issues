@@ -16,11 +16,13 @@ import DropDownChangeLabel from '../dropDownChangeLabelOnTheGo'
 import DropDownChangeAssignee from '../dropDownChangeAssigneeOnTheGo'
 import Skeleton from '@mui/material/Skeleton'
 
+import SaveChanges from '@mui/icons-material/SaveAs';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 
 
 import extractFitIconNoDinamic from '../../../../selectors/helpers/extractFitIconNoDinamic'
+import { lineHeight } from '@mui/system';
 
 interface SingleIssuePageProps {
     
@@ -54,10 +56,50 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     const [dropDownAssigneeIsOpen,setDropDownAssigneeIsOpen] = useState(false)
     const assigneeRef = useRef(null)
 
+   
+    const [inputTextValue,setInputTextValue] = useState(issueObject.content.text || "")
+    const [inputTitleValue,setInputTitleValue] = useState(issueObject.title || "")
+ 
+    const showSaveChangesIcon = detectCreatedChanges()
+
+
+
+ 
+    const focusEditTextContent = useRef<any>(null)
+
+   
+    
+    const inputTextHeightCalc = inputTextValue.length >= 353 && inputTextValue.length < 570 ? inputTextValue.length : 
+                                inputTextValue.length < 353 ? 353 : 570
+
+      
+
+ 
+    
+
+    console.log('^_^','sii',inputTextValue)
+
 
 
     console.log("O-O",assignedMemberToIssue)
+    console.log('o_O',issueObject)
+
+ 
+    // live updates of the issue will be made on click outside the inpus and on exit tab if any changes were made 
+    // compare with issueObject
+
     // load activity  
+
+
+    function detectCreatedChanges(){
+      if(issueObject?.content?.text != null && issueObject.content.text !== inputTextValue){
+        return true
+      }
+      if(issueObject?.title != null && inputTitleValue !== issueObject.title){
+        return true
+      }
+      return false
+    }
 
     function findAssigneedUserByIssueAssignedId(){
        if(issueObject?.assignedToUserId != null){
@@ -132,7 +174,7 @@ function creteSkeletons(){
    return skeletons
 }
     return  ( 
-        <div className="single-issue-container">
+        <div className="single-issue-container p-2">
           {issueObject != null && teamObject != null && <div className="single-issue-container ">
                <div className="issue-page-content-left-side">
                 <div className="issue-page-nav-bar flex justify-between p-4 text-sm px-9">
@@ -148,14 +190,20 @@ function creteSkeletons(){
 
                       <div className="issue-page-nav-bar__right-half gap-2 flex" ref={rightHalfBtnsRef}>
                         <div className="first-half-icons flex">
-                          <div className="cursor-pointer hover:bg-gray-100 p-1 rounded-md"> <EditIssueIcon/></div>
-                          <div className="cursor-pointer hover:bg-gray-100 p-1 rounded-md"> <DeleteForeverTwoToneIcon/></div>
+                        { showSaveChangesIcon && <div className="cursor-pointer hover:bg-gray-100 p-1 rounded-md text-red-400" title="Save Changes" >< SaveChanges/></div>}
+                          <div className="cursor-pointer hover:bg-gray-100 p-1 rounded-md" title="Edit Issue" 
+                          onClick={()=>{if(focusEditTextContent.current?.focus)focusEditTextContent.current.focus()}}
+                          > <EditIssueIcon/></div>
+                       
+                          <div className="cursor-pointer hover:bg-gray-100 p-1 rounded-md" title="Delete Issue"> <DeleteForeverTwoToneIcon/></div>
                         </div>
 
                            
                         <div className="second-half-icons flex gap-2 items-center border-l pl-2">
                             
+   
 
+   
                             
                                  <div className="cursor-pointer hover:bg-gray-100 p-1 rounded-md" title="Copy issue URL to clipboard" onClick={()=>{handleCopyToClipBoard("url")}}><AddToClipBoardIcon fontSize='small'/></div>
                                  <div className="cursor-pointer hover:bg-gray-100 p-1 rounded-md" title="Copy issue ID to clipboard" onClick={()=>{handleCopyToClipBoard("id")}}><AddIdToClipboard/></div>
@@ -263,9 +311,39 @@ function creteSkeletons(){
 
                 </div>
 
-                <div className="issue-page-content">
+                {issueObject.content != null && <div className="issue-page-content flex flex-col justify-center items-center">
+                    <div className="issue-given-title-container w-full">
+                        <div className="issue-given-title self-start p-4">
+                         <textarea name="" id="" 
+                         onChange={(event)=>{setInputTitleValue(event.target.value)}} 
+                         className="w-full leading-6 text-2xl font-semibold border overflow-hidden break-words rounded-sm resize-none border-white transition-all ease-in-out">{inputTitleValue}</textarea>
+                        </div>
+                    </div>
+                    <div className="issue-given-content">
+                          <div className="text-content">
+                         
+                                 
 
-                </div>
+                          <textarea autoFocus={true} ref={focusEditTextContent}  name="" id="" 
+                          onChange={(event)=>{setInputTextValue(event.target.value)}} 
+                          style={{height:`${inputTextHeightCalc}px` ,lineHeight:1.4}}
+                           className="issue-input-text w-full leading-6 text-2xl font-semibold border overflow-hidden break-words rounded-sm resize-none border-white transition-all ease-in-out" value={inputTextValue}></textarea> 
+                          
+                           
+                          </div>
+
+
+                          {issueObject.content.pictureListURL != null && 
+                          issueObject.content.pictureListURL.length >= 1 &&
+                             <div className="pictures-list">
+                            {issueObject.content.pictureListURL.map((pictureURL:string)=>{
+                                   return <img src={pictureURL} alt="picture" />
+                            })}
+                          </div>}
+
+                    </div>
+
+                </div>}
 
                 <div className="issue-page-activity">
 
