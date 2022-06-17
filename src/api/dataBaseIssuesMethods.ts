@@ -1,4 +1,5 @@
 import { postNewDocument} from '../composables/firebase/post/postDocument' 
+import {deleteLevelThreeNestedDocumentFirebase } from '../composables/firebase/delete/deleteDocument' 
 import {getTeamIssuesFirebase} from '../composables/firebase/issues/getTeamIssues'
 import {postMultipleFiles} from './dataBaseStorageMethods'
 import {serverTimestamp,writeBatch,increment} from 'firebase/firestore'
@@ -58,6 +59,23 @@ export async function updateIssue({inputObject,issueId,teamId,workspaceId}:{work
        return {error:false}
     }catch(e:any){
         return {error:true,message:'Could not update the issue'}
+    }
+}
+
+export async function deleteIssue({wokspaceId,teamId,issueId}:{
+    wokspaceId:string,teamId:string,issueId:string
+}){
+
+  
+    try{
+        await deleteLevelThreeNestedDocumentFirebase({
+            firstCollectionName:"workspaces",firstDocumentName:wokspaceId,
+            secondCollectionName:"teams",secondDocumentName:teamId,
+            thirdCollectionName:"issues",thirdDocumentName:issueId
+        })
+        return {error:false}
+    }catch(e:any){
+  return {error:true,message:e.message}
     }
 }
 

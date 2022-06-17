@@ -1,6 +1,6 @@
 import {useRef,useState} from 'react'
-import {useSelector} from 'react-redux'
-import {useParams} from 'react-router-dom'
+import {useSelector, useDispatch} from 'react-redux'
+import {useParams,useNavigate} from 'react-router-dom'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import TeamIcon from '@mui/icons-material/GroupsSharp';
 import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
@@ -15,6 +15,21 @@ import Avatar from '@mui/material/Avatar';
 import DropDownChangeLabel from '../dropDownChangeLabelOnTheGo'
 import DropDownChangeAssignee from '../dropDownChangeAssigneeOnTheGo'
 import Skeleton from '@mui/material/Skeleton'
+import SavedMade from '@mui/icons-material/CheckTwoTone';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import DangerDeleteIssue from '@mui/icons-material/ReportProblemSharp';
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Stack from '@mui/material/Stack';
+import LinearProgress from '@mui/material/LinearProgress';
+
+import SaveFailed from '@mui/icons-material/RunningWithErrorsSharp';
+
+import CircularProgress from '@mui/lab/LoadingButton';
+
+import {updateIssue,deleteIssue} from '../../../../../api/dataBaseIssuesMethods'
+
 
 import SaveChanges from '@mui/icons-material/SaveAs';
 import Popover from '@mui/material/Popover';
@@ -22,7 +37,7 @@ import Typography from '@mui/material/Typography';
 
 
 import extractFitIconNoDinamic from '../../../../selectors/helpers/extractFitIconNoDinamic'
-import { lineHeight } from '@mui/system';
+
 
 interface SingleIssuePageProps {
     
@@ -34,14 +49,21 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     const teamIssuesList = useSelector((state:any)=>state.issues.teamsIssues)
     
     const params = useParams()
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+
     const teamList = useSelector((state:any)=>state.team.teamList)
     const workspaceMembersList:any[] = useSelector((state:any)=>state.workspace.members)
+    
    
     const issueIdentified = params.issueIdentified
     const issueObject = findIssueInTeamsIssues()// .teamId for finding the team// .identified for issue
     const assignedMemberToIssue  = findAssigneedUserByIssueAssignedId()
     const teamObject = findTeamById()
- 
+    const selectedWorkspace = useSelector(
+        (state: any) => state.workspace.selectedWorkSpace
+      )
 
     const rightHalfBtnsRef = useRef(null)
     const [popoverOpenStatus,setPopoverOpenStatus] = useState(false)
@@ -56,7 +78,15 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     const [dropDownAssigneeIsOpen,setDropDownAssigneeIsOpen] = useState(false)
     const assigneeRef = useRef(null)
 
-   
+    //updateIssue
+    const [updateIssueLogin,setUpdateIssueLogin] =useState(false)
+    const [showSaveMade,setShowSaveMade] = useState(false)
+    const [showUnsaved,setShowUnsaved] = useState(false)
+
+    const [deleteModalStatus,setDeleteModalStatus] = useState(false)
+    const [deleteLoginModalStatus,setDeleteLoginModalStatus] = useState(false)
+    const [deleteErrorMessage,setDeleteErrorMessage] = useState<null | string>(null)
+
     const [inputTextValue,setInputTextValue] = useState(issueObject.content.text || "")
     const [inputTitleValue,setInputTitleValue] = useState(issueObject.title || "")
  
@@ -77,18 +107,84 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
  
     
 
-    console.log('^_^','sii',inputTextValue)
+    
 
-
-
-    console.log("O-O",assignedMemberToIssue)
-    console.log('o_O',issueObject)
-
+   
  
     // live updates of the issue will be made on click outside the inpus and on exit tab if any changes were made 
     // compare with issueObject
 
     // load activity  
+
+    async function deleteIssueFunction(){
+        setDeleteLoginModalStatus(true)
+
+        const deletedResult = await deleteIssue({
+           issueId:issueObject.id,
+           teamId:issueObject.teamId,
+           wokspaceId:selectedWorkspace.id
+        })
+
+       
+
+        if(deletedResult.error){
+            // issue could not be deleted, show message
+            setDeleteErrorMessage(deletedResult.message)
+
+            setTimeout(()=>{
+                setDeleteErrorMessage(null) 
+            },3000)
+        }
+ 
+
+        if(!deletedResult.error){
+            // issue was deleted , redirect to / (that will then redirect you to my issue , or just go back a step :]) 
+            navigate(-1)
+          
+        }
+      
+            setDeleteLoginModalStatus(false)
+        
+        
+    }
+
+    async function updateIssueFunction(){
+
+        setShowSaveMade(false)
+        setShowUnsaved(false)
+
+        setUpdateIssueLogin(true)
+
+      const updateResult = await updateIssue({inputObject:{
+            title:inputTitleValue,content:{
+                text:inputTextValue
+            }
+        },
+        issueId:issueObject.id,
+        teamId:issueObject.teamId,workspaceId:selectedWorkspace.id
+    
+      })
+
+  
+ 
+       if(updateResult.error){
+        setShowUnsaved(true)
+        setTimeout(()=>{
+            setShowUnsaved(false)
+        },3000)
+        
+       }
+
+       if(!updateResult.error){
+        setShowSaveMade(true)
+        setTimeout(()=>{
+            setShowSaveMade(false)
+        },3000)
+       }
+
+       setUpdateIssueLogin(false)
+      
+    }
 
 
     function detectCreatedChanges(){
@@ -189,13 +285,38 @@ function creteSkeletons(){
                       </div>
 
                       <div className="issue-page-nav-bar__right-half gap-2 flex" ref={rightHalfBtnsRef}>
-                        <div className="first-half-icons flex">
-                        { showSaveChangesIcon && <div className="cursor-pointer hover:bg-gray-100 p-1 rounded-md text-red-400" title="Save Changes" >< SaveChanges/></div>}
+                        <div className="first-half-icons flex items-center">
+                            {/* showSaveMade && */}
+                       
+                       { showSaveMade && <div className="flex items-center gap-2 mr-2">
+                        <div className="save-failed-info-text text-green-600">Successfully saved</div>
+                        <SavedMade className="text-green-600 bg-green-100 rounded-md p-1"/>
+                        
+                        </div>
+                       
+                       }
+                       {showUnsaved && <div className="flex items-center gap-2 mr-2">
+                        <div className="save-failed-info-text text-red-600">Save Failed</div>
+                        <SaveFailed className="text-red-600 bg-red-100 rounded-md p-1"/>
+                        
+                        </div>
+                       
+                       }
+
+                        {updateIssueLogin && <CircularProgress className="p-1"  loading variant="text" />}
+                        { showSaveChangesIcon && updateIssueLogin === false && 
+                        <div className="cursor-pointer hover:bg-gray-100 p-1 rounded-md text-red-400" 
+                        onClick={()=>{updateIssueFunction()}}
+                        title="Save Changes" >< SaveChanges/></div>}
+
+                        
+                             
+                      
                           <div className="cursor-pointer hover:bg-gray-100 p-1 rounded-md" title="Edit Issue" 
                           onClick={()=>{if(focusEditTextContent.current?.focus)focusEditTextContent.current.focus()}}
                           > <EditIssueIcon/></div>
                        
-                          <div className="cursor-pointer hover:bg-gray-100 p-1 rounded-md" title="Delete Issue"> <DeleteForeverTwoToneIcon/></div>
+                          <div className="cursor-pointer hover:bg-gray-100 p-1 rounded-md" title="Delete Issue" onClick={()=>{setDeleteModalStatus(true)}}> <DeleteForeverTwoToneIcon/></div>
                         </div>
 
                            
@@ -313,18 +434,18 @@ function creteSkeletons(){
 
                 {issueObject.content != null && <div className="issue-page-content flex flex-col justify-center items-center">
                     <div className="issue-given-title-container w-full">
-                        <div className="issue-given-title self-start p-4">
-                         <textarea name="" id="" 
+                        <div className="issue-given-title self-start p-4 ">
+                         <textarea  
                          onChange={(event)=>{setInputTitleValue(event.target.value)}} 
                          className="w-full leading-6 text-2xl font-semibold border overflow-hidden break-words rounded-sm resize-none border-white transition-all ease-in-out">{inputTitleValue}</textarea>
                         </div>
                     </div>
-                    <div className="issue-given-content">
+                    <div className="issue-given-content w-full border-b pb-2">
                           <div className="text-content">
                          
                                  
 
-                          <textarea autoFocus={true} ref={focusEditTextContent}  name="" id="" 
+                          <textarea autoFocus={true} ref={focusEditTextContent} 
                           onChange={(event)=>{setInputTextValue(event.target.value)}} 
                           style={{height:`${inputTextHeightCalc}px` ,lineHeight:1.4}}
                            className="issue-input-text w-full leading-6 text-2xl font-semibold border overflow-hidden break-words rounded-sm resize-none border-white transition-all ease-in-out" value={inputTextValue}></textarea> 
@@ -358,7 +479,62 @@ function creteSkeletons(){
                <DropDownChangeLabel issueObject={issueObject} anchorRef={statusRef} open={dropDownStatusIsOpen} selectBoxType="status" setOpen={setDropDownStatusIsOpen} />
                <DropDownChangeLabel issueObject={issueObject} anchorRef={labelRef} open={dropDownLabelIsOpen} selectBoxType="labels" setOpen={setDropDownLabelIsOpen} />
                 <DropDownChangeAssignee issueObject={issueObject} anchorRef={assigneeRef} open={dropDownAssigneeIsOpen} setOpen={setDropDownAssigneeIsOpen} />
-         
+           
+                <Modal
+                open={deleteModalStatus}
+                        onClose={()=>{setDeleteModalStatus(false)}}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={{
+                            position: 'absolute' as 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 500,
+                            bgcolor: 'background.paper',
+                            border: '2px solid white',
+                            boxShadow: 24,
+                            p: 3
+                        }}>
+                            {deleteLoginModalStatus &&
+                                 <Stack sx={{ width: '100%', color: 'grey.500',visibility: "visible" }} spacing={2}>
+                                        <LinearProgress color="success" />
+
+                                  </Stack>
+                            }
+                            {deleteLoginModalStatus === false &&
+                                  <Stack sx={{ width: '100%', color: 'grey.500' , visibility: "hidden"}} spacing={2}>
+                                        <LinearProgress color="success" />
+
+                                  </Stack>}
+                            <div className="container">
+                                        <div className="flex justify-center my-2"><DangerDeleteIssue className="text-red-500"/></div>
+                                    <Typography  id="modal-modal-title" variant="h6" component="h2">
+                                    Are you sure you want to delete the issue?
+                                    </Typography>
+                                    {deleteErrorMessage != null &&
+                                        <div className="text-center text-red-500 visible">Could not delete the issue</div>
+                                    
+                                    }
+                                   {deleteErrorMessage == null &&
+                                        <div className="text-center text-red-500 invisible">placeholder</div>
+                                    
+                                    }
+                                    <div className="flex justify-between m-2 mt-4">
+                                        <Button onClick={()=>{deleteIssueFunction()}} disabled={deleteLoginModalStatus} variant="outlined"  startIcon={<DeleteIcon />}>
+                                                Delete
+                                        </Button>
+                                        <Button disabled={deleteLoginModalStatus} variant="contained" color="success" onClick={()=>{setDeleteModalStatus(false)}}>
+                                            Keep
+                                        </Button>
+                                    </div>
+                            </div>
+
+
+                            
+                        </Box>
+                </Modal>
            </div> }
            {
             issueObject == null && teamObject == null && 
