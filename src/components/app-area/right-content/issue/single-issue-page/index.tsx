@@ -50,7 +50,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     
     const params = useParams()
     const navigate = useNavigate()
-    const dispatch = useDispatch()
+  
 
 
     const teamList = useSelector((state:any)=>state.team.teamList)
@@ -65,6 +65,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
         (state: any) => state.workspace.selectedWorkSpace
       )
 
+      console.log('issueObject is',issueObject)
     const rightHalfBtnsRef = useRef(null)
     const [popoverOpenStatus,setPopoverOpenStatus] = useState(false)
     const [popoverMessage,setPopoverMessage]  = useState("Copied to clipboard")
@@ -87,8 +88,8 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     const [deleteLoginModalStatus,setDeleteLoginModalStatus] = useState(false)
     const [deleteErrorMessage,setDeleteErrorMessage] = useState<null | string>(null)
 
-    const [inputTextValue,setInputTextValue] = useState(issueObject.content.text || "")
-    const [inputTitleValue,setInputTitleValue] = useState(issueObject.title || "")
+    const [inputTextValue,setInputTextValue] = useState(issueObject?.content?.text != null? issueObject.content.text : "")
+    const [inputTitleValue,setInputTitleValue] = useState(issueObject?.title ? issueObject?.title : "")
  
     const showSaveChangesIcon = detectCreatedChanges()
 
@@ -100,7 +101,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
    
     
     const inputTextHeightCalc = inputTextValue.length >= 353 && inputTextValue.length < 570 ? inputTextValue.length : 
-                                inputTextValue.length < 353 ? 353 : 570
+                                inputTextValue.length < 353 ? 303 : 570
 
       
 
@@ -139,7 +140,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
 
         if(!deletedResult.error){
             // issue was deleted , redirect to / (that will then redirect you to my issue , or just go back a step :]) 
-            navigate(-1)
+            navigate("/")
           
         }
       
@@ -230,6 +231,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     }
 
     function findTeamById(){
+        if(issueObject?.teamId == null) return null
         for(const teamValue of teamList){
           
             if(issueObject?.teamId != null  && teamValue.id === issueObject.teamId){
@@ -434,33 +436,35 @@ function creteSkeletons(){
 
                 {issueObject.content != null && <div className="issue-page-content flex flex-col justify-center items-center">
                     <div className="issue-given-title-container w-full">
-                        <div className="issue-given-title self-start p-4 ">
+                        <div className="issue-given-title self-start p-4">
                          <textarea  
                          onChange={(event)=>{setInputTitleValue(event.target.value)}} 
-                         className="w-full leading-6 text-2xl font-semibold border overflow-hidden break-words rounded-sm resize-none border-white transition-all ease-in-out">{inputTitleValue}</textarea>
+                         className="w-full leading-6 text-2xl font-semibold border overflow-hidden break-words rounded-md resize-none border-white transition-all ease-in-out" value={inputTitleValue}></textarea>
                         </div>
                     </div>
                     <div className="issue-given-content w-full border-b pb-2">
+                         {    issueObject.content.pictureListURL != null && 
+                          issueObject.content.pictureListURL.length >= 1 &&
+                             <div className="pictures-list mb-4">
+                            {issueObject.content.pictureListURL.map((pictureURL:string)=>{
+                                   return <img src={pictureURL} alt="picture" className="rounded-md"/>
+                            })}
+                          </div>}
+
                           <div className="text-content">
                          
                                  
 
-                          <textarea autoFocus={true} ref={focusEditTextContent} 
+                          <textarea  ref={focusEditTextContent} 
                           onChange={(event)=>{setInputTextValue(event.target.value)}} 
                           style={{height:`${inputTextHeightCalc}px` ,lineHeight:1.4}}
-                           className="issue-input-text w-full leading-6 text-2xl font-semibold border overflow-hidden break-words rounded-sm resize-none border-white transition-all ease-in-out" value={inputTextValue}></textarea> 
+                           className="issue-input-text w-full leading-6   border overflow-hidden break-words rounded-md resize-none border-white transition-all ease-in-out" value={inputTextValue}></textarea> 
                           
                            
                           </div>
 
 
-                          {issueObject.content.pictureListURL != null && 
-                          issueObject.content.pictureListURL.length >= 1 &&
-                             <div className="pictures-list">
-                            {issueObject.content.pictureListURL.map((pictureURL:string)=>{
-                                   return <img src={pictureURL} alt="picture" />
-                            })}
-                          </div>}
+
 
                     </div>
 

@@ -43,8 +43,9 @@ import { useParams } from 'react-router-dom'
         return teamMembersObject.find((member)=>member.id === searchedId)
        } 
 
-       
-    const createdAtDate = issue.registeredAt.toDate()
+     
+    const createdAtDate =issue.registeredAt != null && issue.registeredAt.nanoseconds && issue.registeredAt.nanoseconds > 0 && issue.registeredAt.seconds && issue.registeredAt.seconds > 0
+         ? issue.registeredAt.toDate() : ""
     const yearDiffCreatedAt  =moment().diff(createdAtDate, 'years');
    const momentFormatForCreatedAt = yearDiffCreatedAt >= 1 ? 'MMMM d, YYYY' : 'MMMM d' // show year if the at least one year has passed
     const createdAtHumanizeDate = moment(createdAtDate).format(momentFormatForCreatedAt);
