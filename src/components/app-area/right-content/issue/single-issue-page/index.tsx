@@ -446,8 +446,8 @@ function creteSkeletons(){
                          {    issueObject.content.pictureListURL != null && 
                           issueObject.content.pictureListURL.length >= 1 &&
                              <div className="pictures-list mb-4">
-                            {issueObject.content.pictureListURL.map((pictureURL:string)=>{
-                                   return <img src={pictureURL} alt="picture" className="rounded-md"/>
+                            {issueObject.content.pictureListURL.map((pictureURL:string,index:number)=>{
+                                   return <img src={pictureURL} alt="picture" className="rounded-md" key={index}/>
                             })}
                           </div>}
 

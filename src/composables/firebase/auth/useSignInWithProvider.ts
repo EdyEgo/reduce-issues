@@ -30,7 +30,7 @@ export async function signInWithProviderFirebase({
     
    
   }) {
-   
+
     const redirectOrPopUp = async (provider: any) => {
     
 
@@ -41,12 +41,11 @@ export async function signInWithProviderFirebase({
       
         const result = await signInWithPopup(auth, provider);
 
-        // The signed-in user info.
         const user = result.user;
    
         if(signUp){
          const splitName:any = user.displayName?.split(' ')
-
+      
              await setupOnSignUp(user,{createdUidUser:user.uid,createdUserEmail:user.email,firstName:splitName[0] ,lastName:splitName[1]})
          }
 
@@ -69,7 +68,7 @@ export async function signInWithProviderFirebase({
               
 
               const splitName:any = user.displayName?.split(' ')
-
+           
               await setupOnSignUp(user,{createdUidUser:user.uid,createdUserEmail:user.email,firstName:splitName[0] ,lastName:splitName[1]})
              }
 

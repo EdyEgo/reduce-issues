@@ -2,7 +2,7 @@ import { postNewDocument} from '../composables/firebase/post/postDocument'
 import {deleteLevelThreeNestedDocumentFirebase } from '../composables/firebase/delete/deleteDocument' 
 import {getTeamIssuesFirebase} from '../composables/firebase/issues/getTeamIssues'
 import {postMultipleFiles} from './dataBaseStorageMethods'
-import {serverTimestamp,writeBatch,increment} from 'firebase/firestore'
+import {serverTimestamp,writeBatch,increment,arrayUnion} from 'firebase/firestore'
 
 import {db} from '../firebase'
 import type { Issue} from '../types/issues' 
@@ -127,11 +127,15 @@ export async function postIssueActivity({workspaceId,createdIssueId,teamId,creat
 try{
     await postNewDocument({collectionSelected:activitesLink,documentName:createdIssueId,
         inputObject:{
-            type,// can be action or comment
-            creatorId,// if null then the app has created the issue
-            [type]:issueTypeIssue
+           
+            activity:arrayUnion({
+                type,// can be action or comment
+                creatorId,// if null then the app has created the issue
+                [type]:issueTypeIssue,
+                regiteredAt:serverTimestamp()
+            })
     
-        }
+        },noRegister:true
       })
       return {data:true,error:false}
 }catch(e:any){

@@ -8,7 +8,7 @@ const ClientHome: React.FC<ClientHomeProps> = () => {
         <div className="hero-content-container w-7/12 flex flex-col justify-center items-center gap-4 ">
           <div className="first-title-row">
             <div className="first-title text-6xl font-extrabold text-center">
-              Reduce your issues with an fun and easy to use tracking tool
+              Reduce your issues with a fun and easy to use tracking tool
             </div>
           </div>
           <div className="second-title-row mt-4">

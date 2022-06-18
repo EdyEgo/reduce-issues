@@ -3,6 +3,8 @@ import {  addDoc, collection, doc, serverTimestamp, setDoc   } from 'firebase/fi
 
 import {db} from '../../../firebase'
 
+// batch does not have merge , and you can only use add document as an option or use batch but not both 
+
 const postDocument = async ({
     collectionSelected,
   inputObject,
@@ -95,11 +97,11 @@ noRegister,useBatch ,firstCollectionName,firstDocumentName,secondCollectionName,
 
  //
      if(useBatch) {
-       const newDocumentObject = useBatch.set(documentRef, copyObjectInput,{merge:true})
+       const newDocumentObject = useBatch.set(documentRef, copyObjectInput)
        return newDocumentObject
      }
  //
- const resultPostedDoument = await setDoc(documentRef, copyObjectInput,{merge:true});
+ const resultPostedDoument = await setDoc(documentRef, copyObjectInput);
 
  return resultPostedDoument;
  
@@ -111,10 +113,10 @@ noRegister,useBatch ,firstCollectionName,firstDocumentName,secondCollectionName,
 
     export const postNewNestedDocumentNoDocumentName = async ({
  
-      inputObject,
+      inputObject,useAddDoc,
      noRegister,useBatch ,firstCollectionName,firstDocumentName,secondCollectionName
      }: {
-     
+     useAddDoc?:boolean,
       
       noRegister?:boolean;
       inputObject: any;useBatch?:any | undefined;
@@ -137,6 +139,13 @@ noRegister,useBatch ,firstCollectionName,firstDocumentName,secondCollectionName,
             return newDocumentObject
           }
       //
+
+      if(useAddDoc){
+
+        const resultPostedDoument = await addDoc(collection(db, firstCollectionName, firstDocumentName,secondCollectionName), copyObjectInput);
+     
+        return resultPostedDoument;
+      }
       const resultPostedDoument = await setDoc(documentRef, copyObjectInput,{merge:true});
      
       return resultPostedDoument;
@@ -144,3 +153,54 @@ noRegister,useBatch ,firstCollectionName,firstDocumentName,secondCollectionName,
      
      
          }
+
+
+
+         export const postNewNestedLevelTwoDocumentNoDocumentName = async ({
+ 
+          inputObject,useAddDoc,
+         noRegister,useBatch ,firstCollectionName,firstDocumentName,secondCollectionName,
+         secondDocumentName,thirdCollectionName
+         }: {
+         useAddDoc?:boolean,
+          
+          noRegister?:boolean;
+          inputObject: any;useBatch?:any | undefined;
+          firstCollectionName:string;firstDocumentName:string;secondCollectionName:string;
+          secondDocumentName:string,thirdCollectionName:string
+         }) => {
+          let copyObjectInput:any
+          if(noRegister == null) copyObjectInput = { ...inputObject, ...{ registeredAt: serverTimestamp() } };
+          if(noRegister)copyObjectInput = {...inputObject}
+         
+         
+         
+         
+         
+         
+
+          //
+    
+          if(useAddDoc){
+            const collectionRef = collection(db, firstCollectionName, firstDocumentName,secondCollectionName,secondDocumentName,thirdCollectionName)
+           
+            const resultPostedDoument = await addDoc(collectionRef, copyObjectInput);
+         
+            return resultPostedDoument;
+          }
+
+
+          const documentRef = doc(collection(db, firstCollectionName, firstDocumentName,secondCollectionName,secondDocumentName,thirdCollectionName)) 
+         
+          //
+              if(useBatch) {
+                const newDocumentObject = useBatch.set(documentRef, copyObjectInput)
+                return newDocumentObject
+              }
+          const resultPostedDoument = await setDoc(documentRef, copyObjectInput);
+         
+          return resultPostedDoument;
+          
+         
+         
+             }
