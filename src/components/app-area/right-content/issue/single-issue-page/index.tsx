@@ -23,6 +23,7 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
+import IssueActivity from './issueActivityList'
 
 import SaveFailed from '@mui/icons-material/RunningWithErrorsSharp';
 
@@ -471,7 +472,15 @@ function creteSkeletons(){
                 </div>}
 
                 <div className="issue-page-activity">
+                      <div className="nav-issue-activity flex">
+                        <div className="nav-issue-activity__title self-start">Activity</div>
+                      </div>
+                      {issueObject.activity != null && issueObject.activity.length >= 1  &&
+                       <IssueActivity activity={issueObject.activity}/>
+                      }
+                      <div className="leave-a-comment">
 
+                      </div>
                 </div>
 
                </div>

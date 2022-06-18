@@ -103,8 +103,8 @@ try{
             
             updatedAt:serverTimestamp(),
             activity:[{
-              type:'action',
-              actionType:'create',
+              type:'created',
+              
               creatorId:null,// if no id then the app has created the issue
               registeredAt:new Date(),
               
@@ -191,14 +191,9 @@ try{
               
               updatedAt:serverTimestamp(),
               activity:[{
-                type:'action',// may be change
+                type:'created',// may be change
                 registeredAt:new Date(),
-                action:{
-                  iconType:'',
-                  actionMessage:'created the issue',
-                  fromMessage: null, 
-                  toMessage:null
-                }
+                creatorId:null
               }]
       
             },useAddDocument:true
@@ -290,9 +285,9 @@ try{
             
             updatedAt:serverTimestamp(),
             activity:[{
-              type:'action',
+              type:'created',
               registeredAt:new Date(),
-              actionType:'create',
+              
               creatorId:null,// if no id then the app has created the issue
             }]
     
