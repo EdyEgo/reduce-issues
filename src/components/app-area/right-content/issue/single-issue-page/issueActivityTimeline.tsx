@@ -52,7 +52,7 @@ export default function BasicTimeline({
     }
     return false;
   }
-  console.log("bruh wth ", workspaceSelected);
+
   // delete comment modal
   const [
     currentActivityIndexOpenedModalFor,
@@ -71,7 +71,7 @@ export default function BasicTimeline({
     return copyIssueActivity;
   }
 
-  async function deleteIssueFunction() {
+  async function deleteIsssueCommentActivity() {
     if (currentActivityIndexOpenedModalFor === null) return;
     setDeleteLoginModalStatus(true);
 
@@ -427,7 +427,7 @@ export default function BasicTimeline({
             <div className="flex justify-between m-2 mt-4">
               <Button
                 onClick={() => {
-                  deleteIssueFunction();
+                  deleteIsssueCommentActivity();
                 }}
                 disabled={deleteLoginModalStatus}
                 variant="outlined"

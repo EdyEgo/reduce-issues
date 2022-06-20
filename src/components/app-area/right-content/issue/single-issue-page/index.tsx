@@ -24,6 +24,7 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import LinearProgress from "@mui/material/LinearProgress";
 import IssueActivity from "./issueActivityList";
+import DeleteAllIssueModal from "./SureYouWannaDeleteModal";
 
 import SaveFailed from "@mui/icons-material/RunningWithErrorsSharp";
 
@@ -37,6 +38,7 @@ import {
 import SaveChanges from "@mui/icons-material/SaveAs";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
+import DeleteActivitysIcon from "@mui/icons-material/AutoDeleteSharp";
 
 import extractFitIconNoDinamic from "../../../../selectors/helpers/extractFitIconNoDinamic";
 
@@ -63,6 +65,11 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     (state: any) => state.workspace.selectedWorkSpace
   );
 
+  const isUserTheWorkspaceOwner =
+    selectedWorkspace?.membersId != null &&
+    authUser?.uid != null &&
+    Object.hasOwn(selectedWorkspace.membersId, authUser.uid);
+
   const rightHalfBtnsRef = useRef(null);
   const [popoverOpenStatus, setPopoverOpenStatus] = useState(false);
   const [popoverMessage, setPopoverMessage] = useState("Copied to clipboard");
@@ -86,6 +93,15 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
   const [deleteErrorMessage, setDeleteErrorMessage] = useState<null | string>(
     null
   );
+
+  const [deleteActivitiesErrorMessage, setDeleteActivitiesErrorMessage] =
+    useState<null | string>(null);
+  const [
+    deleteActivitiesLoginModalStatus,
+    setDeleteActivitiesLoginModalStatus,
+  ] = useState(false);
+  const [deleteActivitiesModalStatus, setDeleteActivitiesModalStatus] =
+    useState(false);
 
   const [inputTextValue, setInputTextValue] = useState(
     issueObject?.content?.text != null ? issueObject.content.text : ""
@@ -300,6 +316,35 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
   }
   // and sub issue
 
+  async function deleteAllActivitiesAfterCreationEvent() {
+    // updateIssue
+
+    // const [deleteActivitiesErrorMessage,setDeleteActivitiesErrorMessage] = useState<null |string>(null)
+    // const [deleteActivitiesLoginModalStatus,setDeleteActivitiesLoginModalStatus] = useState(false)
+    // const [deleteActivitiesModalStatus,setDeleteActivitiesModalStatus]= useState(false)
+    setDeleteActivitiesLoginModalStatus(true);
+    const updatedArray = issueObject.activity.slice(0, 1);
+
+    const { error, message } = await updateIssue({
+      inputObject: { activity: updatedArray },
+      issueId: issueObject.id,
+      teamId: issueObject.teamId,
+      workspaceId: selectedWorkspace.id,
+    });
+
+    if (error && message) {
+      // issue could not be deleted, show message
+      setDeleteActivitiesErrorMessage(message);
+
+      setTimeout(() => {
+        setDeleteActivitiesErrorMessage(null);
+      }, 3000);
+    }
+
+    setDeleteActivitiesLoginModalStatus(false);
+    setDeleteActivitiesModalStatus(false);
+  }
+
   function creteSkeletons() {
     const skeletons = [];
     for (let i = 0; i < 20; i++) {
@@ -378,7 +423,6 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
                         focusEditTextContent.current.focus();
                     }}
                   >
-                    {" "}
                     <EditIssueIcon />
                   </div>
 
@@ -389,7 +433,6 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
                       setDeleteModalStatus(true);
                     }}
                   >
-                    {" "}
                     <DeleteForeverTwoToneIcon />
                   </div>
                 </div>
@@ -643,10 +686,22 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
             )}
 
             <div className="issue-page-activity">
-              <div className="nav-issue-activity flex">
-                <div className="nav-issue-activity__title self-start">
+              <div className="nav-issue-activity flex items-center justify-between">
+                <div className="nav-issue-activity__title self-start p-4">
                   Activity
                 </div>
+
+                {isUserTheWorkspaceOwner && (
+                  <div
+                    className="delete-all-comments text-gray-600 cursor-pointer hover:text-red-400"
+                    title="delete all after created(event) issue history"
+                    onClick={() => {
+                      setDeleteActivitiesModalStatus(true);
+                    }}
+                  >
+                    <DeleteActivitysIcon /> Delete activities
+                  </div>
+                )}
               </div>
               {issueObject.activity != null &&
                 issueObject.activity.length >= 1 && (
@@ -779,6 +834,15 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
         </div>
       )}
       {issueObject == null && teamObject == null && creteSkeletons()}
+
+      <DeleteAllIssueModal
+        executeDelete={deleteAllActivitiesAfterCreationEvent}
+        deleteErrorMessage={deleteActivitiesErrorMessage}
+        deleteLoginModalStatus={deleteActivitiesLoginModalStatus}
+        deleteModalStatus={deleteActivitiesModalStatus}
+        setDeleteModalStatus={setDeleteActivitiesModalStatus}
+        warningMessageTitle="Are sure you wannt to delete this issue activities"
+      />
     </div>
   );
 };
