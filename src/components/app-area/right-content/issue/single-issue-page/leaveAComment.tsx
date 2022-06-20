@@ -52,7 +52,7 @@ const LeaveACommentToIssue: React.FC<LeaveACommentToIssueProps> = ({
           onChange={(event) => {
             setCommentText(event.target.value);
           }}
-          className="w-full leading-6  border overflow-hidden break-words rounded-md resize-none border-white transition-all ease-in-out"
+          className="w-full shadow-md leading-6 p-4  border overflow-hidden break-words rounded-md resize-none border-white transition-all ease-in-out"
           value={commentText}
         ></textarea>
       </div>
