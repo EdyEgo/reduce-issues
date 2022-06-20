@@ -111,20 +111,25 @@ export async function updateIssue({
   workspaceId,
 }: {
   workspaceId: string;
-  addToActivity: any;
+  addToActivity?: any;
   teamId: string;
   issueId: string;
   inputObject: any;
 }) {
   try {
+    const inputObjectForUpdate = { ...inputObject };
+
+    if (addToActivity) {
+      inputObjectForUpdate["activity"] = arrayUnion({
+        ...addToActivity,
+        registeredAt: new Date(),
+      });
+    }
     await postNewDocument({
       collectionSelected: `workspaces/${workspaceId}/teams/${teamId}/issues`,
       documentName: issueId,
       noRegister: true,
-      inputObject: {
-        ...inputObject,
-        activity: arrayUnion({ ...addToActivity, registeredAt: new Date() }),
-      },
+      inputObject: inputObjectForUpdate,
     });
     return { error: false };
   } catch (e: any) {

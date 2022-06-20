@@ -19,9 +19,9 @@ import SavedMade from "@mui/icons-material/CheckTwoTone";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import DangerDeleteIssue from "@mui/icons-material/ReportProblemSharp";
+import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 import IssueActivity from "./issueActivityList";
 
@@ -63,7 +63,6 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     (state: any) => state.workspace.selectedWorkSpace
   );
 
-  console.log("issueObject is", issueObject);
   const rightHalfBtnsRef = useRef(null);
   const [popoverOpenStatus, setPopoverOpenStatus] = useState(false);
   const [popoverMessage, setPopoverMessage] = useState("Copied to clipboard");
