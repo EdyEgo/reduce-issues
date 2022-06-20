@@ -16,16 +16,6 @@ const LeaveACommentToIssue: React.FC<LeaveACommentToIssueProps> = ({
 }) => {
   const [commentText, setCommentText] = useState("");
   const authUser = useSelector((state: any) => state.auth.user);
-  // const updateResult = await addIssueComment({
-  //     inputObject: {
-
-  //     },
-  //     issueId: issueObject.id,
-  //     teamId: issueObject.teamId,
-  //     workspaceId: selectedWorkspace.id,
-
-  //     addToActivity,
-  //   });
 
   async function updateCommentWithLoggedUser() {
     if (commentText === "") return "";
@@ -56,7 +46,7 @@ const LeaveACommentToIssue: React.FC<LeaveACommentToIssueProps> = ({
           value={commentText}
         ></textarea>
       </div>
-      <div className="leave-a-comment-footer">
+      <div className="leave-a-comment-footer p-2 pl-0">
         <Button
           size="small"
           variant="outlined"

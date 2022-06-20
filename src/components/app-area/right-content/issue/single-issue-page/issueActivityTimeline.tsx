@@ -34,6 +34,25 @@ export default function BasicTimeline({
   );
 
   const authUser = useSelector((state: any) => state.auth.user);
+  const workspaceSelected = useSelector(
+    (state: any) => state.workspace.selectedWorkSpace
+  );
+  // make a title with self delete or by case , delete as workspace owner
+  const areYouTheWorkspaceOwner = detectIfYouAreTheWorkspaceOwner();
+
+  function detectIfYouAreTheWorkspaceOwner() {
+    const listMembers: {
+      [key: string]: { role: "Owner" | string; invitedAt: any };
+    } = workspaceSelected.membersId;
+    if (
+      Object.hasOwn(listMembers, authUser.uid) &&
+      listMembers[authUser.uid].role === "Owner"
+    ) {
+      return true;
+    }
+    return false;
+  }
+  console.log("bruh wth ", workspaceSelected);
   // delete comment modal
   const [
     currentActivityIndexOpenedModalFor,
@@ -88,9 +107,9 @@ export default function BasicTimeline({
     changedStatus: "changed status",
     changedLabel: "changed label",
     changedPriority: "changed priority",
-    titleUpdate: "updated the title of the issue",
-    textUpdate: "updated the description of the issue",
-    textAndTitleUpdate: "updated title and description of the issue",
+    titleUpdate: "updated the title",
+    textUpdate: "updated the description",
+    textAndTitleUpdate: "updated title and description",
     selfAssigned: "self-assigned the issue",
     removedAssignee: "removed assignee",
     assignedTo: "assgine the issue to",
@@ -138,6 +157,15 @@ export default function BasicTimeline({
             const memberAssignedIssueObjectct = activity?.assignedIssueToId
               ? findAssigneedUserByIssueAssignedId(activity.assignedIssueToId)
               : null;
+
+            let titleCommentTypeButton = "";
+            if (
+              activity.type === "comment" &&
+              authUser.uid === activity.creatorId
+            )
+              titleCommentTypeButton = "delete your comment";
+            if (activity.type === "comment" && areYouTheWorkspaceOwner)
+              titleCommentTypeButton = "delete comment as workspace owner";
             return (
               <div className="timeline-item p-2 " key={currentActivityIndex}>
                 <div className="timeline-separator">
@@ -170,18 +198,20 @@ export default function BasicTimeline({
                                     ).fromNow()}
                                   </div>
 
-                                  <div className="delete-comment flex gap-4 items-center text-gray-600  cursor-pointer hover:text-red-400 rounded-md">
-                                    <div>
-                                      <DeleteCommentIcon
-                                        onClick={() => {
-                                          setDeleteModalStatus(true);
-                                          setCurrentActivityIndexOpenedModalFor(
-                                            currentActivityIndex
-                                          );
-                                        }}
-                                      />
+                                  {titleCommentTypeButton !== "" && (
+                                    <div className="delete-comment flex gap-4 items-center text-gray-600  cursor-pointer hover:text-red-400 rounded-md">
+                                      <div title={titleCommentTypeButton}>
+                                        <DeleteCommentIcon
+                                          onClick={() => {
+                                            setDeleteModalStatus(true);
+                                            setCurrentActivityIndexOpenedModalFor(
+                                              currentActivityIndex
+                                            );
+                                          }}
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
+                                  )}
                                 </div>
                               )}
                           </div>
@@ -319,7 +349,7 @@ export default function BasicTimeline({
           </div>
           <div className="timeline-content py-1">
             <div className="input-comment">
-              <div className="call-to-action-label text-gray-500">
+              <div className="call-to-action-label text-gray-500 p-2 pl-0">
                 Leave a comment...
               </div>
               <LeaveAComment

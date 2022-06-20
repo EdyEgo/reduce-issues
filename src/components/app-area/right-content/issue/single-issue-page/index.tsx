@@ -148,7 +148,9 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
       issueObject?.content?.text != null &&
       issueObject.content.text !== inputTextValue;
     const titleChange =
-      issueObject?.title != null && inputTitleValue !== issueObject.title;
+      issueObject?.title != null &&
+      inputTitleValue !== "" &&
+      inputTitleValue !== issueObject.title;
     const titleAndTextChange = textChange && titleChange;
 
     if (textChange) {
