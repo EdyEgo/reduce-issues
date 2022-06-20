@@ -199,17 +199,25 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
       }, 3000);
     }
 
+    // setInputTitleValue("");
+    // setInputTextValue("");
+
     setUpdateIssueLogin(false);
   }
 
   function detectCreatedChanges() {
     if (
       issueObject?.content?.text != null &&
+      inputTextValue !== "" &&
       issueObject.content.text !== inputTextValue
     ) {
       return true;
     }
-    if (issueObject?.title != null && inputTitleValue !== issueObject.title) {
+    if (
+      issueObject?.title != null &&
+      inputTitleValue !== "" &&
+      inputTitleValue !== issueObject.title
+    ) {
       return true;
     }
     return false;
@@ -238,10 +246,12 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
         issueIndex++
       ) {
         const issueValueObject = teamIssuesValue[issueIndex];
+
         if (
           issueValueObject?.identified &&
+          issueIdentified &&
           issueValueObject.identified.toLowerCase() ===
-            issueIdentified?.toLowerCase()
+            issueIdentified.toLowerCase()
         ) {
           issueObject = issueValueObject;
           break loopTeam;
@@ -580,7 +590,11 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
                         setInputTitleValue(event.target.value);
                       }}
                       className="w-full leading-6 text-2xl font-semibold border overflow-hidden break-words rounded-md resize-none border-white transition-all ease-in-out"
-                      value={inputTitleValue}
+                      value={
+                        inputTitleValue === "" && issueObject?.title != null
+                          ? issueObject?.title
+                          : inputTitleValue
+                      }
                     ></textarea>
                   </div>
                 </div>
@@ -614,7 +628,12 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
                         lineHeight: 1.4,
                       }}
                       className="issue-input-text w-full leading-6   border overflow-hidden break-words rounded-md resize-none border-white transition-all ease-in-out"
-                      value={inputTextValue}
+                      value={
+                        inputTextValue === "" &&
+                        issueObject.content.text != null
+                          ? issueObject.content.text
+                          : inputTextValue
+                      }
                     ></textarea>
                   </div>
                 </div>
