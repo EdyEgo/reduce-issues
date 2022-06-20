@@ -1,46 +1,44 @@
+import IssueTimeline from "./issueActivityTimeline";
+
 interface IssueActivityListProps {
-    activity:null | {
-        actionType:string,creatorId:null | string
-        type:string,registeredAt:any
-        }[]
+  activity:
+    | null
+    | {
+        actionType: string;
+        creatorId: null | string;
+        type: string;
+        registeredAt: any;
+      }[];
+  issueId: string;
+  teamId: string;
+  workspaceId: string;
 }
- 
-const IssueActivityList: React.FC<IssueActivityListProps> = ({activity}) => {
 
-   const textActivity = {
-     created:"created the issue",
-     addedLabel:"added label",
-     addedStatus:"added status",
-     addedPriority:"added priority",
-     changedStatus:"changed status",
-     changedLabel:"changed label",
-     changedPriority:"changed priority",
-     titleUpdate:"updated the title of the issue",
-     textUpdate:"updated the description of the issue",
-     selfAssigned:"self-assigned the issue",
-     assigned:"assgine the issue to",
-     comment:""
-   }
+const IssueActivityList: React.FC<IssueActivityListProps> = ({
+  activity,
+  issueId,
+  teamId,
+  workspaceId,
+}) => {
+  // create a list of icons , for each piece of history/activity we'll have a different icon
+  // on created the user avatar or a placeholder , and for labels(status/priority/label) an icon
+  // for text or title updated will have just a pen
 
+  // if there is a creatorId but the id was not found then show deleted user
+  // anyway you are gonna delete a user from a team but not from the workspace(the workspace only remembers the ids of the users)
 
-    return ( <div className="issue-activity-list">
-                              {activity != null && activity.length >= 1  &&
-                       <div className="activity-list">
-                             { activity.map((activity:{
-                               actionType:string,creatorId:null | string
-                               type:string,registeredAt:any
-                               })=>{
-                              return <div></div>
-                             })}
+  return (
+    <div className="issue-activity-list">
+      {activity != null && activity.length >= 1 && (
+        <IssueTimeline
+          issueActivity={activity}
+          issueId={issueId}
+          teamId={teamId}
+          workspaceId={workspaceId}
+        />
+      )}
+    </div>
+  );
+};
 
-                             {
-                    //   activity.map(()=>{
-                    //     return <div></div>
-                    //   })
-                             }
-                      </div>
-                      }
-    </div> );
-}
- 
 export default IssueActivityList;

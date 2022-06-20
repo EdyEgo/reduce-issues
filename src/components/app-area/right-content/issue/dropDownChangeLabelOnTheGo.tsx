@@ -35,9 +35,9 @@ export default function DropDownChangeLabelOnTheGo({
 }) {
   
 
-    const params = useParams() 
+    // const params = useParams() 
 
- 
+  const authUser = useSelector((state:any)=>state.auth.user)
 
     // function findIssueTeam(){
     //   // this function is just a lot of nonsense just because i don t want to store at least in the objects the link , jesus , wth man
@@ -85,15 +85,15 @@ export default function DropDownChangeLabelOnTheGo({
     // }
 
 
-    function findTeamId(teamList:any[]){
+    // function findTeamId(teamList:any[]){
       
-        if(params?.teamURL == null)  {
-        //  return findIssueTeam().id
-           return issueObject.teamId
+    //     if(params?.teamURL == null)  {
+    //     //  return findIssueTeam().id
+    //        return issueObject.teamId
 
-        }
-       return teamList.find((team)=>team.identified.toLowerCase() === params.teamURL?.toLowerCase()).id
-      }
+    //     }
+    //    return teamList.find((team)=>team.identified.toLowerCase() === params.teamURL?.toLowerCase()).id
+    //   }
   
   const selectedWorkspace = useSelector((state:any)=>state.workspace.selectedWorkSpace)    
 
@@ -131,9 +131,17 @@ export default function DropDownChangeLabelOnTheGo({
    
       const issueId = issueObject.id
       const workspaceId = selectedWorkspace.id
+
+      const changedOrAddedLabel  = issueObject[selectBoxType] == null ? "added" : "changed"
+      const fromMessage  = changedOrAddedLabel === "changed" ? issueObject[selectBoxType].name : null
+      const toMessage = fromMessage != null ? name : null
+      
+      const createActivityKey = changedOrAddedLabel + selectBoxType[0].toUpperCase() +selectBoxType.slice(1,selectBoxType.length)// ex:changedStatus/addedStatus
+
+      const addToActivity = {creatorId:authUser.uid ,type:createActivityKey,fromMessage,toMessage}
      
-     console.log('what ????',workspaceId,selectedTeamId,issueId,selectBoxType)
-   const {error} =  await updateIssue({inputObject:{[selectBoxType]:{icon,name}},issueId,teamId:selectedTeamId,workspaceId})
+   
+   const {error} =  await updateIssue({inputObject:{[selectBoxType]:{icon,name}},issueId,teamId:selectedTeamId,workspaceId,addToActivity})
   
    if(error) console.log('error on updateing the issue',error)
   }

@@ -33,9 +33,9 @@ export default function DropDownChangeLabelOnTheGo({
   anchorRef: any;
 }) {
    
-    const params = useParams() 
+    // const params = useParams() 
     
-   
+    const authUser = useSelector((state:any)=>state.auth.user)
 
 
     // function findIssueTeam(){
@@ -83,14 +83,14 @@ export default function DropDownChangeLabelOnTheGo({
    
     // }
 
-    function findTeamId(teamList:any[]){
-        if(params?.teamURL == null) {
+    // function findTeamId(teamList:any[]){
+    //     if(params?.teamURL == null) {
 
-          // return findIssueTeam().id
-          return issueObject.teamId
-        }
-       return teamList.find((team)=>team.identified.toLowerCase() === params.teamURL).id
-      }
+    //       // return findIssueTeam().id
+    //       return issueObject.teamId
+    //     }
+    //    return teamList.find((team)=>team.identified.toLowerCase() === params.teamURL).id
+    //   }
  
   const selectedWorkspace = useSelector((state:any)=>state.workspace.selectedWorkSpace)    
   const workspaceMembers = useSelector((state:any)=>state.workspace.members)
@@ -137,13 +137,17 @@ const selectedTeamId = issueObject.teamId//findTeamId(teamsList)
      
       if(userObject == null) {
     // assign to null
-    const {error} = await updateIssue({inputObject:{assignedToUserId:null},issueId,teamId:selectedTeamId,workspaceId})
+    const addToActivity = {type:"removedAssignee"  ,creatorId:authUser.uid}
+    const {error} = await updateIssue({inputObject:{assignedToUserId:null},issueId,teamId:selectedTeamId,workspaceId,addToActivity})
     if(error) console.log('error on updateing the issue',error)
     return 
       }
      const userId = userObject.id
-
-     const {error} = await updateIssue({inputObject:{assignedToUserId:userId},issueId,teamId:selectedTeamId,workspaceId})
+     let addToActivity:any = {type:"assignedTo"  ,creatorId:authUser.uid , assignedIssueToId:userId}
+     if(userId === authUser.uid){
+       addToActivity = {type:"selfAssigned"  ,creatorId:authUser.uid }
+     }
+     const {error} = await updateIssue({inputObject:{assignedToUserId:userId},issueId,teamId:selectedTeamId,workspaceId,addToActivity})
      if(error) console.log('error on updateing the issue',error)
   }
 
