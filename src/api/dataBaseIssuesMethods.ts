@@ -238,6 +238,7 @@ export async function postIssue({
       collectionSelected: `workspaces/${workspaceId}/teams`,
       documentName: teamId,
       inputObject: updateTeamObjectInput,
+      noRegister: true,
       useBatch: batch,
     });
 

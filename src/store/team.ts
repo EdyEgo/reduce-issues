@@ -1,45 +1,60 @@
-import {createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
-const initialState:{selectedTeam:any,teamList:{[key:string]:any}[] | []} = {
-   selectedTeam:{name:'My First Team',id:''},teamList:[]
-} 
-
-
-
-
-
+const initialState: {
+  selectedTeam: any;
+  teamList: { [key: string]: any }[] | [];
+} = {
+  selectedTeam: { name: "My First Team", id: "" },
+  teamList: [],
+};
 
 export const teamSlice = createSlice({
-    name:'team',
-    initialState,
-    reducers:{
+  name: "team",
+  initialState,
+  reducers: {
+    changeSelectedTeam: (state, action) => {
+      state.selectedTeam = action.payload;
+    }, // we don t have a selected team future
 
-        changeSelectedTeam:(state,action)=>{
-            state.selectedTeam = action.payload
-        }, // we don t have a selected team future
-
-        setTeamList:(state,action)=>{
-          
-            state.teamList = action.payload
-           
-        },
-        deleteTeamList:(state)=>{
-            state.teamList = []
-        },
-        deleteTeamFromList:(state,action)=>{
-            const {teamId} = action.payload
-            delete state.teamList[teamId]
-        },
-        updateATeam:(state,action)=>{
-            const {newTeamId,newTeamObject} = action.payload
-            state.teamList[newTeamId] = newTeamObject
-        }
-      
-      
+    setTeamList: (state, action) => {
+      state.teamList = action.payload;
     },
+    deleteTeamList: (state) => {
+      state.teamList = [];
+    },
+    deleteTeamFromList: (state, action) => {
+      const { teamId } = action.payload;
+      delete state.teamList[teamId];
+    },
+    updateATeam: (state, action) => {
+      const { newTeamId, newTeamObject } = action.payload;
+      state.teamList[newTeamId] = newTeamObject;
+    },
+    updateATeamName(state, { payload }) {
+      const teamId = payload.teamId;
+      const newName = payload.newName;
+      const teamFoundedIndex = state.teamList.findIndex(
+        (teamObject) => teamObject.id === teamId
+      );
 
-})
+      const copyTeamList = [...state.teamList];
+      copyTeamList.splice(teamFoundedIndex, 1, {
+        ...copyTeamList[teamFoundedIndex],
+        name: newName,
+      });
 
-export const { changeSelectedTeam , setTeamList, deleteTeamList , updateATeam ,deleteTeamFromList} = teamSlice.actions
+      state.teamList = copyTeamList;
+    },
+  },
+});
 
-export default teamSlice.reducer
+export const {
+  changeSelectedTeam,
+  setTeamList,
+  deleteTeamList,
+  updateATeam,
+  deleteTeamFromList,
+  updateATeamName,
+} = teamSlice.actions;
+
+export default teamSlice.reducer;
