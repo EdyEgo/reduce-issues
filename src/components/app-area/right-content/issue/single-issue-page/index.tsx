@@ -130,9 +130,10 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     setDeleteLoginModalStatus(true);
 
     const deletedResult = await deleteIssue({
+      issueObject,
       issueId: issueObject.id,
       teamId: issueObject.teamId,
-      wokspaceId: selectedWorkspace.id,
+      workspaceId: selectedWorkspace.id,
     });
 
     if (deletedResult.error) {
@@ -388,7 +389,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
                       <div className="save-failed-info-text text-green-600">
                         Successfully saved
                       </div>
-                      <SavedMade className="text-green-600 bg-green-100 rounded-md p-1" />
+                      <SavedMade className="text-green-600 bg-green-100 rounded-md p-1 transition-all ease" />
                     </div>
                   )}
                   {showUnsaved && (
@@ -396,16 +397,20 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
                       <div className="save-failed-info-text text-red-600">
                         Save Failed
                       </div>
-                      <SaveFailed className="text-red-600 bg-red-100 rounded-md p-1" />
+                      <SaveFailed className="text-red-600 bg-red-100 rounded-md p-1 transition-all ease" />
                     </div>
                   )}
 
                   {updateIssueLogin && (
-                    <CircularProgress className="p-1" loading variant="text" />
+                    <CircularProgress
+                      className="p-1 transition-all ease"
+                      loading
+                      variant="text"
+                    />
                   )}
                   {showSaveChangesIcon && updateIssueLogin === false && (
                     <div
-                      className="cursor-pointer hover:bg-gray-100 p-1 rounded-md text-red-400"
+                      className="cursor-pointer hover:bg-gray-100 p-1 rounded-md text-green-600 transition-all ease"
                       onClick={() => {
                         updateIssueFunction();
                       }}
@@ -416,7 +421,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
                   )}
 
                   <div
-                    className="cursor-pointer hover:bg-gray-100 p-1 rounded-md"
+                    className="cursor-pointer hover:bg-gray-100 p-1 hover:text-blue-400 rounded-md transition-all ease"
                     title="Edit Issue"
                     onClick={() => {
                       if (focusEditTextContent.current?.focus)
@@ -427,7 +432,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
                   </div>
 
                   <div
-                    className="cursor-pointer hover:bg-gray-100 p-1 rounded-md"
+                    className="cursor-pointer hover:bg-gray-100 p-1 rounded-md hover:text-red-400 transition-all ease"
                     title="Delete Issue"
                     onClick={() => {
                       setDeleteModalStatus(true);
@@ -437,7 +442,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
                   </div>
                 </div>
 
-                <div className="second-half-icons flex gap-2 items-center border-l pl-2">
+                <div className="second-half-icons flex gap-2 items-center border-l pl-2 transition-all ease">
                   <div
                     className="cursor-pointer hover:bg-gray-100 p-1 rounded-md"
                     title="Copy issue URL to clipboard"
@@ -448,7 +453,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
                     <AddToClipBoardIcon fontSize="small" />
                   </div>
                   <div
-                    className="cursor-pointer hover:bg-gray-100 p-1 rounded-md"
+                    className="cursor-pointer hover:bg-gray-100 p-1 rounded-md transition-all ease"
                     title="Copy issue ID to clipboard"
                     onClick={() => {
                       handleCopyToClipBoard("id");
@@ -685,15 +690,15 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
               </div>
             )}
 
-            <div className="issue-page-activity">
+            <div className="issue-page-activity my-2">
               <div className="nav-issue-activity flex items-center justify-between">
-                <div className="nav-issue-activity__title self-start p-4">
+                <div className="nav-issue-activity__title self-start p-4 cursor-default font-semibold text-lg">
                   Activity
                 </div>
 
                 {isUserTheWorkspaceOwner && (
                   <div
-                    className="delete-all-comments text-gray-600 cursor-pointer hover:text-red-400"
+                    className="delete-all-comments text-gray-600 cursor-pointer hover:text-red-400 p-4 transition-all ease"
                     title="delete all after created(event) issue history"
                     onClick={() => {
                       setDeleteActivitiesModalStatus(true);

@@ -55,24 +55,29 @@ export async function getTeamIssues({
   }
 }
 
-function returnFitLabelsObject(newIssueObject: Issue) {
+function returnFitLabelsObject(newIssueObject: Issue, decrement?: boolean) {
   const fitLabels: any = {};
+  const numberValue = decrement != null ? -1 : 1;
   if (newIssueObject.status !== null)
-    fitLabels["createdStatus"] = { [newIssueObject.status.name]: increment(1) };
+    fitLabels["createdStatus"] = {
+      [newIssueObject.status.icon]: increment(numberValue),
+    };
 
   if (newIssueObject.priority !== null)
     fitLabels["createdPriority"] = {
-      [newIssueObject.priority.name]: increment(1),
+      [newIssueObject.priority.icon]: increment(numberValue),
     };
 
   if (newIssueObject.label !== null)
-    fitLabels["createdLabel"] = { [newIssueObject.label.name]: increment(1) };
+    fitLabels["createdLabel"] = {
+      [newIssueObject.label.icon]: increment(numberValue),
+    };
 
   if (newIssueObject.assignedToUserId !== null)
-    fitLabels["assignedIssues"] = increment(1);
+    fitLabels["assignedIssues"] = increment(numberValue);
 
   if (newIssueObject.assignedToUserId === null)
-    fitLabels["unassignedIssues"] = increment(-1);
+    fitLabels["unassignedIssues"] = increment(numberValue);
 
   return fitLabels;
 }
@@ -138,22 +143,43 @@ export async function updateIssue({
 }
 
 export async function deleteIssue({
-  wokspaceId,
+  issueObject,
+  workspaceId,
   teamId,
   issueId,
 }: {
-  wokspaceId: string;
+  issueObject: any;
+  workspaceId: string;
   teamId: string;
   issueId: string;
 }) {
   try {
     await deleteLevelThreeNestedDocumentFirebase({
       firstCollectionName: "workspaces",
-      firstDocumentName: wokspaceId,
+      firstDocumentName: workspaceId,
       secondCollectionName: "teams",
       secondDocumentName: teamId,
       thirdCollectionName: "issues",
       thirdDocumentName: issueId,
+    });
+
+    const updateTeamObjectInput: any = {
+      issuesNumber: increment(1),
+      //   membersId: { [creatorId]: { createdIssues: increment(-1),deletedIssues:increment(1) } },
+      ...returnFitLabelsObject(issueObject, true),
+    };
+    if (issueObject?.creatorId != null) {
+      // add to teammate history
+      updateTeamObjectInput["membersId"] = {
+        [issueObject.creatorId]: { deletedIssues: increment(1) },
+      };
+    }
+
+    await postNewDocument({
+      collectionSelected: `workspaces/${workspaceId}/teams`,
+      documentName: teamId,
+      inputObject: { issuesNumber: increment(-1) },
+      noRegister: true,
     });
     return { error: false };
   } catch (e: any) {
@@ -190,6 +216,13 @@ export async function postIssue({
         identified:
           teamDocument.data.identified + "-" + newIssueNumberIndentifier,
         updatedAt: serverTimestamp(),
+        activity: [
+          {
+            creatorId: null,
+            registerAt: new Date(),
+            type: "created",
+          },
+        ],
       },
       useBatch: batch,
     });

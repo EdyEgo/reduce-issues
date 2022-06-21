@@ -7,7 +7,10 @@ import {
   getWorkSpace,
   getWorkSpacesByIds,
 } from "../../api/dataBaseWorkSpaceMethods";
-import { getTeams ,getTeamsWhereTheUserMeetsTheRole} from "../../api/dataBaseTeamsMethods";
+import {
+  getTeams,
+  getTeamsWhereTheUserMeetsTheRole,
+} from "../../api/dataBaseTeamsMethods";
 import { changeCurrentUser } from "../../store/users";
 import {
   changeSelectedWorkSpace,
@@ -33,13 +36,12 @@ const AppArea: React.FC<AppAreaProps> = () => {
     (state: any) => state.issues.newIssueModalOpenStatus
   );
 
-
   async function getCurrentUserAndSave() {
     const currentUser = authStore.user;
     const currentUserObject = await getUser({ userId: currentUser.uid });
     if (currentUserObject.error) throw new Error(currentUserObject.message);
     const currentUserDataObject = currentUserObject.data;
-    
+
     dispatch(
       changeCurrentUser({ ...currentUserDataObject, id: currentUser.uid })
     );
@@ -69,14 +71,21 @@ const AppArea: React.FC<AppAreaProps> = () => {
     return documents.data;
   }
 
-  async function getCurrentTeamListForWorkspace(workspaceId: string,workspaceMembersId:any) {
-  
-    
-    // old : const document = await getTeams(workspaceId) 
-    const isUserAOwner = workspaceMembersId != null &&  workspaceMembersId[authStoreUser.uid].role === 'Owner' 
+  async function getCurrentTeamListForWorkspace(
+    workspaceId: string,
+    workspaceMembersId: any
+  ) {
+    // old : const document = await getTeams(workspaceId)
+    const isUserAOwner =
+      workspaceMembersId != null &&
+      workspaceMembersId[authStoreUser.uid].role === "Owner";
     // if the user is owner then he can see all the teams from the current workspace
-    const document = await getTeamsWhereTheUserMeetsTheRole(workspaceId,authStoreUser.uid,isUserAOwner);
-    
+    const document = await getTeamsWhereTheUserMeetsTheRole(
+      workspaceId,
+      authStoreUser.uid,
+      isUserAOwner
+    );
+
     if (document.error) throw new Error(document.message);
     const teamData = document.data;
 
@@ -92,7 +101,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
     const members = await getUsers({ usersIds });
     if (members.error) throw new Error(members.message);
     const teamMembersList = members.data;
-    
+
     dispatch(loadMembersToStore(teamMembersList));
   }
 
@@ -107,7 +116,6 @@ const AppArea: React.FC<AppAreaProps> = () => {
           console.log("error on loading current user object ", error.message)
         )
         .then(async (userData: any) => {
-          
           const selectedWorkspaceId = userData.data.workSpaceSelected.id;
           const userWorkSpaces = userData.data.workSpaces;
 
@@ -123,7 +131,10 @@ const AppArea: React.FC<AppAreaProps> = () => {
             collectionUserWorkspace
           );
           // load team data from workspace nested collection
-          await getCurrentTeamListForWorkspace(selectedWorkspaceId,workspaceData.membersId);
+          await getCurrentTeamListForWorkspace(
+            selectedWorkspaceId,
+            workspaceData.membersId
+          );
           // load members list from data base in users collection
           await getSelectedWorkspaceMembersAndSave(workspaceData.membersId);
         });
@@ -140,8 +151,8 @@ const AppArea: React.FC<AppAreaProps> = () => {
 
       <Router>
         {/* links here */}
-        <div className="flex app-side-content-container text-md mt-1">
-          <div className="w-3/12 left-menu-container">
+        <div className="flex app-side-content-container text-md mt-1 h-full">
+          <div className="w-3/12 left-menu-container ">
             <LeftMenu />
           </div>
 

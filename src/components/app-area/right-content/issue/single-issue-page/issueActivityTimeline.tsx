@@ -87,7 +87,7 @@ export default function BasicTimeline({
     });
 
     if (error && message) {
-      // issue could not be deleted, show message
+      // could not be deleted, show message
       setDeleteErrorMessage(message);
 
       setTimeout(() => {
