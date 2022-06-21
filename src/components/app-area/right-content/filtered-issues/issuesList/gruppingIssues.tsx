@@ -119,13 +119,6 @@ const GrouppingIssues: React.FC<GrouppingIssuesProps> = ({
   const teamMembersObject: { id: string; photoURL: string | null }[] =
     useSelector((state: any) => state.workspace.members); //{}[]
 
-  console.log(
-    "you filter by this selectedTeamIssues",
-    filteredIssuesList,
-    "and test ",
-    selectedTeamIssues
-  );
-
   // function openNewIssueModal(preloadedPropertyName:string,preloadedData:any) {
   // // openModalWithPreloadedData
   //     // open with some data and at closing the modal the local store to get clean , neee

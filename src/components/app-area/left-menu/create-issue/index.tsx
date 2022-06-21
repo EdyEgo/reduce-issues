@@ -13,7 +13,7 @@ const CreateNewIssue: React.FC<CreateNewIssueProps> = () => {
   const dispatch = useDispatch();
 
   function openNewIssueModal() {
-    dispatch(changenewIssueModalOpenStatus({open:true}));
+    dispatch(changenewIssueModalOpenStatus({ open: true }));
   }
 
   return (
@@ -21,7 +21,7 @@ const CreateNewIssue: React.FC<CreateNewIssueProps> = () => {
       <div className="create-issue-content-container flex justify-between items-center ">
         <div
           onClick={openNewIssueModal}
-          className="left-menu-new-issue-btn cursor-pointer flex gap-2 ml-2  my-4 border rounded-sm py-1 px-2 hover:bg-gray-100 "
+          className="left-menu-new-issue-btn cursor-pointer text-gray-700 hover:text-gray-900 flex gap-2 ml-2  my-4 border rounded-md py-1 px-2 hover:bg-gray-100 "
         >
           <span>
             <WritePen className="pointer-events-none" />
@@ -29,7 +29,7 @@ const CreateNewIssue: React.FC<CreateNewIssueProps> = () => {
           <span className="pointer-events-none">Create a new Issue </span>
         </div>
         <Link
-          className="search-btn   my-4 border rounded-sm py-1 px-2 hover:bg-gray-100 "
+          className="search-btn   my-4 border rounded-md py-1 px-2 hover:bg-gray-100 hover:text-gray-900 text-gray-700"
           to={selectedWorkspaceUrl + "/search"}
         >
           <MagnifyingGlass className="pointer-events-none" />

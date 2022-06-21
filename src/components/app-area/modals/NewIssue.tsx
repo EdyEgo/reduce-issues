@@ -316,8 +316,8 @@ export default function NewIssueModal() {
           id="customized-dialog-title"
           onClose={closeNewIssueModal}
         >
-          <div className="title-and-select-team-container flex flex-col items-center">
-            <div className="title"> Create a new issue</div>
+          <div className="title-and-select-team-container flex flex-col items-center pt-1 gap-3">
+            <div className="title "> Create a new issue</div>
             <div className="select-team">
               <SelectDialogObjectBased
                 disableButton={loading}
@@ -366,7 +366,7 @@ export default function NewIssueModal() {
             </Box>
           </div>
           <div className="buttons-row flex flex-col px-2">
-            <div className="labels-container flex  justify-center items-center  flex-wrap  p-5">
+            <div className="labels-container text-xs flex  justify-center items-center  flex-wrap  p-5">
               {/* <div className="first-half"> */}
               {
                 <SelectDialogArrayBased

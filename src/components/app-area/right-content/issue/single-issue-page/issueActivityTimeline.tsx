@@ -189,6 +189,7 @@ export default function BasicTimeline({
                                 {assignedMemberToIssue.lastName}
                               </div>
                             </div>
+
                             {activity.registeredAt != null &&
                               activity.type === "comment" && (
                                 <div className="about-comment-container flex gap-4">

@@ -1,10 +1,10 @@
-import {  useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { useState, useRef } from "react";
 
 import DropDownProfileMenu from "./dropDownProfile";
 
-import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
+import AccountCircleSharpIcon from "@mui/icons-material/AccountCircleSharp";
 
 interface ManageProfileColumnProps {}
 
@@ -14,9 +14,8 @@ const ManageProfileColumn: React.FC<ManageProfileColumnProps> = () => {
 
   // if the photoURL is present but the img gives an error , on img error this will be set to true ..
   // ..so you can have the avatar default img as if the user is not haveing an img URL
-  const [hideBrokenProfileImgWithSrc , setHideBrokenProfileImgWithSrc] = useState(false) 
-
-
+  const [hideBrokenProfileImgWithSrc, setHideBrokenProfileImgWithSrc] =
+    useState(false);
 
   const [open, setOpen] = useState(false);
 
@@ -33,21 +32,22 @@ const ManageProfileColumn: React.FC<ManageProfileColumnProps> = () => {
         ref={anchorRef}
         onClick={handleToggle}
       >
-        {userObject?.photoURL == null || hideBrokenProfileImgWithSrc && (
-          <div className="no-profile-picture">
-            <AccountCircleSharpIcon />
-          </div>
-        )}
+        {userObject?.photoURL == null ||
+          (hideBrokenProfileImgWithSrc && (
+            <div className="no-profile-picture p-1">
+              <AccountCircleSharpIcon />
+            </div>
+          ))}
+
         {userObject?.photoURL && hideBrokenProfileImgWithSrc === false && (
-          <div className="profile-picture ">
-         
+          <div className="profile-picture p-1 flex justify-center items-center">
             <img
               alt={"profile"}
               src={userObject.photoURL}
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null; // prevents looping (not really /:} )
                 // currentTarget.src="image_path_here";
-                setHideBrokenProfileImgWithSrc(true)
+                setHideBrokenProfileImgWithSrc(true);
               }}
               className="rounded-full max-w-5 max-h-5"
             />
