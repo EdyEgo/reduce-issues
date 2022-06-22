@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import moment from "moment";
 import Avatar from "@mui/material/Avatar";
@@ -17,11 +17,11 @@ import SaveIcon from "@mui/icons-material/Save";
 import extractFitIconNoDinamic from "../../../selectors/helpers/extractFitIconNoDinamic";
 import { updateOneteam } from "../../../../api/dataBaseTeamsMethods";
 
-import {
-  labelsList,
-  priorityList,
-  statusList,
-} from "../../../../composables/modalOptions/issues";
+// import {
+//   labelsList,
+//   priorityList,
+//   statusList,
+// } from "../../../../composables/modalOptions/issues";
 
 interface TeamSettingsProps {}
 
@@ -38,29 +38,32 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
   );
   const teamIssuesList = useSelector((state: any) => state.issues.teamsIssues);
   const selectedTeam = findTeamByIdentifier();
+  const selectedTeamNameIs = selectedTeam?.name ? selectedTeam.name : "";
   const [teamInputName, setTeamInputName] = useState(selectedTeam?.name);
-  if (selectedTeam?.name != null && selectedTeam.name !== teamInputName) {
-    // if somehow the the useSelector is empty at first but later(after an update) has content
-    setTeamInputName(selectedTeam.name);
-  }
-
+  const selectedWorkspaceMembersIds = useSelector(
+    (state: any) => state.workspace.selectedWorkSpace
+  );
+  console.log("god damn son", selectedWorkspaceMembersIds);
   const [teamInputIdentified, setTeamInputIdentified] = useState(
     selectedTeam?.identified
   );
-  if (
-    selectedTeam?.identified != null &&
-    selectedTeam.identified !== teamInputIdentified
-  ) {
-    // if somehow the the useSelector is empty at first but  later(after an update) has content
-    setTeamInputIdentified(selectedTeam.identified);
-  }
 
-  console.log(
-    "bruh wth",
-    teamInputName,
-    "how is this a thing",
-    teamInputIdentified
-  );
+  useEffect(() => {
+    let isSubscribed = true;
+
+    if (isSubscribed) {
+      if (selectedTeam?.name != null) {
+        setTeamInputName(selectedTeam.name);
+      }
+      if (selectedTeam?.identified != null) {
+        setTeamInputIdentified(selectedTeam.identified);
+      }
+    }
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [selectedTeam]);
 
   const showSaveOnNameEdit =
     selectedTeam?.name != null &&
@@ -76,6 +79,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
       ? true
       : false;
 
+  const selectedTeamMembersList = Object.entries(selectedTeam.membersId);
   const [updateNameLogin, setUpdateNameLogin] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState("");
   const [snackBarOpenStatus, setSnackBarOpenStatus] = useState(false);
@@ -188,57 +192,33 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
     return error;
   }
 
-  //   function findIssueInTeamsIssues() {
-  //     //identified
-  //     let issueObject = null;
+  async function inviteWorkspaceMemberInTeam(workspaceMemberId: string) {
+    // add to data base and to the team object and to teamList issues
+  }
 
-  //     loopTeam: for (const teamId in teamIssuesList) {
-  //       const teamIssuesValue = teamIssuesList[teamId];
-  //       if (teamIssuesValue.length <= 0) continue;
-  //       for (
-  //         let issueIndex = 0;
-  //         issueIndex < teamIssuesValue.length;
-  //         issueIndex++
-  //       ) {
-  //         const issueValueObject = teamIssuesValue[issueIndex].identified;
-  //         console.log("bruh", issueValueObject);
-  //         // if (
-  //         //   issueValueObject?.identified &&
-  //         //   issueIdentified &&
-  //         //   issueValueObject.identified.toLowerCase() ===
-  //         //     issueIdentified.toLowerCase()
-  //         // ) {
-  //         //   issueObject = issueValueObject;
-  //         //   break loopTeam;
-  //         // }
-  //       }
-  //     }
+  //   function returnLabelsTypeList(icon: string, name: string, index: number) {
+  //     return (
+  //       <div className="item flex gap-2" key={index}>
+  //         <div className="item-type-info flex gap-2">
+  //           <div className="icon">
+  //             {extractFitIconNoDinamic({
+  //               iconName: icon,
+  //               index: index + 1,
+  //             })}
+  //           </div>
+  //           <div className="name">{name}: </div>
+  //         </div>
 
-  //     return issueObject;
-  //   }
-  function returnLabelsTypeList(icon: string, name: string, index: number) {
-    return (
-      <div className="item flex gap-2" key={index}>
-        <div className="item-type-info flex gap-2">
-          <div className="icon">
-            {extractFitIconNoDinamic({
-              iconName: icon,
-              index: index + 1,
-            })}
-          </div>
-          <div className="name">{name}: </div>
-        </div>
-
-        <div className="number-associated">
-          {selectedTeam?.createdStatus != null
-            ? selectedTeam?.createdStatus[icon] != null
-              ? selectedTeam?.createdStatus[icon]
-              : 0
-            : 0}
-        </div>
-      </div>
-    );
-  } // usefull for future progress
+  //         <div className="number-associated">
+  //           {selectedTeam?.createdStatus != null
+  //             ? selectedTeam?.createdStatus[icon] != null
+  //               ? selectedTeam?.createdStatus[icon]
+  //               : 0
+  //             : 0}
+  //         </div>
+  //       </div>
+  //     );
+  //   } // usefull for future progress
   // change team name and delete users
 
   function showSaveBtn() {
@@ -257,7 +237,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
               <div className="about-team ">
                 <div className="team-name-title flex items-center">
                   <div className="name-changer w-7/12 px-1">
-                    <div className="label-t py-2">Name</div>
+                    <div className="label-t py-2 ml-1">Name</div>
                     <textarea
                       onChange={(event) => {
                         setTeamInputName(event.target.value);
@@ -268,7 +248,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                   </div>
 
                   <div className="id-container w-6/12 px-1">
-                    <div className="py-2"> ID Name</div>
+                    <div className="py-2 ml-1"> ID Name</div>
                     {/* <div>{selectedTeam.identified}</div> */}
 
                     <textarea
@@ -334,8 +314,16 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                     </Box>
                   </div>
                 </div>
-                <div className="about-this-page text-gray-700">
-                  Manage this team
+                <div className="about-this-page text-gray-700 flex justify-between items-center p-3">
+                  <div className="title-manage-team">Manage this team</div>
+                  <div className="delete-team">
+                    <div
+                      className="delete-team-button bg-red-400 text-white p-2 rounded-md font-medium 
+                      cursor-pointer hover:bg-red-600 hover:shadow-lg"
+                    >
+                      Delete Team
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -416,7 +404,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                     Team members list
                   </div>
                   <div className="list">
-                    {Object.entries(selectedTeam.membersId).map(
+                    {selectedTeamMembersList.map(
                       (
                         [memberId, memberValue]: [
                           memberId: string,
@@ -465,10 +453,119 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                                   <div>Role:</div>
                                   <div>{memberValue.role}</div>
                                 </div>
-                                <div className="created-issues flex gap-2">
-                                  <div>Created issues:</div>
-                                  <div>{memberValue.createdIssues}</div>
+
+                                {memberValue.createdIssues != null && (
+                                  <div className="created-issues flex gap-2">
+                                    <div>Created issues:</div>
+                                    <div>{memberValue.createdIssues}</div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      }
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {selectedWorkspaceMembersIds.membersId != null && (
+                <div className="team-members-list">
+                  <div className="members-list-title text-lg p-1">
+                    Invite members in this team from current selected workspace
+                    members list
+                  </div>
+                  <div className="list">
+                    {Object.entries(selectedWorkspaceMembersIds.membersId).map(
+                      (
+                        [memberId, memberValue]: [
+                          memberId: string,
+                          memberValue: any
+                        ],
+                        index: number
+                      ) => {
+                        const foundMember = findTeamMemberById(memberId);
+                        const isMember =
+                          selectedTeam.membersId[foundMember.id] != null
+                            ? true
+                            : false;
+
+                        return (
+                          <div key={index} className="">
+                            {foundMember != null && (
+                              <div className="exists-container flex gap-4 items-center">
+                                <div className="member-details flex gap-2">
+                                  <div className="avatar-container ">
+                                    {foundMember?.photoURL != null && (
+                                      <Avatar
+                                        src={foundMember.photoURL}
+                                        sx={{ width: 20, height: 20 }}
+                                      />
+                                    )}
+                                    {foundMember?.photoURL == null && (
+                                      <AvatarPlaceholder />
+                                    )}
+                                  </div>
+                                  <div className="name-container flex gap-2">
+                                    <div className="firstName">
+                                      {foundMember.firstName}
+                                    </div>
+                                    <div className="lastName">
+                                      {foundMember.lastName}
+                                    </div>
+                                  </div>
                                 </div>
+                                <div className="invited-at flex gap-2 text-gray-600">
+                                  <div>Added :</div>
+                                  <div>
+                                    {memberValue?.invitedAt != null &&
+                                      memberValue.invitedAt.nanoseconds > 0 &&
+                                      memberValue.invitedAt.seconds > 0 &&
+                                      moment(
+                                        memberValue.invitedAt.toDate()
+                                      ).fromNow()}
+                                  </div>
+                                </div>
+                                <div className="role flex gap-2">
+                                  <div>Role:</div>
+                                  <div>{memberValue.role}</div>
+                                </div>
+                                {memberValue.createdIssues != null && (
+                                  <div className="created-issues flex gap-2">
+                                    <div>Created issues:</div>
+                                    <div>{memberValue.createdIssues}</div>
+                                  </div>
+                                )}
+
+                                {!isMember && (
+                                  <div className="button-invite-container">
+                                    <div
+                                      onClick={() => {
+                                        inviteWorkspaceMemberInTeam(
+                                          foundMember.id
+                                        );
+                                      }}
+                                      className="button-invite bg-blue p-2 bg-blue-400 text-white font-medium rounded-md"
+                                    >
+                                      Invite
+                                    </div>
+                                  </div>
+                                )}
+                                {isMember && (
+                                  <div className="button-invite-container">
+                                    <div
+                                      onClick={() => {
+                                        inviteWorkspaceMemberInTeam(
+                                          foundMember.id
+                                        );
+                                      }}
+                                      className="button-invite bg-blue p-2 invisible"
+                                    >
+                                      placeholder
+                                    </div>
+                                  </div>
+                                )}
                               </div>
                             )}
                           </div>
