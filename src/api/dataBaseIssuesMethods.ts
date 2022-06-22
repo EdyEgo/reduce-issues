@@ -213,8 +213,10 @@ export async function postIssue({
       useAddDocument: true,
       inputObject: {
         ...newIssue,
-        identified:
-          teamDocument.data.identified + "-" + newIssueNumberIndentifier,
+
+        identifiedNumber: newIssueNumberIndentifier,
+        // identified:
+        //   teamDocument.data.identified + "-" + newIssueNumberIndentifier,
         updatedAt: serverTimestamp(),
         activity: [
           {

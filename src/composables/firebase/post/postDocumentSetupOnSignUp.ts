@@ -119,7 +119,7 @@ export default async function postDocumentSetupOnSignUp(
         dueDate: "",
         blockByIssueId: "",
         blockingIssueId: "",
-        identified: "MFT-0",
+        identifiedNumber: 0,
         assignedToUserId: user.uid,
 
         updatedAt: serverTimestamp(),
@@ -216,7 +216,7 @@ export default async function postDocumentSetupOnSignUp(
         dueDate: "",
         blockByIssueId: "",
         blockingIssueId: "",
-        identified: "MST-0",
+        identifiedNumber: 0,
         assignedToUserId: user.uid,
 
         updatedAt: serverTimestamp(),
@@ -328,7 +328,7 @@ export default async function postDocumentSetupOnSignUp(
         dueDate: "",
         blockByIssueId: "",
         blockingIssueId: "",
-        identified: "MST-0",
+        identifiedNumber: 0,
         assignedToUserId: user.uid,
 
         updatedAt: serverTimestamp(),

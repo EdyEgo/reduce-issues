@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import moment from "moment";
 import Avatar from "@mui/material/Avatar";
 import AvatarPlaceholder from "@mui/icons-material/AccountCircle";
@@ -8,7 +8,7 @@ import SnackBarCRUDInfo from "../../../../composables/info-popovers/snackbar";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { green } from "@mui/material/colors";
-import { updateATeamName } from "../../../../store/team";
+import { updateATeamName, updateATeamIdentified } from "../../../../store/team";
 
 import Fab from "@mui/material/Fab";
 import CheckIcon from "@mui/icons-material/Check";
@@ -29,6 +29,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
   const params = useParams();
   const teamURL = params.teamURL;
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const teamList = useSelector((state: any) => state.team.teamList);
   const usersList: any[] = useSelector((state: any) => state.workspace.members);
@@ -38,7 +39,43 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
   const teamIssuesList = useSelector((state: any) => state.issues.teamsIssues);
   const selectedTeam = findTeamByIdentifier();
   const [teamInputName, setTeamInputName] = useState(selectedTeam?.name);
-  //   message={} openStatus={} setOpenStatus={} severityType={
+  if (selectedTeam?.name != null && selectedTeam.name !== teamInputName) {
+    // if somehow the the useSelector is empty at first but later(after an update) has content
+    setTeamInputName(selectedTeam.name);
+  }
+
+  const [teamInputIdentified, setTeamInputIdentified] = useState(
+    selectedTeam?.identified
+  );
+  if (
+    selectedTeam?.identified != null &&
+    selectedTeam.identified !== teamInputIdentified
+  ) {
+    // if somehow the the useSelector is empty at first but  later(after an update) has content
+    setTeamInputIdentified(selectedTeam.identified);
+  }
+
+  console.log(
+    "bruh wth",
+    teamInputName,
+    "how is this a thing",
+    teamInputIdentified
+  );
+
+  const showSaveOnNameEdit =
+    selectedTeam?.name != null &&
+    teamInputName !== "" &&
+    teamInputName !== selectedTeam.name
+      ? true
+      : false;
+
+  const showSaveOnIdentifiedEdit =
+    selectedTeam?.identified != null &&
+    teamInputIdentified !== "" &&
+    teamInputIdentified !== selectedTeam.identified
+      ? true
+      : false;
+
   const [updateNameLogin, setUpdateNameLogin] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState("");
   const [snackBarOpenStatus, setSnackBarOpenStatus] = useState(false);
@@ -68,33 +105,87 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
     return usersList.find((userItem: any) => userItem.id === serchedMemberId);
   }
 
-  async function updateTeamName() {
-    if (teamInputName === "" || teamInputName === null) return;
+  async function updateTeamInfo() {
+    // showSaveOnIdentifiedEdit , showSaveOnNameEdit
 
-    setUpdateNameLogin(true);
-    const { error } = await updateOneteam({
-      teamId: selectedTeam.id,
-      inputObject: { name: teamInputName },
-      workspaceId: selectedWorkspace.id,
-    });
+    if (
+      teamInputName === "" ||
+      teamInputName === null ||
+      teamInputIdentified === "" ||
+      teamInputIdentified === null ||
+      teamInputIdentified.length > 3
+    )
+      return;
+
+    let updateTeamNameError = null;
+    let updateTeamIdError = null;
+
+    if (showSaveOnNameEdit) {
+      updateTeamNameError = await updateTeamName();
+    }
+    if (showSaveOnIdentifiedEdit) {
+      updateTeamIdError = await updateteamIdentified();
+    }
+
     setUpdateNameLogin(false);
 
-    if (error) {
+    if (updateTeamNameError !== null || updateTeamIdError !== null) {
       setSnackBarOpenStatus(true);
       setSnackBarSeverityType("error");
-      setSnackBarMessage("Could not update the team name");
+      setSnackBarMessage("Could not update the team");
+      return;
     }
-    if (!error) {
+    if (updateTeamNameError === null || updateTeamIdError === null) {
+      setSnackBarOpenStatus(true);
+      setSnackBarSeverityType("success");
+      setSnackBarMessage("Team  updated");
+    }
+
+    if (showSaveOnNameEdit) {
       dispatch(
         updateATeamName({
           teamId: selectedTeam.id,
           newName: teamInputName,
         })
       );
-      setSnackBarOpenStatus(true);
-      setSnackBarSeverityType("success");
-      setSnackBarMessage("Team name updated");
     }
+
+    if (showSaveOnIdentifiedEdit) {
+      dispatch(
+        updateATeamIdentified({
+          teamId: selectedTeam.id,
+          newIdentified: teamInputIdentified,
+        })
+      );
+
+      navigate(
+        `/${selectedWorkspace.workspaceURL}/settings/team/${teamInputIdentified}`
+      );
+    }
+  }
+
+  async function updateTeamName() {
+    setUpdateNameLogin(true);
+    const { error } = await updateOneteam({
+      teamId: selectedTeam.id,
+      inputObject: { name: teamInputName },
+      workspaceId: selectedWorkspace.id,
+    });
+
+    if (!error) return null;
+    return error;
+  }
+
+  async function updateteamIdentified() {
+    setUpdateNameLogin(true);
+    const { error } = await updateOneteam({
+      teamId: selectedTeam.id,
+      inputObject: { identified: teamInputIdentified },
+      workspaceId: selectedWorkspace.id,
+    });
+
+    if (!error) return null;
+    return error;
   }
 
   //   function findIssueInTeamsIssues() {
@@ -150,6 +241,13 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
   } // usefull for future progress
   // change team name and delete users
 
+  function showSaveBtn() {
+    const classToReturn =
+      showSaveOnNameEdit === true || showSaveOnIdentifiedEdit === true
+        ? "save-changed-name visible  flex"
+        : "save-changed-name invisible ";
+    return classToReturn;
+  }
   return (
     <div className="team-settings-container">
       {selectedTeam != null && (
@@ -157,24 +255,50 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
           <div className="nav-team-settings  p-8">
             <div className="about-container border-b pb-2 ">
               <div className="about-team ">
-                <div className="team-name-title flex">
-                  <textarea
-                    onChange={(event) => {
-                      setTeamInputName(event.target.value);
-                    }}
-                    className="text-2xl w-full shadow-md  p-2  border overflow-hidden break-words rounded-md resize-none border-white transition-all ease-in-out"
-                    value={teamInputName}
-                  ></textarea>
+                <div className="team-name-title flex items-center">
+                  <div className="name-changer w-7/12 px-1">
+                    <div className="label-t py-2">Name</div>
+                    <textarea
+                      onChange={(event) => {
+                        setTeamInputName(event.target.value);
+                      }}
+                      className="text-2xl w-full  shadow-md  p-2  border overflow-hidden break-words rounded-md resize-none border-white transition-all ease-in-out"
+                      value={teamInputName}
+                    ></textarea>
+                  </div>
 
-                  <div
-                    className={
-                      selectedTeam.name != null &&
-                      teamInputName !== "" &&
-                      teamInputName !== selectedTeam.name
-                        ? "save-changed-name visible p-2 flex"
-                        : "save-changed-name invisible p-2"
-                    }
-                  >
+                  <div className="id-container w-6/12 px-1">
+                    <div className="py-2"> ID Name</div>
+                    {/* <div>{selectedTeam.identified}</div> */}
+
+                    <textarea
+                      onKeyDown={(event) => {
+                        if (teamInputIdentified?.length <= 3) return;
+                        // this one is here in case you copy paste somehow  a large text , and you want to delete it
+                        if (event.key === "Backspace" || event.key === "Delete")
+                          setTeamInputIdentified(
+                            teamInputIdentified.slice(
+                              0,
+                              teamInputIdentified.length - 1
+                            )
+                          );
+                      }}
+                      onChange={(event) => {
+                        if (
+                          teamInputIdentified.length >= 3 &&
+                          event.target.value.length >= 3
+                        )
+                          return;
+                        setTeamInputIdentified(
+                          event.target.value.toUpperCase()
+                        );
+                      }}
+                      className="text-2xl  w-full shadow-md  p-2  border overflow-hidden break-words rounded-md resize-none border-white transition-all ease-in-out"
+                      value={teamInputIdentified}
+                    ></textarea>
+                  </div>
+
+                  <div className={showSaveBtn()}>
                     {/* <div
                       onClick={updateTeamName}
                       className="change-name-container bg-green-400 rounded-md p-2 text-gray-800 cursor-pointer"
@@ -187,7 +311,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                         aria-label="save"
                         color="primary"
                         sx={buttonSx}
-                        onClick={updateTeamName}
+                        onClick={updateTeamInfo}
                       >
                         {snackBarSeverityType === "success" ? (
                           <CheckIcon />
@@ -218,10 +342,6 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
           </div>
           <div className="stats-container">
             <div className="stats-list">
-              <div className="id-container flex gap-2">
-                <div> ID Name : </div>
-                <div>{selectedTeam.identified}</div>
-              </div>
               {selectedTeam.registeredAt != null &&
                 selectedTeam.registeredAt.nanoseconds > 0 &&
                 selectedTeam.registeredAt.seconds > 0 && (
@@ -306,47 +426,51 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                       ) => {
                         const foundMember = findTeamMemberById(memberId);
                         return (
-                          <div key={index} className="flex  gap-4">
-                            <div className="member-details flex gap-2">
-                              <div className="avatar-container ">
-                                {foundMember?.photoURL != null && (
-                                  <Avatar
-                                    src={foundMember.photoURL}
-                                    sx={{ width: 20, height: 20 }}
-                                  />
-                                )}
-                                {foundMember?.photoURL == null && (
-                                  <AvatarPlaceholder />
-                                )}
-                              </div>
-                              <div className="name-container flex gap-2">
-                                <div className="firstName">
-                                  {foundMember.firstName}
+                          <div key={index} className="">
+                            {foundMember != null && (
+                              <div className="exists-container flex gap-4">
+                                <div className="member-details flex gap-2">
+                                  <div className="avatar-container ">
+                                    {foundMember?.photoURL != null && (
+                                      <Avatar
+                                        src={foundMember.photoURL}
+                                        sx={{ width: 20, height: 20 }}
+                                      />
+                                    )}
+                                    {foundMember?.photoURL == null && (
+                                      <AvatarPlaceholder />
+                                    )}
+                                  </div>
+                                  <div className="name-container flex gap-2">
+                                    <div className="firstName">
+                                      {foundMember.firstName}
+                                    </div>
+                                    <div className="lastName">
+                                      {foundMember.lastName}
+                                    </div>
+                                  </div>
                                 </div>
-                                <div className="lastName">
-                                  {foundMember.lastName}
+                                <div className="invited-at flex gap-2 text-gray-600">
+                                  <div>Added :</div>
+                                  <div>
+                                    {memberValue?.invitedAt != null &&
+                                      memberValue.invitedAt.nanoseconds > 0 &&
+                                      memberValue.invitedAt.seconds > 0 &&
+                                      moment(
+                                        memberValue.invitedAt.toDate()
+                                      ).fromNow()}
+                                  </div>
+                                </div>
+                                <div className="role flex gap-2">
+                                  <div>Role:</div>
+                                  <div>{memberValue.role}</div>
+                                </div>
+                                <div className="created-issues flex gap-2">
+                                  <div>Created issues:</div>
+                                  <div>{memberValue.createdIssues}</div>
                                 </div>
                               </div>
-                            </div>
-                            <div className="invited-at flex gap-2 text-gray-600">
-                              <div>Added :</div>
-                              <div>
-                                {memberValue?.invitedAt != null &&
-                                  memberValue.invitedAt.nanoseconds > 0 &&
-                                  memberValue.invitedAt.seconds > 0 &&
-                                  moment(
-                                    memberValue.invitedAt.toDate()
-                                  ).fromNow()}
-                              </div>
-                            </div>
-                            <div className="role flex gap-2">
-                              <div>Role:</div>
-                              <div>{memberValue.role}</div>
-                            </div>
-                            <div className="created-issues flex gap-2">
-                              <div>Created issues:</div>
-                              <div>{memberValue.createdIssues}</div>
-                            </div>
+                            )}
                           </div>
                         );
                       }

@@ -57,7 +57,9 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     (state: any) => state.workspace.members
   );
 
-  const issueIdentified = params.issueIdentified;
+  const issueIdentifiedParams = params.issueIdentified;
+  const teamURL = params.teamURL;
+
   const issueObject = findIssueInTeamsIssues(); // .teamId for finding the team// .identified for issue
   const assignedMemberToIssue = findAssigneedUserByIssueAssignedId();
   const teamObject = findTeamById();
@@ -257,7 +259,9 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     let issueObject = null;
 
     loopTeam: for (const teamId in teamIssuesList) {
+      // teamURL
       const teamIssuesValue = teamIssuesList[teamId];
+      // well when we load the issues let's add the identified
       if (teamIssuesValue.length <= 0) continue;
       for (
         let issueIndex = 0;
@@ -265,12 +269,36 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
         issueIndex++
       ) {
         const issueValueObject = teamIssuesValue[issueIndex];
+        // const issueIdentified = `${issueValueObject.teamIdentified}-${issueValueObject.identifiedNumber}`
+        // issueValueObject. teamIdentified
 
+        // issueValueObject. identifiedNumber
+        console.log(
+          "how is this working",
+          issueValueObject,
+          "bruh",
+          issueIdentifiedParams,
+          "real"
+        );
+        // const extractIdentifiedNumber
+        // const splitIdentifier = issueIdentified.split("-")// ex: MFW-0 , ["MFW",0]
+        // old way
+        // if (
+        //   issueValueObject?.identified &&
+        //   issueIdentified &&
+        //   issueValueObject.identified.toLowerCase() ===
+        //     issueIdentified.toLowerCase()
+        // ) {
+        //   issueObject = issueValueObject;
+        //   break loopTeam;
+        // }
+
+        // new way
+        const issueIdentified = `${issueValueObject.teamIdentified}-${issueValueObject.identifiedNumber}`;
         if (
-          issueValueObject?.identified &&
           issueIdentified &&
-          issueValueObject.identified.toLowerCase() ===
-            issueIdentified.toLowerCase()
+          issueIdentifiedParams &&
+          issueIdentified.toLowerCase() === issueIdentifiedParams.toLowerCase()
         ) {
           issueObject = issueValueObject;
           break loopTeam;

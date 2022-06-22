@@ -45,6 +45,22 @@ export const teamSlice = createSlice({
 
       state.teamList = copyTeamList;
     },
+    updateATeamIdentified(state, { payload }) {
+      const teamId = payload.teamId;
+      const newIdentified = payload.newIdentified;
+      const teamFoundedIndex = state.teamList.findIndex(
+        (teamObject) => teamObject.id === teamId
+      );
+
+      const copyTeamList = [...state.teamList];
+      copyTeamList.splice(teamFoundedIndex, 1, {
+        ...copyTeamList[teamFoundedIndex],
+        identified: newIdentified,
+      });
+      console.log("bruh", copyTeamList);
+
+      state.teamList = copyTeamList;
+    },
   },
 });
 
@@ -55,6 +71,7 @@ export const {
   updateATeam,
   deleteTeamFromList,
   updateATeamName,
+  updateATeamIdentified,
 } = teamSlice.actions;
 
 export default teamSlice.reducer;

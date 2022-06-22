@@ -33,12 +33,17 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
     (state: any) => state.profile.profileStatus
   );
 
-  function writeIssuesToOneTeam(teamId: string, data: any, unsub: any) {
+  function writeIssuesToOneTeam(
+    teamId: string,
+    teamIdentified: string,
+    data: any,
+    unsub: any
+  ) {
     // add team subscription
     dispatch(addSubscription(unsub));
 
     // add team issues
-    dispatch(addIssuesToOneTeam({ id: teamId, data }));
+    dispatch(addIssuesToOneTeam({ id: teamId, data, teamIdentified }));
   }
 
   function callbackIssuesSnapShot({
@@ -46,22 +51,27 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
     data,
     message,
     teamId,
+    teamIdentified,
     unsub,
   }: any) {
     if (error) return;
     setErrorMessage(`Could not get your issues , reason:,${message}`);
-    writeIssuesToOneTeam(teamId, data, unsub);
+    writeIssuesToOneTeam(teamId, teamIdentified, data, unsub);
   }
 
   function getTeamsIssues() {
     if (selectedWorkspace.id == null || teamsList.length <= 0) return;
 
-    teamsList.forEach((teamObject: { id: string }) => {
+    teamsList.forEach((teamObject: { id: string; identified: string }) => {
+      console.log("bruh wth,", teamObject.identified);
       getTeamIssues({
         teamId: teamObject.id,
         workspaceId: selectedWorkspace.id,
         callbackDocuments: callbackIssuesSnapShot,
-        valuesToIncludeInResult: { teamId: teamObject.id },
+        valuesToIncludeInResult: {
+          teamId: teamObject.id,
+          teamIdentified: teamObject.identified,
+        },
       });
     });
   }
