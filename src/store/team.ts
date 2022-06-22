@@ -57,7 +57,35 @@ export const teamSlice = createSlice({
         ...copyTeamList[teamFoundedIndex],
         identified: newIdentified,
       });
-      console.log("bruh", copyTeamList);
+
+      state.teamList = copyTeamList;
+    },
+    addTeamMember(state, { payload }) {
+      const teamMemberId = payload.teamMemberId;
+      const teamId = payload.teamId;
+
+      const teamFoundedIndex = state.teamList.findIndex(
+        (teamObject) => teamObject.id === teamId
+      );
+
+      const copyTeamList = [...state.teamList];
+      copyTeamList.splice(teamFoundedIndex, 1, {
+        ...copyTeamList[teamFoundedIndex],
+        [teamMemberId]: { role: "Member", invitedAt: new Date() },
+      });
+
+      state.teamList = copyTeamList;
+    },
+    removeTeamMember(state, { payload }) {
+      const teamMemberId = payload.teamMemberId;
+      const teamId = payload.teamId;
+
+      const teamFoundedIndex = state.teamList.findIndex(
+        (teamObject) => teamObject.id === teamId
+      );
+
+      const copyTeamList = [...state.teamList];
+      delete copyTeamList[teamFoundedIndex][teamMemberId];
 
       state.teamList = copyTeamList;
     },
@@ -69,6 +97,8 @@ export const {
   setTeamList,
   deleteTeamList,
   updateATeam,
+  addTeamMember,
+  removeTeamMember,
   deleteTeamFromList,
   updateATeamName,
   updateATeamIdentified,

@@ -5,8 +5,35 @@ import {
   getOneTeamFirebase,
 } from "../composables/firebase/teams/getWorkspaceTeams";
 import { postNewDocument } from "../composables/firebase/post/postDocument";
+import { deleteLevelTwoNestedDocumentFieldFirebase } from "../composables/firebase/delete/deleteDocumentField";
 import { serverTimestamp } from "firebase/firestore";
 import { tz } from "moment-timezone";
+
+export async function deleteOneTeamMember({
+  memberIdFiledToDelete,
+  teamId,
+  workspaceId,
+}: {
+  memberIdFiledToDelete: string;
+  workspaceId: string;
+  teamId: string;
+}) {
+  try {
+    await deleteLevelTwoNestedDocumentFieldFirebase({
+      fieldToDelete: "membersId",
+      nestedFieldToDelete: memberIdFiledToDelete,
+      firstCollectionName: "workspaces",
+      firstDocumentName: workspaceId,
+      secondCollectionName: "teams",
+      secondDocumentName: teamId,
+    });
+    console.group(workspaceId, memberIdFiledToDelete, teamId);
+
+    return { error: false };
+  } catch (e: any) {
+    return { error: true, message: e.message };
+  }
+}
 
 export async function updateOneteam({
   inputObject,

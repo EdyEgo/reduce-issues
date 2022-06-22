@@ -6,16 +6,25 @@ import Avatar from "@mui/material/Avatar";
 import AvatarPlaceholder from "@mui/icons-material/AccountCircle";
 import SnackBarCRUDInfo from "../../../../composables/info-popovers/snackbar";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import { green } from "@mui/material/colors";
-import { updateATeamName, updateATeamIdentified } from "../../../../store/team";
+import {
+  updateATeamName,
+  updateATeamIdentified,
+  removeTeamMember,
+  addTeamMember,
+} from "../../../../store/team";
 
 import Fab from "@mui/material/Fab";
 import CheckIcon from "@mui/icons-material/Check";
 import SaveIcon from "@mui/icons-material/Save";
 // import extractFitIconNoDinamic from "../../../../selectors/helpers/extractFitIconNoDinamic";
 import extractFitIconNoDinamic from "../../../selectors/helpers/extractFitIconNoDinamic";
-import { updateOneteam } from "../../../../api/dataBaseTeamsMethods";
+import {
+  updateOneteam,
+  deleteOneTeamMember,
+} from "../../../../api/dataBaseTeamsMethods";
 
 // import {
 //   labelsList,
@@ -43,7 +52,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
   const selectedWorkspaceMembersIds = useSelector(
     (state: any) => state.workspace.selectedWorkSpace
   );
-  console.log("god damn son", selectedWorkspaceMembersIds);
+
   const [teamInputIdentified, setTeamInputIdentified] = useState(
     selectedTeam?.identified
   );
@@ -79,7 +88,11 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
       ? true
       : false;
 
-  const selectedTeamMembersList = Object.entries(selectedTeam.membersId);
+  const selectedTeamMembersList =
+    selectedTeam?.membersId != null
+      ? Object.entries(selectedTeam.membersId)
+      : [];
+  const [disabledRequestButton, setDisabledRequestButton] = useState(false);
   const [updateNameLogin, setUpdateNameLogin] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState("");
   const [snackBarOpenStatus, setSnackBarOpenStatus] = useState(false);
@@ -192,8 +205,49 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
     return error;
   }
 
+  async function deleteTeam() {
+    setDisabledRequestButton(true);
+  }
+
   async function inviteWorkspaceMemberInTeam(workspaceMemberId: string) {
     // add to data base and to the team object and to teamList issues
+
+    setDisabledRequestButton(true);
+    const { error } = await updateOneteam({
+      teamId: selectedTeam.id,
+      inputObject: { role: "Member", invitedAt: new Date() },
+      workspaceId: selectedWorkspace.id,
+    });
+    setDisabledRequestButton(false);
+    if (error) return;
+
+    dispatch(
+      addTeamMember({
+        teamMemberId: workspaceMemberId,
+        teamId: selectedTeam.id,
+      })
+    );
+  }
+
+  async function removeWorkspaceMemberInTeam(workspaceMemberId: string) {
+    setDisabledRequestButton(true);
+
+    const { error } = await deleteOneTeamMember({
+      memberIdFiledToDelete: workspaceMemberId,
+      teamId: selectedTeam.id,
+      workspaceId: selectedWorkspace.id,
+    });
+
+    setDisabledRequestButton(false);
+
+    if (error) return;
+
+    dispatch(
+      removeTeamMember({
+        teamMemberId: workspaceMemberId,
+        teamId: selectedTeam.id,
+      })
+    );
   }
 
   //   function returnLabelsTypeList(icon: string, name: string, index: number) {
@@ -413,10 +467,14 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                         index: number
                       ) => {
                         const foundMember = findTeamMemberById(memberId);
+                        const isMember =
+                          selectedTeam.membersId[foundMember.id] != null
+                            ? true
+                            : false;
                         return (
                           <div key={index} className="">
                             {foundMember != null && (
-                              <div className="exists-container flex gap-4">
+                              <div className="exists-container flex gap-4 items-center">
                                 <div className="member-details flex gap-2">
                                   <div className="avatar-container ">
                                     {foundMember?.photoURL != null && (
@@ -450,7 +508,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                                   </div>
                                 </div>
                                 <div className="role flex gap-2">
-                                  <div>Role:</div>
+                                  <div>Team role:</div>
                                   <div>{memberValue.role}</div>
                                 </div>
 
@@ -458,6 +516,34 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                                   <div className="created-issues flex gap-2">
                                     <div>Created issues:</div>
                                     <div>{memberValue.createdIssues}</div>
+                                  </div>
+                                )}
+
+                                {isMember && memberValue.role !== "Owner" && (
+                                  <div className="button-invite-container">
+                                    <Button
+                                      disabled={disabledRequestButton}
+                                      onClick={() => {
+                                        removeWorkspaceMemberInTeam(
+                                          foundMember.id
+                                        );
+                                      }}
+                                      variant="outlined"
+                                      className="button-invite  "
+                                    >
+                                      Remove
+                                    </Button>
+                                  </div>
+                                )}
+                                {!isMember && (
+                                  <div className="button-invite-container">
+                                    <Button
+                                      disabled={disabledRequestButton}
+                                      variant="outlined"
+                                      className="button-invite-placeholder"
+                                    >
+                                      Remove
+                                    </Button>
                                   </div>
                                 )}
                               </div>
@@ -485,6 +571,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                         ],
                         index: number
                       ) => {
+                        console.log("workspace member details", memberValue);
                         const foundMember = findTeamMemberById(memberId);
                         const isMember =
                           selectedTeam.membersId[foundMember.id] != null
@@ -528,7 +615,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                                   </div>
                                 </div>
                                 <div className="role flex gap-2">
-                                  <div>Role:</div>
+                                  <div>Workspace role:</div>
                                   <div>{memberValue.role}</div>
                                 </div>
                                 {memberValue.createdIssues != null && (
@@ -540,30 +627,29 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
 
                                 {!isMember && (
                                   <div className="button-invite-container">
-                                    <div
+                                    <Button
                                       onClick={() => {
                                         inviteWorkspaceMemberInTeam(
                                           foundMember.id
                                         );
                                       }}
-                                      className="button-invite bg-blue p-2 bg-blue-400 text-white font-medium rounded-md"
+                                      variant="contained"
+                                      disabled={disabledRequestButton}
+                                      className="button-invite"
                                     >
-                                      Invite
-                                    </div>
+                                      Add
+                                    </Button>
                                   </div>
                                 )}
                                 {isMember && (
                                   <div className="button-invite-container">
-                                    <div
-                                      onClick={() => {
-                                        inviteWorkspaceMemberInTeam(
-                                          foundMember.id
-                                        );
-                                      }}
-                                      className="button-invite bg-blue p-2 invisible"
+                                    <Button
+                                      variant="contained"
+                                      disabled={disabledRequestButton}
+                                      className="button-invite-placeholder invisible"
                                     >
-                                      placeholder
-                                    </div>
+                                      Add
+                                    </Button>
                                   </div>
                                 )}
                               </div>
