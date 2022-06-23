@@ -225,6 +225,15 @@ export default function MenuListComposition({
                     >
                       Workspace settigns and stats
                     </MenuItem>
+
+                    <MenuItem
+                      onClick={(event) => {
+                        navigate("/add-new-team");
+                        handleClose(event);
+                      }}
+                    >
+                      Add team
+                    </MenuItem>
                     <div className="line-separator border-b "></div>
 
                     <MenuItem

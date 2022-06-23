@@ -25,36 +25,6 @@ interface CommentTypeIssue {
   text: string;
 }
 
-export async function getTeamIssues({
-  callbackDocuments,
-  teamId,
-  workspaceId,
-  valuesToIncludeInResult,
-}: {
-  valuesToIncludeInResult?: { [key: string]: any };
-  workspaceId: string;
-  teamId: string;
-  callbackDocuments: (documents: {
-    data?: any[];
-    error: boolean;
-    message?: string;
-    unsub?: () => void;
-    [key: string]: any;
-  }) => void;
-}) {
-  try {
-    // will gonna take all the issues
-    getTeamIssuesFirebase({
-      workspaceId,
-      teamId,
-      callbackDocuments,
-      valuesToIncludeInResult,
-    });
-  } catch (e: any) {
-    callbackDocuments({ error: true, message: e.message });
-  }
-}
-
 function returnFitLabelsObject(newIssueObject: Issue, decrement?: boolean) {
   const fitLabels: any = {};
   const numberValue = decrement != null ? -1 : 1;
@@ -139,6 +109,35 @@ export async function updateIssue({
     return { error: false };
   } catch (e: any) {
     return { error: true, message: "Could not update the issue" };
+  }
+}
+export async function getTeamIssues({
+  callbackDocuments,
+  teamId,
+  workspaceId,
+  valuesToIncludeInResult,
+}: {
+  valuesToIncludeInResult?: { [key: string]: any };
+  workspaceId: string;
+  teamId: string;
+  callbackDocuments: (documents: {
+    data?: any[];
+    error: boolean;
+    message?: string;
+    unsub?: () => void;
+    [key: string]: any;
+  }) => void;
+}) {
+  try {
+    // will gonna take all the issues
+    getTeamIssuesFirebase({
+      workspaceId,
+      teamId,
+      callbackDocuments,
+      valuesToIncludeInResult,
+    });
+  } catch (e: any) {
+    callbackDocuments({ error: true, message: e.message });
   }
 }
 

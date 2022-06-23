@@ -1,4 +1,5 @@
 import {} from "../composables/firebase/teams/getUsersTeamMemebers";
+import { getTeamIssues, deleteIssue } from "./dataBaseIssuesMethods";
 import {
   getTeamsFirebase,
   getTeamsFirebaseWithWhere,
@@ -6,15 +7,20 @@ import {
 } from "../composables/firebase/teams/getWorkspaceTeams";
 import { postNewDocument } from "../composables/firebase/post/postDocument";
 import { deleteLevelTwoNestedDocumentFieldFirebase } from "../composables/firebase/delete/deleteDocumentField";
-import { deleteLevelTwoNestedDocumentFirebase } from "../composables/firebase/delete/deleteDocument";
+import {
+  deleteLevelTwoNestedDocumentFirebase,
+  deleteDocumentWithRefAsId,
+} from "../composables/firebase/delete/deleteDocument";
 import { serverTimestamp } from "firebase/firestore";
 import { tz } from "moment-timezone";
 
 export async function deleteOneTeam({
   teamId,
+  issuesWithRefs,
   workspaceId,
 }: {
   workspaceId: string;
+  issuesWithRefs: any;
   teamId: string;
 }) {
   try {
@@ -24,6 +30,17 @@ export async function deleteOneTeam({
       secondCollectionName: "teams",
       secondDocumentName: teamId,
     });
+
+    await Promise.all(
+      issuesWithRefs.map(async (issue: { ref: any }) => {
+        // await deleteLevelThreeNestedDocumentFirebase({
+        //   firstCollectionName:"workspaces",firstDocumentName:workspaceId,
+        //   secondCollectionName:"teams",secondDocumentName:teamId,
+        //   thirdCollectionName:"issues",thirdDocumentName:
+        // })
+        await deleteDocumentWithRefAsId(issue.ref);
+      })
+    );
 
     return { error: false };
   } catch (e: any) {
@@ -37,10 +54,13 @@ export async function deleteOneTeamMember({
   workspaceId,
 }: {
   memberIdFiledToDelete: string;
+
   workspaceId: string;
   teamId: string;
 }) {
   try {
+    // const
+
     await deleteLevelTwoNestedDocumentFieldFirebase({
       fieldToDelete: "membersId",
       nestedFieldToDelete: memberIdFiledToDelete,
@@ -84,6 +104,7 @@ export async function createOneTeam(
   teamName: string,
   workspace: { id: string },
   userObject: any,
+  identified?: string | null,
   batch?: any
 ) {
   try {
@@ -95,7 +116,9 @@ export async function createOneTeam(
       teamNameLowerCase.indexOf(" ") !== -1
         ? teamNameLowerCase.split(" ").join("")
         : teamNameLowerCase;
-    const createIdentified = teamURL.slice(0, 3).toUpperCase();
+    const createIdentified = identified
+      ? identified
+      : teamURL.slice(0, 3).toUpperCase();
 
     if (batch) {
       const createdTeam = await postNewDocument({
@@ -118,25 +141,25 @@ export async function createOneTeam(
 
       return { error: false, data: createdTeam };
     }
+    const teamObject = {
+      issuesNumber: 1,
+      membersId: {
+        [userObject.uid]: { role: "Owner", invitedAt: serverTimestamp() },
+      },
 
+      name: teamNameTrimed,
+      teamURL,
+      photoURL: null,
+      identified: createIdentified,
+      timezone: browserDate,
+    };
     const createdTeam = await postNewDocument({
       collectionSelected: `workspaces/${workspace.id}/teams`,
-      inputObject: {
-        issuesNumber: 1,
-        membersId: {
-          [userObject.uid]: { role: "Owner", invitedAt: serverTimestamp() },
-        },
-
-        name: teamNameTrimed,
-        teamURL,
-        photoURL: null,
-        identified: createIdentified,
-        timezone: browserDate,
-      },
+      inputObject: teamObject,
       useAddDocument: true,
     });
 
-    return { error: false, data: createdTeam };
+    return { error: false, data: createdTeam, teamObject };
   } catch (e: any) {
     return { error: true, message: e.message };
   }

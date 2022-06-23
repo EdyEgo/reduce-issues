@@ -15,6 +15,7 @@ import RedirectToMyIssues from "./RedirectToMyIssues";
 import SignleIssuePage from "./issue/single-issue-page";
 import TeamSettingsPage from "./team-settings";
 import WorkspaceSettignsPage from "./workspace-settings";
+import CreateNewTeam from "./create-team";
 
 import CreateNewWorspace from "./new-workspace/create-workspace";
 
@@ -64,7 +65,6 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
     if (selectedWorkspace.id == null || teamsList.length <= 0) return;
 
     teamsList.forEach((teamObject: { id: string; identified: string }) => {
-      console.log("bruh wth,", teamObject.identified);
       getTeamIssues({
         teamId: teamObject.id,
         workspaceId: selectedWorkspace.id,
@@ -110,6 +110,15 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
               element={
                 <div className="add-workspace-container">
                   <CreateNewWorspace />
+                </div>
+              }
+            />
+
+            <Route
+              path="/add-new-team"
+              element={
+                <div className="add-new-team-container">
+                  <CreateNewTeam />
                 </div>
               }
             />

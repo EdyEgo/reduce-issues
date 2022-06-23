@@ -127,7 +127,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
     if (
       teamInputName === "" ||
       teamInputName === null ||
-      teamInputIdentified === "" ||
+      teamInputIdentified.trim() === "" ||
       teamInputIdentified === null ||
       teamInputIdentified.length > 3
     )
@@ -469,7 +469,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                         return (
                           <div key={index} className="">
                             {foundMember != null && (
-                              <div className="exists-container flex gap-4 items-center">
+                              <div className="exists-container flex gap-4 items-center  border-b pb-4 justify-between flex-wrap">
                                 <div className="member-details flex gap-2 items-center">
                                   <div className="avatar-container ">
                                     {foundMember?.photoURL != null && (
@@ -566,7 +566,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                     Invite members in this team from current selected workspace
                     members list
                   </div>
-                  <div className="list">
+                  <div className="list ">
                     {Object.entries(selectedWorkspace.membersId).map(
                       (
                         [memberId, memberValue]: [
@@ -575,7 +575,6 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                         ],
                         index: number
                       ) => {
-                        console.log("workspace member details", memberValue);
                         const foundMember = findTeamMemberById(memberId);
                         const isMember =
                           selectedTeam.membersId[foundMember.id] != null
@@ -585,7 +584,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                         return (
                           <div key={index} className="">
                             {foundMember != null && (
-                              <div className="exists-container flex gap-4 items-center">
+                              <div className="exists-container gap-4  flex items-center border-b pb-4 justify-between flex-wrap">
                                 <div className="member-details flex gap-2 items-center">
                                   <div className="avatar-container ">
                                     {foundMember?.photoURL != null && (

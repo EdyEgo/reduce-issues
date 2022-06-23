@@ -1,7 +1,6 @@
 import SnackBarCRUDInfo from "../../../../composables/info-popovers/snackbar";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 
 import moment from "moment";
 import Avatar from "@mui/material/Avatar";
@@ -29,18 +28,14 @@ import { deleteOneTeamFromTeamList } from "../../../../store/team";
 interface WorkspaceSettingsProps {}
 
 const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
-  const params = useParams();
-
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const authUser = useSelector((state: any) => state.auth.user);
   const teamList = useSelector((state: any) => state.team.teamList);
+  const teamIssuesList = useSelector((state: any) => state.issues.teamsIssues);
   const usersList: any[] = useSelector((state: any) => state.workspace.members);
   const selectedWorkspace = useSelector(
     (state: any) => state.workspace.selectedWorkSpace
   );
-
-  console.log("teamList ", teamList);
 
   const [workspaceInputName, setWorkspaceInputName] = useState(
     selectedWorkspace?.name
@@ -192,12 +187,11 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
   }
 
   async function deleteSelectedTeamById(selectedTeamId: string) {
-    // delete team  and the fileds of the members associated with(maybe , mmmm neeee)
-    // delete from the team list in store too
     setUpdateNameLogin(true);
     setDisabledRequestButton(true);
     const { error } = await deleteOneTeam({
       teamId: selectedTeamId,
+      issuesWithRefs: teamIssuesList[selectedTeamId],
       workspaceId: selectedWorkspace.id,
     });
     setDisabledRequestButton(false);
@@ -334,7 +328,7 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
                         return (
                           <div key={index} className="">
                             {foundMember != null && (
-                              <div className="exists-container flex gap-4 items-center">
+                              <div className="exists-container flex gap-4 items-center  border-b pb-4 justify-between flex-wrap">
                                 <div className="member-details flex gap-2 items-center">
                                   <div className="avatar-container ">
                                     {foundMember?.photoURL != null && (
@@ -411,7 +405,7 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
                       ([teamId, teamValue]: any, index: number) => {
                         return (
                           <div
-                            className="team-item flex gap-4 items-center"
+                            className="team-item flex gap-4 items-center my-4 justify-between flex-wrap border-b pb-4"
                             key={index}
                           >
                             <div className="team-name flex gap-2">

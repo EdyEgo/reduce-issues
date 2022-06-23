@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: {
   selectedTeam: any;
-  teamList: { [key: string]: any }[] | [];
+  teamList: { [key: string]: any }[] | any[];
 } = {
   selectedTeam: { name: "My First Team", id: "" },
   teamList: [],
@@ -18,6 +18,10 @@ export const teamSlice = createSlice({
 
     setTeamList: (state, action) => {
       state.teamList = action.payload;
+    },
+    addATeamInTeamList(state, { payload }) {
+      const teamObject: any = payload.teamObject;
+      state.teamList.push(teamObject);
     },
     deleteTeamList: (state) => {
       state.teamList = [];
@@ -105,6 +109,7 @@ export const teamSlice = createSlice({
 export const {
   changeSelectedTeam,
   setTeamList,
+  addATeamInTeamList,
   deleteOneTeamFromTeamList,
   deleteTeamList,
   updateATeam,

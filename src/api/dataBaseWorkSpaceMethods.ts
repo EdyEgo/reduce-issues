@@ -119,6 +119,7 @@ export async function createNewWorkspaceWithTeam(
       teamName,
       createdWorkspace.data,
       userObject,
+      null,
       batch
     );
 
