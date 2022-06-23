@@ -291,7 +291,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                       onChange={(event) => {
                         setTeamInputName(event.target.value);
                       }}
-                      className="text-2xl w-full  shadow-md  p-2  border overflow-hidden break-words rounded-md resize-none border-white transition-all ease-in-out"
+                      className="text-2xl w-full  shadow-md h-12  p-2  border overflow-hidden break-words rounded-md resize-none border-gray-200 transition-all ease-in-out"
                       value={teamInputName}
                     ></textarea>
                   </div>
@@ -322,7 +322,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                           event.target.value.toUpperCase()
                         );
                       }}
-                      className="text-2xl  w-full shadow-md  p-2  border overflow-hidden break-words rounded-md resize-none border-white transition-all ease-in-out"
+                      className="text-2xl  w-full h-12 shadow-md  p-2  border overflow-hidden break-words rounded-md resize-none border-gray-200 transition-all ease-in-out"
                       value={teamInputIdentified}
                     ></textarea>
                   </div>

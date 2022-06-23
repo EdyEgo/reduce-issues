@@ -229,7 +229,7 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
                       onChange={(event) => {
                         setWorkspaceInputName(event.target.value);
                       }}
-                      className="text-2xl w-full  shadow-md  p-2  border overflow-hidden break-words rounded-md resize-none border-white transition-all ease-in-out"
+                      className="text-2xl w-full  shadow-md  p-2  border overflow-hidden break-words rounded-md resize-none border-gray-200 h-12 transition-all ease-in-out"
                       value={workspaceInputName}
                     ></textarea>
                   </div>
@@ -242,7 +242,7 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
                         // if the url has spaces you can t save
                         setWorkspaceInputUrl(event.target.value.toLowerCase());
                       }}
-                      className="text-2xl  w-full shadow-md  p-2  border overflow-hidden break-words rounded-md resize-none border-white transition-all ease-in-out"
+                      className="text-2xl  w-full shadow-md  p-2  border overflow-hidden break-words rounded-md resize-none border-gray-200 h-12 transition-all ease-in-out"
                       value={workspaceInputUrl}
                     ></textarea>
                   </div>
@@ -405,52 +405,62 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
                       ([teamId, teamValue]: any, index: number) => {
                         return (
                           <div
-                            className="team-item flex gap-4 items-center my-4 justify-between flex-wrap border-b pb-4"
+                            className="team-item flex gap-4 items-center my-4   flex-1 flex-wrap border-b pb-4"
                             key={index}
                           >
-                            <div className="team-name flex gap-2">
-                              <div className="name">Name:</div>
-                              <div className="data">{teamValue.name}</div>
-                            </div>
-                            <div className="team-identified flex gap-2">
-                              <div className="name">ID:</div>
-                              <div className="data">{teamValue.identified}</div>
-                            </div>
-                            <div className="team-regitered-at flex gap-2 text-gray-600">
-                              <div className="name">Added</div>
-                              <div className="data">
-                                {teamValue?.registeredAt != null &&
-                                  teamValue.registeredAt.nanoseconds > 0 &&
-                                  teamValue.registeredAt.seconds > 0 &&
-                                  moment(
-                                    teamValue.registeredAt.toDate()
-                                  ).fromNow()}
+                            <div className="left-side flex items-center justify-between flex-1">
+                              <div className="team-name flex gap-2">
+                                <div className="name">Name:</div>
+                                <div className="data">
+                                  {teamValue.name.length > 15
+                                    ? `${teamValue.name.slice(0, 19)}..`
+                                    : teamValue.name}
+                                </div>
+                              </div>
+                              <div className="team-identified flex gap-2">
+                                <div className="name">ID:</div>
+                                <div className="data">
+                                  {teamValue.identified}
+                                </div>
+                              </div>
+                              <div className="team-regitered-at flex gap-2 text-gray-600">
+                                <div className="name">Added</div>
+                                <div className="data">
+                                  {teamValue?.registeredAt != null &&
+                                    teamValue.registeredAt.nanoseconds > 0 &&
+                                    teamValue.registeredAt.seconds > 0 &&
+                                    moment(
+                                      teamValue.registeredAt.toDate()
+                                    ).fromNow()}
+                                </div>
+                              </div>
+                              <div className="team-timezone flex gap-2">
+                                <div className="name">Timezone:</div>
+                                <div className="data">{teamValue.timezone}</div>
+                              </div>
+                              <div className="team-issues-number flex gap-2">
+                                <div className="name">Issues:</div>
+                                <div className="data">
+                                  {teamValue?.issuesNumber != null
+                                    ? teamValue.issuesNumber
+                                    : 0}
+                                </div>
                               </div>
                             </div>
-                            <div className="team-timezone flex gap-2">
-                              <div className="name">Timezone:</div>
-                              <div className="data">{teamValue.timezone}</div>
-                            </div>
-                            <div className="team-issues-number flex gap-2">
-                              <div className="name">Issues:</div>
-                              <div className="data">
-                                {teamValue?.issuesNumber != null
-                                  ? teamValue.issuesNumber
-                                  : 0}
+                            <div className="right-side">
+                              <div className="delete-team">
+                                <Button
+                                  onClick={() => {
+                                    deleteSelectedTeamById(teamValue.id);
+                                  }}
+                                  color="error"
+                                  variant="contained"
+                                  disabled={disabledRequestButton}
+                                  className="button-delete-team"
+                                >
+                                  Delete team
+                                </Button>
                               </div>
-                            </div>
-                            <div className="delete-team">
-                              <Button
-                                onClick={() => {
-                                  deleteSelectedTeamById(teamValue.id);
-                                }}
-                                color="error"
-                                variant="contained"
-                                disabled={disabledRequestButton}
-                                className="button-delete-team"
-                              >
-                                Delete team
-                              </Button>
                             </div>
                           </div>
                         );
