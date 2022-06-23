@@ -217,6 +217,14 @@ export default function MenuListComposition({
                     >
                       Create a new workspace
                     </MenuItem>
+                    <MenuItem
+                      onClick={(event) => {
+                        navigate("/workspace-stats-and-settings");
+                        handleClose(event);
+                      }}
+                    >
+                      Workspace settigns and stats
+                    </MenuItem>
                     <div className="line-separator border-b "></div>
 
                     <MenuItem

@@ -14,6 +14,7 @@ import ProfileDetails from "./profile-details";
 import RedirectToMyIssues from "./RedirectToMyIssues";
 import SignleIssuePage from "./issue/single-issue-page";
 import TeamSettingsPage from "./team-settings";
+import WorkspaceSettignsPage from "./workspace-settings";
 
 import CreateNewWorspace from "./new-workspace/create-workspace";
 
@@ -107,10 +108,15 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
             <Route
               path="/addworkspace"
               element={
-                <div className="placeholder">
+                <div className="add-workspace-container">
                   <CreateNewWorspace />
                 </div>
               }
+            />
+
+            <Route
+              path="/workspace-stats-and-settings"
+              element={<WorkspaceSettignsPage />}
             />
 
             <Route

@@ -169,7 +169,7 @@ export default async function postDocumentSetupOnSignUp(
         membersId: {
           [user.uid]: { role: "Owner", invitedAt: serverTimestamp() },
         },
-
+        assignedIssues: 1,
         name: "My Second Team",
         photoURL: null,
         identified: "MST",
@@ -281,7 +281,7 @@ export default async function postDocumentSetupOnSignUp(
         membersId: {
           [user.uid]: { role: "Owner", invitedAt: serverTimestamp() },
         },
-
+        assignedIssues: 1,
         name: "My Second Team",
         photoURL: null,
         identified: "MST",

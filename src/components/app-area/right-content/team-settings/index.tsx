@@ -19,8 +19,9 @@ import {
 import Fab from "@mui/material/Fab";
 import CheckIcon from "@mui/icons-material/Check";
 import SaveIcon from "@mui/icons-material/Save";
-// import extractFitIconNoDinamic from "../../../../selectors/helpers/extractFitIconNoDinamic";
-import extractFitIconNoDinamic from "../../../selectors/helpers/extractFitIconNoDinamic";
+
+// import extractFitIconNoDinamic from "../../../selectors/helpers/extractFitIconNoDinamic";
+
 import {
   updateOneteam,
   deleteOneTeamMember,
@@ -40,18 +41,16 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const authUser = useSelector((state: any) => state.auth.user);
   const teamList = useSelector((state: any) => state.team.teamList);
   const usersList: any[] = useSelector((state: any) => state.workspace.members);
   const selectedWorkspace = useSelector(
     (state: any) => state.workspace.selectedWorkSpace
   );
-  const teamIssuesList = useSelector((state: any) => state.issues.teamsIssues);
+
   const selectedTeam = findTeamByIdentifier();
-  const selectedTeamNameIs = selectedTeam?.name ? selectedTeam.name : "";
+
   const [teamInputName, setTeamInputName] = useState(selectedTeam?.name);
-  const selectedWorkspaceMembersIds = useSelector(
-    (state: any) => state.workspace.selectedWorkSpace
-  );
 
   const [teamInputIdentified, setTeamInputIdentified] = useState(
     selectedTeam?.identified
@@ -205,10 +204,6 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
     return error;
   }
 
-  async function deleteTeam() {
-    setDisabledRequestButton(true);
-  }
-
   async function inviteWorkspaceMemberInTeam(workspaceMemberId: string) {
     // add to data base and to the team object and to teamList issues
 
@@ -283,7 +278,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
     return classToReturn;
   }
   return (
-    <div className="team-settings-container">
+    <div className="team-settings-container ">
       {selectedTeam != null && (
         <div className="content-container">
           <div className="nav-team-settings  p-8">
@@ -370,25 +365,17 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                 </div>
                 <div className="about-this-page text-gray-700 flex justify-between items-center p-3">
                   <div className="title-manage-team">Manage this team</div>
-                  <div className="delete-team">
-                    <div
-                      className="delete-team-button bg-red-400 text-white p-2 rounded-md font-medium 
-                      cursor-pointer hover:bg-red-600 hover:shadow-lg"
-                    >
-                      Delete Team
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="stats-container">
-            <div className="stats-list">
+          <div className="stats-container px-8 ">
+            <div className="stats-list text-base gap-y-4">
               {selectedTeam.registeredAt != null &&
                 selectedTeam.registeredAt.nanoseconds > 0 &&
                 selectedTeam.registeredAt.seconds > 0 && (
-                  <div className="created-at-container flex gap-2">
-                    <div> Team created : </div>
+                  <div className="created-at-container flex gap-2 my-4">
+                    <div className="font-semibold"> Team created: </div>
                     <div
                       className="cursor-default hover:text-gray-600"
                       title={`Team created at ${selectedTeam.registeredAt.toDate()}`}
@@ -397,25 +384,33 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                     </div>
                   </div>
                 )}
-              <div className="time-zone gap-2 flex">
-                <div> Register with </div>
-                <div> "{selectedTeam.timezone}" timezone </div>
+              <div className="time-zone gap-2 flex my-4">
+                <div className="font-semibold"> Team Timezone: </div>
+                <div> {selectedTeam.timezone} </div>
               </div>
 
-              <div className="general-issue-stats">
-                {selectedTeam.assignedIssues && (
-                  <div className="assigneed-issue-number flex gap-2">
-                    <div>Issue number with an assignee</div>
-                    <div>{selectedTeam.assignedIssues}</div>
+              <div className="general-issue-stats my-4">
+                <div className="assigneed-issue-number flex gap-2 ">
+                  <div className="font-semibold">
+                    Issue number with an assignee:
                   </div>
-                )}
+                  <div>
+                    {selectedTeam?.assignedIssues != null
+                      ? selectedTeam.assignedIssues
+                      : 0}
+                  </div>
+                </div>
 
-                {selectedTeam.unassignedIssues && (
-                  <div className="assigneed-issue-number flex gap-2">
-                    <div>Issue number without an assignee</div>
-                    <div>{selectedTeam.unassignedIssues}</div>
+                <div className="assigneed-issue-number flex gap-2 my-4">
+                  <div className="font-semibold">
+                    Issue number without an assignee:
                   </div>
-                )}
+                  <div>
+                    {selectedTeam?.unassignedIssues != null
+                      ? selectedTeam.unassignedIssues
+                      : 0}
+                  </div>
+                </div>
               </div>
 
               {/* <div className="created-labels-numbers">
@@ -453,8 +448,8 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
               </div> */}
 
               {selectedTeam.membersId != null && (
-                <div className="team-members-list">
-                  <div className="members-list-title text-lg p-1">
+                <div className="team-members-list my-2 mb-5">
+                  <div className="members-list-title text-lg p-1 font-semibold">
                     Team members list
                   </div>
                   <div className="list">
@@ -475,7 +470,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                           <div key={index} className="">
                             {foundMember != null && (
                               <div className="exists-container flex gap-4 items-center">
-                                <div className="member-details flex gap-2">
+                                <div className="member-details flex gap-2 items-center">
                                   <div className="avatar-container ">
                                     {foundMember?.photoURL != null && (
                                       <Avatar
@@ -487,12 +482,18 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                                       <AvatarPlaceholder />
                                     )}
                                   </div>
-                                  <div className="name-container flex gap-2">
-                                    <div className="firstName">
-                                      {foundMember.firstName}
+                                  <div className="name-container gap-2">
+                                    <div className="fullp-name flex gap-2">
+                                      <div className="firstName">
+                                        {foundMember.firstName}
+                                      </div>
+                                      <div className="lastName">
+                                        {foundMember.lastName}
+                                      </div>
                                     </div>
-                                    <div className="lastName">
-                                      {foundMember.lastName}
+
+                                    <div className="email text-gray-600">
+                                      {foundMember.email}
                                     </div>
                                   </div>
                                 </div>
@@ -511,14 +512,12 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                                   <div>Team role:</div>
                                   <div>{memberValue.role}</div>
                                 </div>
-
                                 {memberValue.createdIssues != null && (
                                   <div className="created-issues flex gap-2">
                                     <div>Created issues:</div>
                                     <div>{memberValue.createdIssues}</div>
                                   </div>
                                 )}
-
                                 {isMember && memberValue.role !== "Owner" && (
                                   <div className="button-invite-container">
                                     <Button
@@ -535,14 +534,19 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                                     </Button>
                                   </div>
                                 )}
-                                {!isMember && (
-                                  <div className="button-invite-container">
+                                {isMember && authUser.uid === foundMember.id && (
+                                  <div className="button-invite-container ">
                                     <Button
+                                      onClick={() => {
+                                        removeWorkspaceMemberInTeam(
+                                          foundMember.id
+                                        );
+                                      }}
                                       disabled={disabledRequestButton}
                                       variant="outlined"
                                       className="button-invite-placeholder"
                                     >
-                                      Remove
+                                      Leave Team
                                     </Button>
                                   </div>
                                 )}
@@ -556,14 +560,14 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                 </div>
               )}
 
-              {selectedWorkspaceMembersIds.membersId != null && (
-                <div className="team-members-list">
-                  <div className="members-list-title text-lg p-1">
+              {selectedWorkspace.membersId != null && (
+                <div className="team-members-list my-2">
+                  <div className="members-list-title text-lg p-1 font-semibold">
                     Invite members in this team from current selected workspace
                     members list
                   </div>
                   <div className="list">
-                    {Object.entries(selectedWorkspaceMembersIds.membersId).map(
+                    {Object.entries(selectedWorkspace.membersId).map(
                       (
                         [memberId, memberValue]: [
                           memberId: string,
@@ -582,7 +586,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                           <div key={index} className="">
                             {foundMember != null && (
                               <div className="exists-container flex gap-4 items-center">
-                                <div className="member-details flex gap-2">
+                                <div className="member-details flex gap-2 items-center">
                                   <div className="avatar-container ">
                                     {foundMember?.photoURL != null && (
                                       <Avatar
@@ -594,16 +598,23 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                                       <AvatarPlaceholder />
                                     )}
                                   </div>
-                                  <div className="name-container flex gap-2">
-                                    <div className="firstName">
-                                      {foundMember.firstName}
+                                  <div className="name-container gap-2">
+                                    <div className="fullp-name flex gap-2">
+                                      <div className="firstName">
+                                        {foundMember.firstName}
+                                      </div>
+                                      <div className="lastName">
+                                        {foundMember.lastName}
+                                      </div>
                                     </div>
-                                    <div className="lastName">
-                                      {foundMember.lastName}
+
+                                    <div className="email text-gray-600">
+                                      {foundMember.email}
                                     </div>
                                   </div>
                                 </div>
-                                <div className="invited-at flex gap-2 text-gray-600">
+
+                                <div className="invited-at flex  gap-2 text-gray-600">
                                   <div>Added :</div>
                                   <div>
                                     {memberValue?.invitedAt != null &&
@@ -663,11 +674,10 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
               )}
             </div>
           </div>
-          <div className="add-members-to-the-team">{/* from workspace */}</div>
         </div>
       )}
 
-      {selectedTeam != null && <div className="loading-container"></div>}
+      {selectedTeam == null && <div className="loading-container"></div>}
       <SnackBarCRUDInfo
         message={snackBarMessage}
         openStatus={snackBarOpenStatus}
