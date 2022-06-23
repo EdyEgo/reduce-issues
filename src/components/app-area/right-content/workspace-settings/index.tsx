@@ -19,10 +19,13 @@ import {
   updateWorkspaceName,
   updateWorkspaceURL,
 } from "../../../../api/dataBaseWorkSpaceMethods";
+import { deleteOneTeam } from "../../../../api/dataBaseTeamsMethods";
+
 import {
   updateSelectedWorkspaceName as updateSelectedWorkspaceNameStore,
   updateSelectedWorkspaceURL as updateSelectedWorkspaceURLStore,
 } from "../../../../store/workspace";
+import { deleteOneTeamFromTeamList } from "../../../../store/team";
 interface WorkspaceSettingsProps {}
 
 const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
@@ -36,6 +39,8 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
   const selectedWorkspace = useSelector(
     (state: any) => state.workspace.selectedWorkSpace
   );
+
+  console.log("teamList ", teamList);
 
   const [workspaceInputName, setWorkspaceInputName] = useState(
     selectedWorkspace?.name
@@ -158,31 +163,63 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
 
   async function updateWorkspaceNameFunc() {
     setUpdateNameLogin(true);
+    setDisabledRequestButton(true);
     const { error } = await updateWorkspaceName({
       newName: workspaceInputName,
       workspaceId: selectedWorkspace.id,
     });
-
+    setDisabledRequestButton(false);
     if (!error) return null;
     return error;
   }
 
   async function updateWorkspaceURLFunc() {
     setUpdateNameLogin(true);
+    setDisabledRequestButton(true);
     const { error } = await updateWorkspaceURL({
       newURL: workspaceInputUrl,
       workspaceId: selectedWorkspace.id,
     });
-
+    setDisabledRequestButton(false);
     if (!error) return null;
     return error;
   }
 
   ////
 
-  function findTeamMemberById(serchedMemberId: string) {
-    return usersList.find((userItem: any) => userItem.id === serchedMemberId);
+  function findTeamMemberById(searchedMemberId: string) {
+    return usersList.find((userItem: any) => userItem.id === searchedMemberId);
   }
+
+  async function deleteSelectedTeamById(selectedTeamId: string) {
+    // delete team  and the fileds of the members associated with(maybe , mmmm neeee)
+    // delete from the team list in store too
+    setUpdateNameLogin(true);
+    setDisabledRequestButton(true);
+    const { error } = await deleteOneTeam({
+      teamId: selectedTeamId,
+      workspaceId: selectedWorkspace.id,
+    });
+    setDisabledRequestButton(false);
+    if (error) {
+      setSnackBarOpenStatus(true);
+      setSnackBarSeverityType("error");
+      setSnackBarMessage("Could not update the workspace");
+      return;
+    }
+    if (!error) {
+      setSnackBarOpenStatus(true);
+      setSnackBarSeverityType("success");
+      setSnackBarMessage("Workspace  updated");
+      // dispatch changes
+
+      dispatch(deleteOneTeamFromTeamList({ teamId: selectedTeamId }));
+    }
+
+    setUpdateNameLogin(false);
+  }
+
+  // after delete team i am gonna add delete workspace
 
   return (
     <div className="workspace-settings-page">
@@ -279,7 +316,7 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
               </div>
 
               {selectedWorkspace.membersId != null && (
-                <div className="team-members-list my-2">
+                <div className="workspace-members-list my-2">
                   <div className="members-list-title text-lg p-1 font-semibold">
                     Workspace members list
                   </div>
@@ -356,6 +393,71 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
                                 </div>
                               </div>
                             )}
+                          </div>
+                        );
+                      }
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {teamList != null && (
+                <div className="workspace-teams-list">
+                  <div className="title text-lg p-1 font-semibold">
+                    Team list
+                  </div>
+                  <div className="list-container">
+                    {Object.entries(teamList).map(
+                      ([teamId, teamValue]: any, index: number) => {
+                        return (
+                          <div
+                            className="team-item flex gap-4 items-center"
+                            key={index}
+                          >
+                            <div className="team-name flex gap-2">
+                              <div className="name">Name:</div>
+                              <div className="data">{teamValue.name}</div>
+                            </div>
+                            <div className="team-identified flex gap-2">
+                              <div className="name">ID:</div>
+                              <div className="data">{teamValue.identified}</div>
+                            </div>
+                            <div className="team-regitered-at flex gap-2 text-gray-600">
+                              <div className="name">Added</div>
+                              <div className="data">
+                                {teamValue?.registeredAt != null &&
+                                  teamValue.registeredAt.nanoseconds > 0 &&
+                                  teamValue.registeredAt.seconds > 0 &&
+                                  moment(
+                                    teamValue.registeredAt.toDate()
+                                  ).fromNow()}
+                              </div>
+                            </div>
+                            <div className="team-timezone flex gap-2">
+                              <div className="name">Timezone:</div>
+                              <div className="data">{teamValue.timezone}</div>
+                            </div>
+                            <div className="team-issues-number flex gap-2">
+                              <div className="name">Issues:</div>
+                              <div className="data">
+                                {teamValue?.issuesNumber != null
+                                  ? teamValue.issuesNumber
+                                  : 0}
+                              </div>
+                            </div>
+                            <div className="delete-team">
+                              <Button
+                                onClick={() => {
+                                  deleteSelectedTeamById(teamValue.id);
+                                }}
+                                color="error"
+                                variant="contained"
+                                disabled={disabledRequestButton}
+                                className="button-delete-team"
+                              >
+                                Delete team
+                              </Button>
+                            </div>
                           </div>
                         );
                       }

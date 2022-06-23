@@ -76,6 +76,16 @@ export const teamSlice = createSlice({
 
       state.teamList = copyTeamList;
     },
+    deleteOneTeamFromTeamList(state, { payload }) {
+      const teamId = payload.teamId;
+      const teamFoundedIndex = state.teamList.findIndex(
+        (teamObject) => teamObject.id === teamId
+      );
+      const copyTeamList = [...state.teamList];
+      if (teamFoundedIndex === -1) return;
+      copyTeamList.splice(teamFoundedIndex, 1);
+      state.teamList = copyTeamList;
+    },
     removeTeamMember(state, { payload }) {
       const teamMemberId = payload.teamMemberId;
       const teamId = payload.teamId;
@@ -95,6 +105,7 @@ export const teamSlice = createSlice({
 export const {
   changeSelectedTeam,
   setTeamList,
+  deleteOneTeamFromTeamList,
   deleteTeamList,
   updateATeam,
   addTeamMember,
