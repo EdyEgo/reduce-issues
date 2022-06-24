@@ -214,6 +214,12 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
 
     setUpdateNameLogin(false);
   }
+  async function deleteWorkspaceFunc() {
+    // thats gonna be something
+    // you need to delete the workspace , all teams , and their issues :))))))
+    // use a promise . all and the function that deletes a team by id
+    // left here
+  }
 
   // after delete team i am gonna add delete workspace
 
@@ -285,6 +291,19 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
                 </div>
                 <div className="about-this-page text-gray-700 flex justify-between items-center p-3">
                   <div className="title-manage-team">Manage this workspace</div>
+                  <div className="delete-workspace">
+                    <Button
+                      variant="contained"
+                      onClick={deleteWorkspaceFunc}
+                      style={{
+                        backgroundColor: "rgb(156, 39, 176)",
+                        fontWeight: 600,
+                        color: "white",
+                      }}
+                    >
+                      Delete workspace
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

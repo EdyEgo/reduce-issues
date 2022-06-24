@@ -29,16 +29,6 @@ const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
-  async function logUserOut() {
-    const result = await signOut();
-    if (result.error) {
-      dispatch(changeErrorStatus(result.error));
-      return false;
-    }
-    navigate("/");
-    return true;
-  }
-
   function returnWorkspaceNameMaxLength() {
     if (selectedWorkSpace.name.length > 15) {
       return selectedWorkSpace.name.slice(0, 16) + "..";

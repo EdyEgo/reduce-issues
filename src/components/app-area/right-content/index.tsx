@@ -100,10 +100,6 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
   return (
     <>
       <div className="content-right">
-        {/* <div className="content-right__nav-bar">
-        <NavBar/>
-       </div> */}
-
         <div className="content-container">
           <Routes>
             <Route
@@ -132,7 +128,7 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
                 </div>
               }
             />
-            {/*  */}
+
             <Route
               path="/workspace-stats-and-settings"
               element={<WorkspaceSettignsPage />}

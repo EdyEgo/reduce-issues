@@ -12,9 +12,7 @@ import { signOut } from "../../../../api/dataBaseAuthMethods";
 import { authSlice, changeErrorStatus } from "../../../../store/auth";
 import { useSelector, useDispatch } from "react-redux";
 import { changeProfileBarStatus } from "../../../../store/profile";
-
-
-
+import { removeSubscriptions } from "../../../../store/issues";
 
 export default function MenuListComposition({
   open,
@@ -25,7 +23,6 @@ export default function MenuListComposition({
   setOpen: (argument: any) => void;
   anchorRef: any;
 }) {
-  
   const workSpaceStore = useSelector((state: any) => state.workspace);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -51,15 +48,15 @@ export default function MenuListComposition({
   }
 
   function directUserToProfilePage() {
-    dispatch(changeProfileBarStatus())
+    dispatch(changeProfileBarStatus());
 
-    navigate(
-      `/${workSpaceStore.selectedWorkSpace.workspaceURL}/profile`
-    );
+    navigate(`/${workSpaceStore.selectedWorkSpace.workspaceURL}/profile`);
   }
 
   async function logUserOut() {
+    // left here , unsub from issues updates
     const result = await signOut();
+    dispatch(removeSubscriptions());
     if (result.error) {
       dispatch(changeErrorStatus(result.error));
       return false;

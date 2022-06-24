@@ -17,6 +17,7 @@ import { getUser, getUsers } from "../../../../api/dataBaseUsersMethods";
 import { getTeams } from "../../../../api/dataBaseTeamsMethods";
 import { setTeamList } from "../../../../store/team";
 import { changeCurrentUser } from "../../../../store/users";
+import { removeSubscriptions } from "../../../../store/issues";
 import {
   changeSelectedWorkSpace,
   changeUserWorkspaces,
@@ -136,7 +137,9 @@ export default function MenuListComposition({
   }
 
   async function logUserOut() {
+    // left here , unsub from issues updates
     const result = await signOut();
+    dispatch(removeSubscriptions());
     if (result.error) {
       dispatch(changeErrorStatus(result.error));
       return false;

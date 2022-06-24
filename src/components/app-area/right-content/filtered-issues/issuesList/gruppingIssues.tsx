@@ -239,11 +239,8 @@ const GrouppingIssues: React.FC<GrouppingIssuesProps> = ({
         }
 
         return (
-          <div>
-            <div
-              className="property-head-group bg-gray-100 flex justify-between p-4"
-              key={groupIndex + 1}
-            >
+          <div key={groupIndex + 19}>
+            <div className="property-head-group bg-gray-100 flex justify-between p-4">
               <div className="left-half flex items-center gap-2">
                 <div className="property-icon">
                   {headIcon !== "" && headIcon}
@@ -275,13 +272,17 @@ const GrouppingIssues: React.FC<GrouppingIssuesProps> = ({
                 </div>
               </div>
             </div>
-            {propertyTypeValue.list.map((issue: any, index: any) => (
-              <IssueListElement
-                index={index}
-                issue={issue}
-                teamMembersObject={teamMembersObject}
-              />
-            ))}
+            {propertyTypeValue.list.map(
+              (issue: any, indexPropertyType: any) => {
+                return (
+                  <IssueListElement
+                    index={indexPropertyType + groupIndex + 1}
+                    issue={issue}
+                    teamMembersObject={teamMembersObject}
+                  />
+                );
+              }
+            )}
           </div>
         );
       }
@@ -298,13 +299,15 @@ const GrouppingIssues: React.FC<GrouppingIssuesProps> = ({
 
       {listIsGrouped === false && filteredIssuesList.length >= 1 && (
         <div className="ungrouped-issues-list border-t">
-          {filteredIssuesList.map((issue, index) => (
-            <IssueListElement
-              index={index}
-              issue={issue}
-              teamMembersObject={teamMembersObject}
-            />
-          ))}
+          {filteredIssuesList.map((issue, index) => {
+            return (
+              <IssueListElement
+                index={index + 50}
+                issue={issue}
+                teamMembersObject={teamMembersObject}
+              />
+            );
+          })}
         </div>
       )}
     </div>

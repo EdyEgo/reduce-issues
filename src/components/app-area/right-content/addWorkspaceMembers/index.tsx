@@ -68,12 +68,7 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
     selectedWorkspace.membersId[authUser.uid].role === "Owner"
       ? true
       : false;
-  console.log(
-    "bruhu sersList,",
-    usersList,
-    "hai ma|||selectedWorkspace",
-    selectedWorkspace
-  );
+
   async function startSearchForNewWorkspaceMembers() {
     const trimedInputValue = searchInputValue.trim();
     if (trimedInputValue === "") return;
@@ -94,7 +89,7 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
       }, 3000);
       return;
     }
-    console.log("users found with this email are", data);
+
     setFoundMembers(data);
 
     setLoading(false);
@@ -141,8 +136,8 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
     }
 
     // success update
-    setDisabledRequestButton(true);
-    setLoadingInvite(true);
+    setDisabledRequestButton(false);
+    setLoadingInvite(false);
 
     setSnackBarOpenStatus(true);
     setSnackBarSeverityType("success");
@@ -188,14 +183,14 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
         userValue: userToRemove,
       })
     );
-
+    setDeleteModalStatus(false);
     setDeleteLoginModalStatus(false);
 
     setUserToRemove(null);
   }
 
-  function selectedUserIdToRemove(userId: string) {
-    setUserToRemove(userId);
+  function selectedUserToRemove(userObject: any) {
+    setUserToRemove(userObject);
   }
   // make a function to remove workspace members , and to delete the workspace !!!!
 
@@ -212,7 +207,7 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
               </div>
             </div>
           </div>
-          <div className="invite-container px-8 mt-10">
+          <div className="invite-container px-8 mt-10 ">
             <div className="search-for-members-container">
               <div className="header-title pb-8 text-lg">
                 <div className="first-title">Search for a user email</div>
@@ -261,11 +256,11 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
                 )}
               </div>
             </div>
-            <div className="members-list">
+            <div className="members-list ">
               <div className="search-database-members-list">
                 {foundMembers.length >= 1 && (
                   <div className="found-members mt-10">
-                    <div className="header-title font-semibold">
+                    <div className="header-title font-semibold pb-2">
                       Found members
                     </div>
                     <div className="list">
@@ -344,92 +339,98 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
                 )}
               </div>
               {selectedWorkspace.membersId != null && (
-                <div className="workspace-list">
-                  {/* use both selectedWorkspace.membersId and usersList */}
-                  {Object.entries(selectedWorkspace.membersId).map(
-                    (
-                      [memberId, memberValue]: any,
-                      indexWorkspaceMember: number
-                    ) => {
-                      const foundMember = usersList.find(
-                        (user) => user.id === memberId
-                      );
-                      const userIsSelf = foundMember.id === authUser.uid;
-                      return (
-                        <div
-                          className="found-member-item flex justify-between items-center"
-                          key={indexWorkspaceMember}
-                        >
-                          <div className="left-side">
-                            <div className="member-details flex gap-2 items-center">
-                              <div className="avatar-container ">
-                                {foundMember?.photoURL != null && (
-                                  <Avatar
-                                    src={foundMember.photoURL}
-                                    sx={{ width: 20, height: 20 }}
-                                  />
-                                )}
-                                {foundMember?.photoURL == null && (
-                                  <AvatarPlaceholder />
-                                )}
-                              </div>
-                              <div className="name-container gap-2">
-                                <div className="fullp-name flex gap-2">
-                                  <div className="firstName">
-                                    {foundMember.firstName}
-                                  </div>
-                                  <div className="lastName">
-                                    {foundMember.lastName}
-                                  </div>
-                                  {areYouWorkspaceOwner ? (
-                                    <div className="text-gray-700 font-sm">
-                                      {"(Owner)"}
-                                    </div>
-                                  ) : (
-                                    ""
+                <div className="workspace-list mt-5 border-t pt-4">
+                  <div className="title font-medium pb-2">
+                    Workspace members
+                  </div>
+                  <div className="list">
+                    {Object.entries(selectedWorkspace.membersId).map(
+                      (
+                        [memberId, memberValue]: any,
+                        indexWorkspaceMember: number
+                      ) => {
+                        const foundMember = usersList.find(
+                          (user) => user.id === memberId
+                        );
+                        if (foundMember == null) return "";
+                        const userIsSelf = foundMember.id === authUser.uid;
+                        return (
+                          <div
+                            className="found-member-item flex justify-between items-center"
+                            key={indexWorkspaceMember}
+                          >
+                            <div className="left-side">
+                              <div className="member-details flex gap-2 items-center">
+                                <div className="avatar-container ">
+                                  {foundMember?.photoURL != null && (
+                                    <Avatar
+                                      src={foundMember.photoURL}
+                                      sx={{ width: 20, height: 20 }}
+                                    />
+                                  )}
+                                  {foundMember?.photoURL == null && (
+                                    <AvatarPlaceholder />
                                   )}
                                 </div>
+                                <div className="name-container gap-2">
+                                  <div className="fullp-name flex gap-2">
+                                    <div className="firstName">
+                                      {foundMember.firstName}
+                                    </div>
+                                    <div className="lastName">
+                                      {foundMember.lastName}
+                                    </div>
+                                    {areYouWorkspaceOwner ? (
+                                      <div className="text-gray-700 font-sm">
+                                        {"(Owner)"}
+                                      </div>
+                                    ) : (
+                                      ""
+                                    )}
+                                  </div>
 
-                                <div className="email text-gray-600">
-                                  {foundMember.email}
+                                  <div className="email text-gray-600">
+                                    {foundMember.email}
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
 
-                          <div className="right-side">
-                            {areYouWorkspaceOwner == null && (
-                              <div className="can-not-member-container text-red-700 invisible">
-                                -----
-                              </div>
-                            )}
-                            {areYouWorkspaceOwner != null && (
-                              <div className="remove-container-btn">
-                                <LoadingButton
-                                  disabled={disabledRequestButton}
-                                  style={{
-                                    fontWeight: 600,
-                                    padding: "0.7em auto",
-                                  }}
-                                  loading={loadingInvite}
-                                  loadingPosition="start"
-                                  startIcon={<RemoveWorkspaceUserIcon />}
-                                  variant="contained"
-                                  onClick={() => {
-                                    selectedUserIdToRemove(memberValue);
-                                  }}
-                                >
-                                  {!loadingRemove
-                                    ? `Remove ${userIsSelf ? "self" : ""}`
-                                    : "Removeing"}
-                                </LoadingButton>
-                              </div>
-                            )}
+                            <div className="right-side">
+                              {areYouWorkspaceOwner == null && (
+                                <div className="can-not-member-container text-red-700 invisible">
+                                  -----
+                                </div>
+                              )}
+                              {areYouWorkspaceOwner != null && (
+                                <div className="remove-container-btn">
+                                  <LoadingButton
+                                    disabled={disabledRequestButton}
+                                    style={{
+                                      fontWeight: 600,
+                                      padding: "0.7em auto",
+                                    }}
+                                    loading={loadingInvite}
+                                    loadingPosition="start"
+                                    startIcon={<RemoveWorkspaceUserIcon />}
+                                    variant="contained"
+                                    onClick={() => {
+                                      selectedUserToRemove(foundMember);
+                                      setDeleteModalStatus(true);
+                                    }}
+                                  >
+                                    {!loadingRemove
+                                      ? `Remove ${userIsSelf ? "self" : ""}`
+                                      : "Removeing"}
+                                  </LoadingButton>
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    }
-                  )}
+                        );
+                      }
+                    )}
+                  </div>
                 </div>
               )}
             </div>
