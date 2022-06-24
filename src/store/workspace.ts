@@ -13,6 +13,7 @@ interface Workspace {
 const initialState: {
   selectedWorkSpace: Workspace;
   members: any[]; // ordered by invitedAt
+
   userWorkspaces: { [key: string]: Workspace };
 } = {
   selectedWorkSpace: {
@@ -24,6 +25,7 @@ const initialState: {
     timezone: "",
     workspaceURL: "myfirstUnloaded",
   },
+
   userWorkspaces: {},
   members: [],
 };
@@ -35,6 +37,7 @@ export const workspaceSlice = createSlice({
     changeSelectedWorkSpace: (state, action) => {
       state.selectedWorkSpace = action.payload;
     },
+
     updateSelectedWorkspaceName(state, { payload }) {
       const newName = payload.newName;
       state.selectedWorkSpace = { ...state.selectedWorkSpace, name: newName };
@@ -58,11 +61,45 @@ export const workspaceSlice = createSlice({
       if (indexOfMemberById === -1) return;
       state.members[indexOfMemberById] = updatedMember;
     },
+    addMemberToWorkspace(state, { payload }) {
+      const userId = payload.userId;
+      const userValue = payload.userValue;
+      state.members.push(userValue);
+
+      const copySelectedWorkspace = { ...state.selectedWorkSpace };
+      if (copySelectedWorkspace.membersId == null)
+        copySelectedWorkspace.membersId = {};
+      copySelectedWorkspace.membersId[userId] = userValue;
+      state.selectedWorkSpace = copySelectedWorkspace;
+    },
+    removeMemberFromWorkspace(state, { payload }) {
+      // unused for now
+      const userId = payload.userId;
+
+      const foundMemberIndex = state.members.findIndex(
+        (member) => member.id === userId
+      );
+      if (foundMemberIndex !== -1) {
+        const copyMembersList = [...state.members];
+        copyMembersList.splice(foundMemberIndex, 1);
+        state.members = copyMembersList;
+      }
+      const copySelectedWorkspace = { ...state.selectedWorkSpace };
+      if (
+        copySelectedWorkspace.membersId != null &&
+        copySelectedWorkspace.membersId[userId] != null
+      ) {
+        delete copySelectedWorkspace.membersId[userId];
+        state.selectedWorkSpace = copySelectedWorkspace;
+      }
+    },
   },
 });
 
 export const {
   changeSelectedWorkSpace,
+  addMemberToWorkspace,
+  removeMemberFromWorkspace,
   updateSelectedWorkspaceName,
   updateSelectedWorkspaceURL,
   loadMembersToStore,

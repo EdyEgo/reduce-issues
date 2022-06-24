@@ -232,7 +232,7 @@ export default function MenuListComposition({
                         handleClose(event);
                       }}
                     >
-                      Add workspace members
+                      Workspace members
                     </MenuItem>
 
                     <MenuItem

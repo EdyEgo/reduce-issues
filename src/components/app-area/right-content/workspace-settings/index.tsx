@@ -25,6 +25,7 @@ import {
   updateSelectedWorkspaceURL as updateSelectedWorkspaceURLStore,
 } from "../../../../store/workspace";
 import { deleteOneTeamFromTeamList } from "../../../../store/team";
+
 interface WorkspaceSettingsProps {}
 
 const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
@@ -33,6 +34,7 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
   const teamList = useSelector((state: any) => state.team.teamList);
   const teamIssuesList = useSelector((state: any) => state.issues.teamsIssues);
   const usersList: any[] = useSelector((state: any) => state.workspace.members);
+
   const selectedWorkspace = useSelector(
     (state: any) => state.workspace.selectedWorkSpace
   );

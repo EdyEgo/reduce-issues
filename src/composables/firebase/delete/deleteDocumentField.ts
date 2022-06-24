@@ -1,6 +1,24 @@
 import { doc, updateDoc, deleteField } from "firebase/firestore";
 import { db } from "../../../firebase";
 
+export async function deleteDocumentFieldFirebase({
+  firstCollectionName,
+  firstDocumentName,
+  fieldToDelete,
+  nestedFieldToDelete,
+}: {
+  firstCollectionName: string;
+  firstDocumentName: string;
+  nestedFieldToDelete: string;
+  fieldToDelete: string;
+}) {
+  const documentRef = doc(db, firstCollectionName, firstDocumentName);
+
+  await updateDoc(documentRef, {
+    [`${fieldToDelete}.${nestedFieldToDelete}`]: deleteField(),
+  });
+}
+
 export async function deleteLevelTwoNestedDocumentFieldFirebase({
   firstCollectionName,
   firstDocumentName,

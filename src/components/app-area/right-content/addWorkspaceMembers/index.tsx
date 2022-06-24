@@ -1,24 +1,79 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import TextField from "@mui/material/TextField";
+import SnackBarCRUDInfo from "../../../../composables/info-popovers/snackbar";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
-import { getUserByEmail } from "../../../../api/dataBaseUsersMethods";
+import Avatar from "@mui/material/Avatar";
+import AvatarPlaceholder from "@mui/icons-material/AccountCircle";
+// import AddWorkspaceUserIcon from "@mui/icons-material/PersonAddAltOutlined";
+import AddWorkspaceUserIcon from "@mui/icons-material/PersonAddAltRounded";
+import RemoveWorkspaceUserIcon from "@mui/icons-material/PersonRemoveAlt1Outlined";
+import {
+  getUserByEmail,
+  addWorkspaceToUserWorkSpaces,
+} from "../../../../api/dataBaseUsersMethods";
+import {
+  addWorkspaceMember,
+  removeWorkspaceMember,
+} from "../../../../api/dataBaseWorkSpaceMethods";
+import {
+  addMemberToWorkspace,
+  removeMemberFromWorkspace,
+} from "../../../../store/workspace";
+import Button from "@mui/material/Button";
 
+import Modal from "@mui/material/Modal";
+
+import DangerDeleteIssue from "@mui/icons-material/ReportProblemSharp";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import DeleteIcon from "@mui/icons-material/Delete";
+import LinearProgress from "@mui/material/LinearProgress";
+
+import Typography from "@mui/material/Typography";
 interface AddWorkspaceMembersProps {}
 
 const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
   const dispactch = useDispatch();
   const [searchInputValue, setSearchInputValue] = useState("");
+  const authUser = useSelector((state: any) => state.auth.user);
+
   const [disabledRequestButton, setDisabledRequestButton] = useState(false);
   const [foundMembers, setFoundMembers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingInvite, setLoadingInvite] = useState(false);
+  const [loadingRemove, setloadingRemove] = useState(false);
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
+
+  const [userToRemove, setUserToRemove] = useState<null | any>(null);
+  const [deleteModalStatus, setDeleteModalStatus] = useState(false);
+  const [deleteLoginModalStatus, setDeleteLoginModalStatus] = useState(false);
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState<null | string>(
+    null
+  );
+
+  const [snackBarMessage, setSnackBarMessage] = useState("");
+  const [snackBarOpenStatus, setSnackBarOpenStatus] = useState(false);
+  const [snackBarSeverityType, setSnackBarSeverityType] = useState<
+    "success" | "error" | null
+  >(null);
+
+  const usersList: any[] = useSelector((state: any) => state.workspace.members); // add here too :)
   const selectedWorkspace = useSelector(
     (state: any) => state.workspace.selectedWorkSpace
   ); //selectedWorkspace.membersId compare id with this when searching for members,so you don t have as
   // result an actual workspace member
-
+  const areYouWorkspaceOwner =
+    selectedWorkspace?.membersId != null &&
+    selectedWorkspace.membersId[authUser.uid].role === "Owner"
+      ? true
+      : false;
+  console.log(
+    "bruhu sersList,",
+    usersList,
+    "hai ma|||selectedWorkspace",
+    selectedWorkspace
+  );
   async function startSearchForNewWorkspaceMembers() {
     const trimedInputValue = searchInputValue.trim();
     if (trimedInputValue === "") return;
@@ -45,6 +100,104 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
     setLoading(false);
     setDisabledRequestButton(false);
   }
+
+  async function addFoundMemberToUserWorkspace(userObject: any) {
+    // add the workspace to the user workspaces
+    //setLoadingInvite
+    // add to the selected workspace the id of the user with the role  "member" and invitedAt:new Date()
+
+    setDisabledRequestButton(true);
+    setLoadingInvite(true);
+
+    const { error: workspaceError } = await addWorkspaceMember({
+      role: "Member",
+      userId: userObject.id,
+      workspaceId: selectedWorkspace.id,
+    });
+    if (workspaceError) {
+      setDisabledRequestButton(true);
+      setLoadingInvite(true);
+
+      setSnackBarOpenStatus(true);
+      setSnackBarSeverityType("error");
+      setSnackBarMessage("Could not update the workspace");
+      return;
+    }
+
+    const { error: userError } = await addWorkspaceToUserWorkSpaces({
+      role: "Member",
+      userId: userObject.id,
+      workspaceId: selectedWorkspace.id,
+    });
+
+    if (userError) {
+      setDisabledRequestButton(true);
+      setLoadingInvite(true);
+
+      setSnackBarOpenStatus(true);
+      setSnackBarSeverityType("error");
+      setSnackBarMessage("Could not add the user");
+      return;
+    }
+
+    // success update
+    setDisabledRequestButton(true);
+    setLoadingInvite(true);
+
+    setSnackBarOpenStatus(true);
+    setSnackBarSeverityType("success");
+    setSnackBarMessage("User added");
+
+    // dispatch store changes
+
+    dispactch(
+      addMemberToWorkspace({
+        userId: userObject.id,
+        userValue: userObject,
+      })
+    );
+  }
+
+  async function removeMemberFromWorkspaceFunction() {
+    if (userToRemove?.id == null) return;
+    // setDeleteLoginModalStatus,setDeleteErrorMessage
+    // use removeMemberFromWorkspace with dispatch
+    // setloadingRemove(true)
+    setDeleteLoginModalStatus(true);
+
+    // remove workspace nested field from users collection
+    const { error } = await removeWorkspaceMember({
+      userId: userToRemove.id,
+      workspaceId: selectedWorkspace.id,
+    });
+    if (error) {
+      setDeleteErrorMessage(
+        "Could not completely remove the user from workspace"
+      );
+      setDeleteLoginModalStatus(false);
+      setTimeout(() => {
+        setDeleteErrorMessage(null);
+      }, 3000);
+      return;
+    }
+
+    //dispactch info store
+    dispactch(
+      removeMemberFromWorkspace({
+        userId: userToRemove.id,
+        userValue: userToRemove,
+      })
+    );
+
+    setDeleteLoginModalStatus(false);
+
+    setUserToRemove(null);
+  }
+
+  function selectedUserIdToRemove(userId: string) {
+    setUserToRemove(userId);
+  }
+  // make a function to remove workspace members , and to delete the workspace !!!!
 
   // if it contains an @ then search by email
   return (
@@ -108,13 +261,274 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
                 )}
               </div>
             </div>
-            {foundMembers.length > 1 && (
-              <div className="found-members mt-10">
-                <div className="header-title font-semibold">Found members</div>
-                <div className="list"></div>
+            <div className="members-list">
+              <div className="search-database-members-list">
+                {foundMembers.length >= 1 && (
+                  <div className="found-members mt-10">
+                    <div className="header-title font-semibold">
+                      Found members
+                    </div>
+                    <div className="list">
+                      {foundMembers.map((foundMember: any, memberIndex) => {
+                        const isWorkspaceMember =
+                          selectedWorkspace.membersId[foundMember.id];
+                        return (
+                          <div
+                            className="found-member-item flex justify-between items-center"
+                            key={memberIndex}
+                          >
+                            <div className="left-side">
+                              <div className="member-details flex gap-2 items-center">
+                                <div className="avatar-container ">
+                                  {foundMember?.photoURL != null && (
+                                    <Avatar
+                                      src={foundMember.photoURL}
+                                      sx={{ width: 20, height: 20 }}
+                                    />
+                                  )}
+                                  {foundMember?.photoURL == null && (
+                                    <AvatarPlaceholder />
+                                  )}
+                                </div>
+                                <div className="name-container gap-2">
+                                  <div className="fullp-name flex gap-2">
+                                    <div className="firstName">
+                                      {foundMember.firstName}
+                                    </div>
+                                    <div className="lastName">
+                                      {foundMember.lastName}
+                                    </div>
+                                  </div>
+
+                                  <div className="email text-gray-600">
+                                    {foundMember.email}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="right-side">
+                              {isWorkspaceMember != null && (
+                                <div className="already-member-container text-blue-700">
+                                  Workspace member
+                                </div>
+                              )}
+                              {isWorkspaceMember == null && (
+                                <div className="invite-container-btn">
+                                  <LoadingButton
+                                    disabled={disabledRequestButton}
+                                    style={{
+                                      fontWeight: 600,
+                                      padding: "0.7em auto",
+                                    }}
+                                    loading={loadingInvite}
+                                    loadingPosition="start"
+                                    startIcon={<AddWorkspaceUserIcon />}
+                                    variant="contained"
+                                    onClick={() => {
+                                      addFoundMemberToUserWorkspace(
+                                        foundMember
+                                      );
+                                    }}
+                                  >
+                                    {!loadingInvite ? "Invite" : "Inviting"}
+                                  </LoadingButton>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
+              {selectedWorkspace.membersId != null && (
+                <div className="workspace-list">
+                  {/* use both selectedWorkspace.membersId and usersList */}
+                  {Object.entries(selectedWorkspace.membersId).map(
+                    (
+                      [memberId, memberValue]: any,
+                      indexWorkspaceMember: number
+                    ) => {
+                      const foundMember = usersList.find(
+                        (user) => user.id === memberId
+                      );
+                      const userIsSelf = foundMember.id === authUser.uid;
+                      return (
+                        <div
+                          className="found-member-item flex justify-between items-center"
+                          key={indexWorkspaceMember}
+                        >
+                          <div className="left-side">
+                            <div className="member-details flex gap-2 items-center">
+                              <div className="avatar-container ">
+                                {foundMember?.photoURL != null && (
+                                  <Avatar
+                                    src={foundMember.photoURL}
+                                    sx={{ width: 20, height: 20 }}
+                                  />
+                                )}
+                                {foundMember?.photoURL == null && (
+                                  <AvatarPlaceholder />
+                                )}
+                              </div>
+                              <div className="name-container gap-2">
+                                <div className="fullp-name flex gap-2">
+                                  <div className="firstName">
+                                    {foundMember.firstName}
+                                  </div>
+                                  <div className="lastName">
+                                    {foundMember.lastName}
+                                  </div>
+                                  {areYouWorkspaceOwner ? (
+                                    <div className="text-gray-700 font-sm">
+                                      {"(Owner)"}
+                                    </div>
+                                  ) : (
+                                    ""
+                                  )}
+                                </div>
+
+                                <div className="email text-gray-600">
+                                  {foundMember.email}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="right-side">
+                            {areYouWorkspaceOwner == null && (
+                              <div className="can-not-member-container text-red-700 invisible">
+                                -----
+                              </div>
+                            )}
+                            {areYouWorkspaceOwner != null && (
+                              <div className="remove-container-btn">
+                                <LoadingButton
+                                  disabled={disabledRequestButton}
+                                  style={{
+                                    fontWeight: 600,
+                                    padding: "0.7em auto",
+                                  }}
+                                  loading={loadingInvite}
+                                  loadingPosition="start"
+                                  startIcon={<RemoveWorkspaceUserIcon />}
+                                  variant="contained"
+                                  onClick={() => {
+                                    selectedUserIdToRemove(memberValue);
+                                  }}
+                                >
+                                  {!loadingRemove
+                                    ? `Remove ${userIsSelf ? "self" : ""}`
+                                    : "Removeing"}
+                                </LoadingButton>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    }
+                  )}
+                </div>
+              )}
+            </div>
           </div>
+          <SnackBarCRUDInfo
+            message={snackBarMessage}
+            openStatus={snackBarOpenStatus}
+            setOpenStatus={setSnackBarOpenStatus}
+            setSeverityType={setSnackBarSeverityType}
+            severityType={snackBarSeverityType}
+          />
+          <Modal
+            open={deleteModalStatus}
+            onClose={() => {
+              setDeleteModalStatus(false);
+            }}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box
+              sx={{
+                position: "absolute" as "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 500,
+                bgcolor: "background.paper",
+                border: "2px solid white",
+                boxShadow: 24,
+                p: 3,
+              }}
+            >
+              {deleteLoginModalStatus && (
+                <Stack
+                  sx={{
+                    width: "100%",
+                    color: "grey.500",
+                    visibility: "visible",
+                  }}
+                  spacing={2}
+                >
+                  <LinearProgress color="success" />
+                </Stack>
+              )}
+              {deleteLoginModalStatus === false && (
+                <Stack
+                  sx={{
+                    width: "100%",
+                    color: "grey.500",
+                    visibility: "hidden",
+                  }}
+                  spacing={2}
+                >
+                  <LinearProgress color="success" />
+                </Stack>
+              )}
+              <div className="container">
+                <div className="flex justify-center my-2">
+                  <DangerDeleteIssue className="text-red-500" />
+                </div>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Are you sure you want to delete the user ?
+                </Typography>
+                {deleteErrorMessage != null && (
+                  <div className="text-center text-red-500 visible">
+                    Could not delete the user
+                  </div>
+                )}
+                {deleteErrorMessage == null && (
+                  <div className="text-center text-red-500 invisible">
+                    placeholder
+                  </div>
+                )}
+                <div className="flex justify-between m-2 mt-4">
+                  <Button
+                    onClick={() => {
+                      removeMemberFromWorkspaceFunction();
+                    }}
+                    disabled={deleteLoginModalStatus}
+                    variant="outlined"
+                    startIcon={<DeleteIcon />}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    disabled={deleteLoginModalStatus}
+                    variant="contained"
+                    color="success"
+                    onClick={() => {
+                      setDeleteModalStatus(false);
+                      setUserToRemove(null);
+                    }}
+                  >
+                    Keep
+                  </Button>
+                </div>
+              </div>
+            </Box>
+          </Modal>
         </div>
       )}
 

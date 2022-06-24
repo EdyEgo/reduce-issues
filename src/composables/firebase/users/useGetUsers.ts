@@ -9,8 +9,8 @@ export async function getUserByEmailFirebase({
 }) {
   return await getDocumentWithQuery({
     collectionSelected: "users",
-    documentQuery: "email",
-    queryKeyName: userEmail,
+    queryKeyName: "email",
+    documentQuery: userEmail,
   });
 }
 

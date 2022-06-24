@@ -2,6 +2,8 @@ import { getWorkSpaceFirebase } from "../composables/firebase/workspace/useGetSe
 import { postNewDocument } from "../composables/firebase/post/postDocument";
 import { writeBatch, serverTimestamp } from "firebase/firestore";
 import { createOneTeam } from "./dataBaseTeamsMethods";
+import { removeWorkspaceFromUserWorkspaces } from "./dataBaseUsersMethods";
+import { deleteDocumentFieldFirebase } from "../composables/firebase/delete/deleteDocumentField";
 import { tz } from "moment-timezone";
 
 import { db } from "../firebase";
@@ -167,6 +169,60 @@ export async function updateWorkspaceURL({
       documentName: workspaceId,
       inputObject: { workspaceURL: newURL },
       noRegister: true,
+    });
+    return { error: false };
+  } catch (e: any) {
+    return { error: true, message: e.message };
+  }
+}
+
+export async function addWorkspaceMember({
+  role,
+  userId,
+  workspaceId,
+}: {
+  workspaceId: string;
+  userId: string;
+  role: string;
+}) {
+  try {
+    await postNewDocument({
+      collectionSelected: "workspaces",
+      documentName: workspaceId,
+      noRegister: true,
+      inputObject: {
+        membersId: {
+          [userId]: {
+            invitedAt: serverTimestamp(),
+            role,
+          },
+        },
+      },
+    });
+    return { error: false };
+  } catch (e: any) {
+    return { error: true, message: e.message };
+  }
+}
+
+export async function removeWorkspaceMember({
+  userId,
+  workspaceId,
+}: {
+  userId: string;
+  workspaceId: string;
+}) {
+  try {
+    await removeWorkspaceFromUserWorkspaces({
+      userId,
+      workspaceId,
+    });
+
+    await deleteDocumentFieldFirebase({
+      firstCollectionName: "workspaces",
+      firstDocumentName: workspaceId,
+      fieldToDelete: "membersId",
+      nestedFieldToDelete: userId,
     });
     return { error: false };
   } catch (e: any) {
