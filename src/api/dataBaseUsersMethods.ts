@@ -1,19 +1,31 @@
-import { getUserFirebase} from '../composables/firebase/users/useGetUser'
-import { getUsersFirebase} from '../composables/firebase/users/useGetUsers'
+import { getUserFirebase } from "../composables/firebase/users/useGetUser";
+import {
+  getUsersFirebase,
+  getUserByEmailFirebase,
+} from "../composables/firebase/users/useGetUsers";
 
+export const getUser = async ({ userId }: { userId: string }) => {
+  return await getUserFirebase(userId);
+};
 
-export const getUser = async ({ userId}:{userId:string})=>{
-     return await getUserFirebase(userId) 
-} 
+export const getUsers = async ({
+  usersIds,
+}: {
+  usersIds: string[] | { [key: string]: any };
+}) => {
+  try {
+    const usersDoc = await getUsersFirebase(usersIds);
+    return { data: usersDoc, error: false };
+  } catch (e: any) {
+    return { error: true, message: e.message };
+  }
+};
 
-export const getUsers = async ({ usersIds}:{usersIds:string[] | {[key:string]:any}})=>{
-
-    try{
-        const usersDoc =  await getUsersFirebase(usersIds) 
-        return {data:usersDoc,error:false}
-    }catch(e:any){
-        return {error:true,message:e.message}
-    }
-   
+export async function getUserByEmail(userEmail: string) {
+  try {
+    const listUsers = await getUserByEmailFirebase({ userEmail });
+    return { error: false, data: listUsers };
+  } catch (e: any) {
+    return { error: true, message: e.message };
+  }
 }
-

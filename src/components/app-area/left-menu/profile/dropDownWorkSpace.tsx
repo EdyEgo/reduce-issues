@@ -228,15 +228,26 @@ export default function MenuListComposition({
 
                     <MenuItem
                       onClick={(event) => {
+                        navigate("/add-workspace-members");
+                        handleClose(event);
+                      }}
+                    >
+                      Add workspace members
+                    </MenuItem>
+
+                    <MenuItem
+                      onClick={(event) => {
                         navigate("/add-new-team");
                         handleClose(event);
                       }}
                     >
                       Add team
                     </MenuItem>
+
                     <div className="line-separator border-b "></div>
 
                     <MenuItem
+                      style={{ color: "rgb(248,113,113)", marginTop: "5px" }}
                       onClick={async (event) => {
                         const userWasLoggedOut = await logUserOut();
                         if (userWasLoggedOut) {

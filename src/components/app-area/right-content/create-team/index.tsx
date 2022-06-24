@@ -18,9 +18,9 @@ const CreateNewTeam: React.FC<CreateNewTeamProps> = () => {
   );
 
   const [disabledRequestButton, setDisabledRequestButton] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
   const [teamInputName, setTeamInputName] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const [teamInputIdentified, setTeamInputIdentified] = useState("");
 
