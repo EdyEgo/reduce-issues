@@ -13,14 +13,13 @@ import { signOut } from "../../../../api/dataBaseAuthMethods";
 import { changeSelectedWorkspace as changeSelectedWorkspaceApi } from "../../../../api/dataBaseWorkSpaceMethods";
 import { changeErrorStatus } from "../../../../store/auth";
 
-import { getUser, getUsers } from "../../../../api/dataBaseUsersMethods";
+import { getUsers } from "../../../../api/dataBaseUsersMethods";
 import { getTeams } from "../../../../api/dataBaseTeamsMethods";
 import { setTeamList } from "../../../../store/team";
 import { changeCurrentUser } from "../../../../store/users";
 import { removeSubscriptions } from "../../../../store/issues";
 import {
   changeSelectedWorkSpace,
-  changeUserWorkspaces,
   loadMembersToStore,
 } from "../../../../store/workspace";
 import { changeSelectedWorkSpace as changeSelectedWorkSpaceStore } from "../../../../store/workspace";
@@ -112,7 +111,7 @@ export default function MenuListComposition({
     const newWorkspaceSelected = workspaces[selectedWorkspaceId];
     dispatch(changeSelectedWorkSpaceStore(newWorkspaceSelected));
     // see if the teams are loaded and the issues
-    console.log("delete this when you have your routes right!!!!!");
+    console.log("delete this in the future");
     //this part is not gonna be needed once you make the routes right <-----
   }
 

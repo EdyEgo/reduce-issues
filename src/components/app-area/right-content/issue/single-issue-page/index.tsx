@@ -269,31 +269,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
         issueIndex++
       ) {
         const issueValueObject = teamIssuesValue[issueIndex];
-        // const issueIdentified = `${issueValueObject.teamIdentified}-${issueValueObject.identifiedNumber}`
-        // issueValueObject. teamIdentified
 
-        // issueValueObject. identifiedNumber
-        console.log(
-          "how is this working",
-          issueValueObject,
-          "bruh",
-          issueIdentifiedParams,
-          "real"
-        );
-        // const extractIdentifiedNumber
-        // const splitIdentifier = issueIdentified.split("-")// ex: MFW-0 , ["MFW",0]
-        // old way
-        // if (
-        //   issueValueObject?.identified &&
-        //   issueIdentified &&
-        //   issueValueObject.identified.toLowerCase() ===
-        //     issueIdentified.toLowerCase()
-        // ) {
-        //   issueObject = issueValueObject;
-        //   break loopTeam;
-        // }
-
-        // new way
         const issueIdentified = `${issueValueObject.teamIdentified}-${issueValueObject.identifiedNumber}`;
         if (
           issueIdentified &&

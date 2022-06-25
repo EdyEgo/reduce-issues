@@ -37,6 +37,34 @@ export const workspaceSlice = createSlice({
     changeSelectedWorkSpace: (state, action) => {
       state.selectedWorkSpace = action.payload;
     },
+    deleteUserWorkspace(state, { payload }) {
+      // if the deleted workspace is the selected workspace than first change the selected workspace
+
+      const selectedWorkspaceId = payload.selectedWorkspaceId;
+      // if (
+      //   selectedWorkspaceId != null &&
+      //   state.selectedWorkSpace.id != null &&
+      //   selectedWorkspaceId === state.selectedWorkSpace.id
+      // ) {
+      //   // select another workspace if the deleted one is the selected one
+      //   for (const currentWorkspaceId in state.userWorkspaces) {
+      //     const currentWorkspaceObject =
+      //       state.userWorkspaces[currentWorkspaceId];
+      //     if (currentWorkspaceObject.id === selectedWorkspaceId) {
+      //       continue;
+      //     }
+      //     if (currentWorkspaceObject.id !== selectedWorkspaceId) {
+      //       state.selectedWorkSpace = currentWorkspaceObject;
+      //       break;
+      //     }
+      //   }
+      // }
+      // delete the workspace from store
+
+      const copyUserWorkspaces = { ...state.userWorkspaces };
+      delete copyUserWorkspaces[selectedWorkspaceId];
+      state.userWorkspaces = copyUserWorkspaces;
+    },
 
     updateSelectedWorkspaceName(state, { payload }) {
       const newName = payload.newName;
@@ -98,6 +126,7 @@ export const workspaceSlice = createSlice({
 
 export const {
   changeSelectedWorkSpace,
+  deleteUserWorkspace,
   addMemberToWorkspace,
   removeMemberFromWorkspace,
   updateSelectedWorkspaceName,

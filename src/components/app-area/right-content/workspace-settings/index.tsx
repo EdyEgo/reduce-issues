@@ -1,6 +1,7 @@
 import SnackBarCRUDInfo from "../../../../composables/info-popovers/snackbar";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import moment from "moment";
 import Avatar from "@mui/material/Avatar";
@@ -17,24 +18,56 @@ import SaveIcon from "@mui/icons-material/Save";
 import {
   updateWorkspaceName,
   updateWorkspaceURL,
+  deleteWorkspace,
+  changeSelectedWorkspace as changeSelectedWorkspaceApi,
 } from "../../../../api/dataBaseWorkSpaceMethods";
-import { deleteOneTeam } from "../../../../api/dataBaseTeamsMethods";
+import {
+  deleteOneTeam,
+  getTeams,
+  deleteOneTeamWithIssues,
+} from "../../../../api/dataBaseTeamsMethods";
+import { getUsers } from "../../../../api/dataBaseUsersMethods";
 
 import {
   updateSelectedWorkspaceName as updateSelectedWorkspaceNameStore,
   updateSelectedWorkspaceURL as updateSelectedWorkspaceURLStore,
+  loadMembersToStore,
 } from "../../../../store/workspace";
-import { deleteOneTeamFromTeamList } from "../../../../store/team";
+import { deleteOneTeamFromTeamList, setTeamList } from "../../../../store/team";
+
+import {
+  deleteUserWorkspace,
+  changeSelectedWorkSpace,
+  changeSelectedWorkSpace as changeSelectedWorkSpaceStore,
+} from "../../../../store/workspace";
+import { changeCurrentUser } from "../../../../store/users";
+
+import Modal from "@mui/material/Modal";
+
+import DangerDeleteIssue from "@mui/icons-material/ReportProblemSharp";
+import Stack from "@mui/material/Stack";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import LinearProgress from "@mui/material/LinearProgress";
+
+import Typography from "@mui/material/Typography";
 
 interface WorkspaceSettingsProps {}
 
 const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const workspaces = useSelector(
+    (state: any) => state.workspace.userWorkspaces
+  );
   const authUser = useSelector((state: any) => state.auth.user);
   const teamList = useSelector((state: any) => state.team.teamList);
+  const userWorkspaces = useSelector(
+    (state: any) => state.workspace.userWorkspaces
+  );
   const teamIssuesList = useSelector((state: any) => state.issues.teamsIssues);
   const usersList: any[] = useSelector((state: any) => state.workspace.members);
-
+  const currentUser = useSelector((state: any) => state.users.currentUser);
   const selectedWorkspace = useSelector(
     (state: any) => state.workspace.selectedWorkSpace
   );
@@ -71,6 +104,79 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
 
   const [disabledRequestButton, setDisabledRequestButton] = useState(false);
   const [updateNameLogin, setUpdateNameLogin] = useState(false);
+
+  // modal
+
+  const [deleteModalStatus, setDeleteModalStatus] = useState(false);
+  const [deleteLoginModalStatus, setDeleteLoginModalStatus] = useState(false);
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState<null | string>(
+    null
+  );
+  async function getCurrentSelectedWorkspaceAndSave(
+    workspaceId: string,
+    userWorkspace: { [key: string]: any }
+  ) {
+    const selectedWorkspaceObject = {
+      ...userWorkspace[workspaceId],
+      id: workspaceId,
+    };
+    dispatch(changeSelectedWorkSpace({ ...selectedWorkspaceObject }));
+    return selectedWorkspaceObject;
+  }
+
+  async function getCurrentTeamListForWorkspace(workspaceId: string) {
+    const document = await getTeams(workspaceId);
+    if (document.error) throw new Error(document.message);
+    const teamData = document.data;
+
+    dispatch(setTeamList(teamData));
+    return teamData;
+  }
+
+  async function getSelectedWorkspaceMembersAndSave(usersIds: {
+    [key: string]: any;
+  }) {
+    // load from db/users all members in this workspace
+
+    const members = await getUsers({ usersIds });
+    if (members.error) throw new Error(members.message);
+    const teamMembersList = members.data;
+    dispatch(loadMembersToStore(teamMembersList));
+  }
+
+  async function changeSelectedWorkspaceById(selectedWorkspaceId: string) {
+    const result = await changeSelectedWorkspaceApi(
+      selectedWorkspaceId,
+      authUser.uid
+    );
+
+    if (result?.error) {
+      return null;
+    }
+    // change current user
+    dispatch(
+      changeCurrentUser({
+        ...currentUser,
+        workSpaceSelected: { id: selectedWorkspaceId },
+      })
+    );
+    // this part is not gonna be needed once you make the routes right ----->
+    const collectionUserWorkspace = workspaces;
+    const workspaceData = await getCurrentSelectedWorkspaceAndSave(
+      selectedWorkspaceId,
+      collectionUserWorkspace
+    );
+    // load team data from workspace nested collection
+    await getCurrentTeamListForWorkspace(selectedWorkspaceId);
+    // load members list from data base in users collection
+    await getSelectedWorkspaceMembersAndSave(workspaceData.membersId);
+
+    const newWorkspaceSelected = workspaces[selectedWorkspaceId];
+    dispatch(changeSelectedWorkSpaceStore(newWorkspaceSelected));
+    // see if the teams are loaded and the issues
+    console.log("delete this in the future");
+    //this part is not gonna be needed once you make the routes right <-----
+  }
 
   const buttonSx = {
     ...(snackBarSeverityType === "success" && {
@@ -214,14 +320,114 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
 
     setUpdateNameLogin(false);
   }
-  async function deleteWorkspaceFunc() {
-    // thats gonna be something
-    // you need to delete the workspace , all teams , and their issues :))))))
-    // use a promise . all and the function that deletes a team by id
-    // left here
+
+  function selectTheNextWorkspaceAvailable(selectedWorkspaceId: string) {
+    // if none return null and don t allow the user to delete the workspace
+    let selectedWorkSpace = null;
+    for (const currentWorkspaceId in userWorkspaces) {
+      const currentWorkspaceObject = userWorkspaces[currentWorkspaceId];
+      if (currentWorkspaceObject.id === selectedWorkspaceId) {
+        continue;
+      }
+      if (currentWorkspaceObject.id !== selectedWorkspaceId) {
+        selectedWorkSpace = currentWorkspaceObject;
+        break;
+      }
+    }
+    return selectedWorkSpace;
   }
 
-  // after delete team i am gonna add delete workspace
+  async function deleteWorkspaceFunc() {
+    const teamsThatWereNotDeleted: any = [];
+    const newWorkspaceAvailableForBeeingSelected =
+      selectTheNextWorkspaceAvailable(selectedWorkspace.id);
+
+    if (newWorkspaceAvailableForBeeingSelected === null) {
+      setDeleteErrorMessage("You gotta have at least another workspace!");
+
+      setTimeout(() => {
+        setDeleteErrorMessage(null);
+      }, 3000);
+      return;
+    }
+    // setDisabledRequestButton , setDeleteErrorMessage,setDeleteLoginModalStatus,
+    setDisabledRequestButton(true);
+    setDeleteLoginModalStatus(true);
+    await Promise.all(
+      teamList.map(async (teamObject: any) => {
+        if (
+          selectedWorkspace?.id != null &&
+          teamObject?.workspaceId != null &&
+          teamObject.workspaceId === selectedWorkspace.id
+        ) {
+          const extractTeamIssues = teamIssuesList[teamObject.id];
+          const isTeamHaveingIssues = extractTeamIssues.length >= 1;
+
+          if (isTeamHaveingIssues) {
+            // delete the team with his issues
+            const { error } = await deleteOneTeam({
+              issuesWithRefs: extractTeamIssues,
+              teamId: teamObject.id,
+              workspaceId: selectedWorkspace.id,
+            });
+            if (!error) {
+              dispatch(deleteOneTeamFromTeamList({ teamId: teamObject.id }));
+            }
+            if (error) {
+              teamsThatWereNotDeleted.push(teamObject);
+              console.log(`Could not delete ${teamObject.name} team`);
+            }
+          }
+          if (!isTeamHaveingIssues) {
+            const { error } = await deleteOneTeamWithIssues({
+              teamId: teamObject.id,
+              workspaceId: selectedWorkspace.id,
+            });
+            if (!error) {
+              teamsThatWereNotDeleted.push(teamObject);
+              dispatch(deleteOneTeamFromTeamList({ teamId: teamObject.id }));
+            }
+            if (error) {
+              console.log(`Could not delete ${teamObject.name} team`);
+            }
+          }
+        }
+      })
+    );
+    if (teamsThatWereNotDeleted.length >= 1) {
+      console.log("Could not delete this teams", teamsThatWereNotDeleted);
+    }
+    // delete workspace and maybe delete the fields from the users that contain that workspace
+    // change the selected workspace to the next one available after you are deleteing this one , update the store
+
+    const { error } = await deleteWorkspace({
+      workspaceRef: selectedWorkspace.workspaceRef,
+    });
+    setDisabledRequestButton(false);
+    setDeleteLoginModalStatus(false);
+    if (error) {
+      // set login , close modal , activate buttons , set error message
+      setDeleteErrorMessage("Could not delete the workspace");
+
+      setTimeout(() => {
+        setDeleteErrorMessage(null);
+      }, 3000);
+      return;
+    }
+    setDeleteModalStatus(false);
+
+    // change the selected workspace in database
+
+    // change the selected workspace in store
+    /// newWorkspaceAvailableForBeeingSelected
+    changeSelectedWorkspaceById(newWorkspaceAvailableForBeeingSelected.id);
+
+    dispatch(
+      deleteUserWorkspace({ selectedWorkspaceId: selectedWorkspace.id })
+    );
+    // redirect at my issues after
+    navigate("/");
+  }
 
   return (
     <div className="workspace-settings-page">
@@ -294,7 +500,9 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
                   <div className="delete-workspace">
                     <Button
                       variant="contained"
-                      onClick={deleteWorkspaceFunc}
+                      onClick={() => {
+                        setDeleteModalStatus(true);
+                      }}
                       style={{
                         backgroundColor: "rgb(156, 39, 176)",
                         fontWeight: 600,
@@ -503,6 +711,107 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
         setSeverityType={setSnackBarSeverityType}
         severityType={snackBarSeverityType}
       />
+
+      <Modal
+        open={deleteModalStatus}
+        onClose={() => {
+          setDeleteModalStatus(false);
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute" as "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 500,
+            bgcolor: "background.paper",
+            border: "2px solid white",
+            boxShadow: 24,
+            p: 3,
+          }}
+        >
+          {deleteLoginModalStatus && (
+            <Stack
+              sx={{
+                width: "100%",
+                color: "grey.500",
+                visibility: "visible",
+              }}
+              spacing={2}
+            >
+              <LinearProgress color="success" />
+            </Stack>
+          )}
+          {deleteLoginModalStatus === false && (
+            <Stack
+              sx={{
+                width: "100%",
+                color: "grey.500",
+                visibility: "hidden",
+              }}
+              spacing={2}
+            >
+              <LinearProgress color="success" />
+            </Stack>
+          )}
+          <div className="container">
+            <div className="flex justify-center my-2">
+              <DangerDeleteIssue className="text-red-500" />
+            </div>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Are you sure you want to delete this workspace ?
+            </Typography>
+            <Typography
+              style={{ marginTop: "1em", color: "red" }}
+              id="modal-modal-title"
+              variant="subtitle2"
+              component="h2"
+            >
+              This operation is irreversible and will result in a complete
+              deletion of all the data associated with the workspace!
+            </Typography>
+            {deleteErrorMessage != null && (
+              <div className="text-center text-red-500 visible">
+                Could not delete the workspace
+              </div>
+            )}
+            {deleteErrorMessage == null && (
+              <div className="text-center text-red-500 invisible">
+                placeholder
+              </div>
+            )}
+            <div className="flex justify-between m-2 mt-4">
+              <Button
+                onClick={() => {
+                  deleteWorkspaceFunc();
+                }}
+                style={{
+                  color: "rgb(211,47,47)",
+                  borderColor: "rgb(211,47,47)",
+                }}
+                disabled={deleteLoginModalStatus}
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+              >
+                Delete
+              </Button>
+              <Button
+                disabled={deleteLoginModalStatus}
+                variant="contained"
+                color="success"
+                onClick={() => {
+                  setDeleteModalStatus(false);
+                }}
+              >
+                Keep
+              </Button>
+            </div>
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 };

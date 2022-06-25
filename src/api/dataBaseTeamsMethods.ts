@@ -14,6 +14,28 @@ import {
 import { serverTimestamp } from "firebase/firestore";
 import { tz } from "moment-timezone";
 
+export async function deleteOneTeamWithIssues({
+  teamId,
+
+  workspaceId,
+}: {
+  workspaceId: string;
+
+  teamId: string;
+}) {
+  try {
+    await deleteLevelTwoNestedDocumentFirebase({
+      firstCollectionName: "workspaces",
+      firstDocumentName: workspaceId,
+      secondCollectionName: "teams",
+      secondDocumentName: teamId,
+    });
+    return { error: false };
+  } catch (e: any) {
+    return { error: true, message: e.message };
+  }
+}
+
 export async function deleteOneTeam({
   teamId,
   issuesWithRefs,

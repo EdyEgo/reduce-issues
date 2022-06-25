@@ -4,6 +4,7 @@ import { writeBatch, serverTimestamp } from "firebase/firestore";
 import { createOneTeam } from "./dataBaseTeamsMethods";
 import { removeWorkspaceFromUserWorkspaces } from "./dataBaseUsersMethods";
 import { deleteDocumentFieldFirebase } from "../composables/firebase/delete/deleteDocumentField";
+import { deleteDocumentWithRefAsId } from "../composables/firebase/delete/deleteDocument";
 import { tz } from "moment-timezone";
 
 import { db } from "../firebase";
@@ -101,6 +102,15 @@ export async function createNewWorkspace(
     return { error: false, data: createdWorkSpace };
   } catch (e: any) {
     return { error: false, message: e.message };
+  }
+}
+
+export async function deleteWorkspace({ workspaceRef }: { workspaceRef: any }) {
+  try {
+    await deleteDocumentWithRefAsId(workspaceRef);
+    return { error: false };
+  } catch (e: any) {
+    return { error: true, message: e.message };
   }
 }
 

@@ -30,6 +30,7 @@ const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
   };
 
   function returnWorkspaceNameMaxLength() {
+    if (selectedWorkSpace?.name == null) return "No existing workspace!!!";
     if (selectedWorkSpace.name.length > 15) {
       return selectedWorkSpace.name.slice(0, 16) + "..";
     }

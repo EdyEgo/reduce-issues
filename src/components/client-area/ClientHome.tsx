@@ -13,7 +13,7 @@ const ClientHome: React.FC<ClientHomeProps> = () => {
           </div>
           <div className="second-title-row mt-4">
             <div className="second-title text-2xl font-semibold text-gray-700 text-center">
-              Organize your project , create task , labels them in a
+              Organize your project , create tasks , labels them in a
               customizable way so you can have a clear overview and an easy
               mind.
             </div>
