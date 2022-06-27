@@ -211,175 +211,177 @@ export default function ReturnIssueListElement({
   }
 
   return (
-    <div
-      className="issue-list-item border-b border-gray-100 flex justify-between font-serif items-center p-4 hover:bg-gray-50 cursor-default"
-      key={index + "s"}
-    >
-      <div className="issue-list-item__left-half flex items-center gap-2">
-        {checkDisplayElement("priority") && (
-          <div
-            className="priority-container"
-            ref={priorityRef}
-            onClick={() => {
-              setDropDownPriorityIsOpen(!dropDownPriorityIsOpen);
-            }}
-          >
-            {issue?.priority != null &&
-              extractFitIconNoDinamic({
-                iconName: issue.priority.icon,
-                index: index,
-              })}
-            {issue?.priority == null && <NoPriority />}
-          </div>
-        )}
-
-        {checkDisplayElement("id") && (
-          <div className="identifier-contianer">{issueIdentifier}</div>
-        )}
-
-        {checkDisplayElement("status") && (
-          <div
-            className="status-container"
-            ref={statusRef}
-            onClick={() => {
-              setDropDownStatusIsOpen(!dropDownStatusIsOpen);
-            }}
-          >
-            {issue?.status != null &&
-              issue.status?.icon != null &&
-              extractFitIconNoDinamic({
-                iconName: issue.status.icon,
-                index: index + 2,
-              })}
-          </div>
-        )}
-
-        {/* <div className="issue-title-container">
-                     {issue.title.length > 50 ? issue.title.slice(0,50) + '...' : issue.title}
-                   </div> */}
-        <Link to={generalLink}>
-          {issue.title.length > 50
-            ? issue.title.slice(0, 50) + "..."
-            : issue.title}
-        </Link>
-      </div>
-
-      <div className="issue-list-item__right-half flex items-center gap-2">
-        {checkDisplayElement("dueDate") && dueDateExists != null && (
-          <div
-            className="due-date-exists flex items-center gap-2 0"
-            onClick={() => {
-              setDueDateModalIsOpen(true);
-            }}
-          >
-            {/* dueDateStatus */}
-            {dueDateStatus != null && dueDateStatus?.inProgress != null && (
-              <div
-                className={`due-date-icon text-${dueDateStatus.iconColor}-400`}
-              >
-                <SetNewDateIcon />
-              </div>
-            )}
-            {dueDateStatus != null && dueDateStatus?.done != null && (
-              <div
-                className={`due-date-icon text-${dueDateStatus.iconColor}-400`}
-              >
-                <IssueCalendarDoneIcon />
-              </div>
-            )}
-            {dueDateStatus != null && dueDateStatus.overdue === true && (
-              <div
-                className={`due-date-icon text-${dueDateStatus.iconColor}-400`}
-              >
-                {/* show an red icon if it has passed the date */}
-                <IssueCalendarOverdueIcon />
-              </div>
-            )}
+    <div>
+      <div
+        className="issue-list-item border-b border-gray-100 flex justify-between font-serif items-center p-4 hover:bg-gray-50 cursor-default"
+        key={index + "s"}
+      >
+        <div className="issue-list-item__left-half flex items-center gap-2">
+          {checkDisplayElement("priority") && (
             <div
-              className={`due-date-nam text-${
-                dueDateStatus != null && dueDateStatus.iconColor
-              }-400`}
-              title="Set new due date"
+              className="priority-container"
+              ref={priorityRef}
+              onClick={() => {
+                setDropDownPriorityIsOpen(!dropDownPriorityIsOpen);
+              }}
             >
-              {issue.dueDate != null && showDueDate(issue.dueDate)}
-
-              {dueDateStatus != null && dueDateStatus.overdue === true
-                ? "(Overdue)"
-                : ""}
-              {/* change calendar color and add (overdue if the issue is overdue ) */}
-            </div>
-          </div>
-        )}
-
-        {checkDisplayElement("labels") &&
-          issue?.label != null &&
-          issue.label?.icon != null && (
-            <div
-              className="issue-label-type-container border p-1 rounded-md"
-              title={issue.label?.name || ""}
-            >
-              {/* bug , improvement , etc */}
-              {extractFitIconNoDinamic({
-                iconName: issue.label.icon,
-                index: index + 3,
-              })}
+              {issue?.priority != null &&
+                extractFitIconNoDinamic({
+                  iconName: issue.priority.icon,
+                  index: index,
+                })}
+              {issue?.priority == null && <NoPriority />}
             </div>
           )}
 
-        {checkDisplayElement("registeredAt") && (
-          <div className="issue-created-at">{createdAtHumanizeDate}</div>
-        )}
+          {checkDisplayElement("id") && (
+            <div className="identifier-contianer">{issueIdentifier}</div>
+          )}
 
-        {checkDisplayElement("updatedAt") && (
-          <div className="issue-updated-at">
-            {updatedAtExists && updatedAtHumanize}
-          </div>
-        )}
+          {checkDisplayElement("status") && (
+            <div
+              className="status-container"
+              ref={statusRef}
+              onClick={() => {
+                setDropDownStatusIsOpen(!dropDownStatusIsOpen);
+              }}
+            >
+              {issue?.status != null &&
+                issue.status?.icon != null &&
+                extractFitIconNoDinamic({
+                  iconName: issue.status.icon,
+                  index: index + 2,
+                })}
+            </div>
+          )}
 
-        {checkDisplayElement("assignee") && (
-          <div
-            className="issue-assignee"
-            ref={assigneeRef}
-            onClick={() => {
-              setDropDownAssigneeIsOpen(!dropDownAssigneeIsOpen);
-            }}
-          >
-            {assigneeUserObject != null &&
-              assigneeUserObject?.photoURL != null && (
-                <Avatar
-                  src={assigneeUserObject.photoURL}
-                  sx={{ width: 20, height: 20 }}
-                  alt=""
-                />
+          {/* <div className="issue-title-container">
+                     {issue.title.length > 50 ? issue.title.slice(0,50) + '...' : issue.title}
+                   </div> */}
+          <Link to={generalLink}>
+            {issue.title.length > 50
+              ? issue.title.slice(0, 50) + "..."
+              : issue.title}
+          </Link>
+        </div>
+
+        <div className="issue-list-item__right-half flex items-center  gap-2">
+          {checkDisplayElement("dueDate") && dueDateExists != null && (
+            <div
+              className="due-date-exists flex items-center gap-2 0"
+              onClick={() => {
+                setDueDateModalIsOpen(true);
+              }}
+            >
+              {/* dueDateStatus */}
+              {dueDateStatus != null && dueDateStatus?.inProgress != null && (
+                <div
+                  className={`due-date-icon text-${dueDateStatus.iconColor}-400`}
+                >
+                  <SetNewDateIcon />
+                </div>
               )}
-            {assigneeUserObject?.photoURL == null && (
-              <NoAssignee sx={{ width: 20, height: 20 }} />
-            )}
-          </div>
-        )}
-      </div>
+              {dueDateStatus != null && dueDateStatus?.done != null && (
+                <div
+                  className={`due-date-icon text-${dueDateStatus.iconColor}-400`}
+                >
+                  <IssueCalendarDoneIcon />
+                </div>
+              )}
+              {dueDateStatus != null && dueDateStatus.overdue === true && (
+                <div
+                  className={`due-date-icon text-${dueDateStatus.iconColor}-400`}
+                >
+                  {/* show an red icon if it has passed the date */}
+                  <IssueCalendarOverdueIcon />
+                </div>
+              )}
+              <div
+                className={`due-date-nam text-${
+                  dueDateStatus != null && dueDateStatus.iconColor
+                }-400`}
+                title="Set new due date"
+              >
+                {issue.dueDate != null && showDueDate(issue.dueDate)}
 
-      <DropDownChangeLabel
-        issueObject={issue}
-        anchorRef={priorityRef}
-        open={dropDownPriorityIsOpen}
-        selectBoxType="priority"
-        setOpen={setDropDownPriorityIsOpen}
-      />
-      <DropDownChangeLabel
-        issueObject={issue}
-        anchorRef={statusRef}
-        open={dropDownStatusIsOpen}
-        selectBoxType="status"
-        setOpen={setDropDownStatusIsOpen}
-      />
-      {/* < anchorRef={assigneeRef} open={dropDownAssigneeIsOpen} setOpen={setDropDownAssigneeIsOpen}/> */}
-      <DropDownChangeAssignee
-        issueObject={issue}
-        anchorRef={assigneeRef}
-        open={dropDownAssigneeIsOpen}
-        setOpen={setDropDownAssigneeIsOpen}
-      />
+                {dueDateStatus != null && dueDateStatus.overdue === true
+                  ? "(Overdue)"
+                  : ""}
+                {/* change calendar color and add (overdue if the issue is overdue ) */}
+              </div>
+            </div>
+          )}
+
+          {checkDisplayElement("labels") &&
+            issue?.label != null &&
+            issue.label?.icon != null && (
+              <div
+                className="issue-label-type-container border p-1 rounded-md"
+                title={issue.label?.name || ""}
+              >
+                {/* bug , improvement , etc */}
+                {extractFitIconNoDinamic({
+                  iconName: issue.label.icon,
+                  index: index + 3,
+                })}
+              </div>
+            )}
+
+          {checkDisplayElement("registeredAt") && (
+            <div className="issue-created-at">{createdAtHumanizeDate}</div>
+          )}
+
+          {checkDisplayElement("updatedAt") && (
+            <div className="issue-updated-at">
+              {updatedAtExists && updatedAtHumanize}
+            </div>
+          )}
+
+          {checkDisplayElement("assignee") && (
+            <div
+              className="issue-assignee"
+              ref={assigneeRef}
+              onClick={() => {
+                setDropDownAssigneeIsOpen(!dropDownAssigneeIsOpen);
+              }}
+            >
+              {assigneeUserObject != null &&
+                assigneeUserObject?.photoURL != null && (
+                  <Avatar
+                    src={assigneeUserObject.photoURL}
+                    sx={{ width: 20, height: 20 }}
+                    alt=""
+                  />
+                )}
+              {assigneeUserObject?.photoURL == null && (
+                <NoAssignee sx={{ width: 20, height: 20 }} />
+              )}
+            </div>
+          )}
+        </div>
+
+        <DropDownChangeLabel
+          issueObject={issue}
+          anchorRef={priorityRef}
+          open={dropDownPriorityIsOpen}
+          selectBoxType="priority"
+          setOpen={setDropDownPriorityIsOpen}
+        />
+        <DropDownChangeLabel
+          issueObject={issue}
+          anchorRef={statusRef}
+          open={dropDownStatusIsOpen}
+          selectBoxType="status"
+          setOpen={setDropDownStatusIsOpen}
+        />
+        {/* < anchorRef={assigneeRef} open={dropDownAssigneeIsOpen} setOpen={setDropDownAssigneeIsOpen}/> */}
+        <DropDownChangeAssignee
+          issueObject={issue}
+          anchorRef={assigneeRef}
+          open={dropDownAssigneeIsOpen}
+          setOpen={setDropDownAssigneeIsOpen}
+        />
+      </div>
 
       <SetNewDateModal
         closeNewModal={handleCloseNewDueDateModal}
