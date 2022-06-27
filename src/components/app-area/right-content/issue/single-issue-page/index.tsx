@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
+import { calculateDueDateStatus } from "../../../../../composables/generalHelpers/calculateDueDateStatus";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import TeamIcon from "@mui/icons-material/GroupsSharp";
 import DeleteForeverTwoToneIcon from "@mui/icons-material/DeleteForeverTwoTone";
@@ -25,8 +26,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import LinearProgress from "@mui/material/LinearProgress";
 import IssueActivity from "./issueActivityList";
 import DeleteAllIssueModal from "./SureYouWannaDeleteModal";
-
+import SetNewDateModal from "../../../modals/setNewDate";
+import SetNewDateIcon from "@mui/icons-material/DateRangeTwoTone";
 import SaveFailed from "@mui/icons-material/RunningWithErrorsSharp";
+
+import IssueCalendarOverdueIcon from "@mui/icons-material/EventBusy";
+import IssueCalendarDoneIcon from "@mui/icons-material/EventAvailable";
 
 import CircularProgress from "@mui/lab/LoadingButton";
 
@@ -58,7 +63,6 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
   );
 
   const issueIdentifiedParams = params.issueIdentified;
-  const teamURL = params.teamURL;
 
   const issueObject = findIssueInTeamsIssues(); // .teamId for finding the team// .identified for issue
   const assignedMemberToIssue = findAssigneedUserByIssueAssignedId();
@@ -81,6 +85,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
   const [dropDownStatusIsOpen, setDropDownStatusIsOpen] = useState(false);
   const statusRef = useRef<any>(null);
   const [dropDownLabelIsOpen, setDropDownLabelIsOpen] = useState(false);
+
   const labelRef = useRef(null);
   const [dropDownAssigneeIsOpen, setDropDownAssigneeIsOpen] = useState(false);
   const assigneeRef = useRef(null);
@@ -95,6 +100,10 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
   const [deleteErrorMessage, setDeleteErrorMessage] = useState<null | string>(
     null
   );
+
+  // setDueDateModalIsOpen(!dueDateModalIsOpen);
+  const [dueDateModalIsOpen, setDueDateModalIsOpen] = useState(false);
+  const [dueDateModalIsLoading, setDueDateModalIsLoading] = useState(false);
 
   const [deleteActivitiesErrorMessage, setDeleteActivitiesErrorMessage] =
     useState<null | string>(null);
@@ -153,6 +162,62 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     }
 
     setDeleteLoginModalStatus(false);
+  }
+
+  function handleCloseNewDueDateModal() {
+    setDueDateModalIsOpen(false);
+  }
+
+  async function handleSaveChangesOnDueDate(newDateValueEvent: any) {
+    await updateIssueDueDate(newDateValueEvent);
+  }
+
+  async function updateIssueDueDate(newDueDateValue: any) {
+    setShowSaveMade(false);
+    setShowUnsaved(false);
+
+    setDueDateModalIsLoading(true);
+    setUpdateIssueLogin(true);
+
+    const addToActivity = {
+      creatorId: authUser.uid,
+      type: "dueDate",
+      fromMessage:
+        issueObject?.dueDate != null ? issueObject?.dueDate : "no due date",
+      toMessage: newDueDateValue,
+    };
+
+    const { error } = await updateIssue({
+      inputObject: {
+        dueDate: newDueDateValue,
+      },
+      issueId: issueObject.id,
+      teamId: issueObject.teamId,
+      workspaceId: selectedWorkspace.id,
+
+      addToActivity,
+    });
+
+    if (error) {
+      setShowUnsaved(true);
+      setTimeout(() => {
+        setShowUnsaved(false);
+      }, 3000);
+    }
+
+    if (!error) {
+      setShowSaveMade(true);
+      setTimeout(() => {
+        setShowSaveMade(false);
+      }, 3000);
+    }
+
+    // setInputTitleValue("");
+    // setInputTextValue("");
+
+    setUpdateIssueLogin(false);
+    setDueDateModalIsOpen(false);
+    setDueDateModalIsLoading(false);
   }
 
   async function updateIssueFunction() {
@@ -349,6 +414,81 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     setDeleteActivitiesLoginModalStatus(false);
     setDeleteActivitiesModalStatus(false);
   }
+
+  function showDueDate(dueDate: any) {
+    if (dueDate == null) return "";
+
+    const useDueDate = dueDate?.toDate != null ? dueDate.toDate() : dueDate;
+
+    // const yearDiffFormat =
+    //   moment().diff(useDueDate, "years") >= 1
+    //     ? "MMMM d, YYYY"
+    //     : "MMMM d, h:mm:ss a";
+
+    // const dateFormat = moment(useDueDate).format(yearDiffFormat);
+
+    return useDueDate.toDateString() + " " + useDueDate.toLocaleTimeString();
+  }
+  const dueDateStatus =
+    issueObject?.status != null &&
+    issueObject?.status?.icon &&
+    issueObject?.dueDate != null
+      ? calculateDueDateStatus(issueObject.dueDate, issueObject.status.icon)
+      : null;
+
+  // function calculateDueDateStatus(dueDate: any, statusIconName: string) {
+  //   if (dueDate == null) {
+  //     return { overdue: null, iconColor: "", done: null, setDate: true };
+  //   }
+  //   const TWO_HOURS_MILISECONDS = 7200000;
+  //   const useDueDate = dueDate?.toDate != null ? dueDate.toDate() : dueDate;
+
+  //   const presentMiliseconds = new Date().getTime();
+  //   const dueDateMiliseconds = useDueDate.getTime();
+
+  //   // present is biggen than the due date // than mean we are in the future an the dueDate has passed , so is overdue
+  //   const isIssueOverDue = presentMiliseconds > dueDateMiliseconds; // if > then overdue , if false then dueDate is bigger
+  //   let milisecondsDifference = isIssueOverDue
+  //     ? null
+  //     : dueDateMiliseconds - presentMiliseconds;
+
+  //   if (statusIconName === "done" && isIssueOverDue) {
+  //     return { overdue: false, iconColor: "blue", done: true };
+  //   }
+  //   if (
+  //     statusIconName === "done" &&
+  //     isIssueOverDue === false &&
+  //     milisecondsDifference != null &&
+  //     milisecondsDifference > TWO_HOURS_MILISECONDS
+  //   ) {
+  //     // lot of time left to complete the issue
+
+  //     return {
+  //       overdue: false,
+  //       iconColor: "green",
+  //       done: false,
+  //       inProgress: true,
+  //     };
+  //   }
+  //   if (
+  //     statusIconName === "done" &&
+  //     isIssueOverDue === false &&
+  //     milisecondsDifference != null &&
+  //     milisecondsDifference <= TWO_HOURS_MILISECONDS
+  //   ) {
+  //     // two hours left to complete the issue
+
+  //     return {
+  //       overdue: false,
+  //       iconColor: "yellow",
+  //       done: false,
+  //       inProgress: true,
+  //     };
+  //   }
+  //   if (statusIconName !== "done" && isIssueOverDue) {
+  //     return { overdue: true, iconColor: "red", done: false };
+  //   }
+  // }
 
   function creteSkeletons() {
     const skeletons = [];
@@ -633,6 +773,74 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
                   </div>
                 )}
               </div>
+
+              <div className="due-date-container p-2  bg-gray-100 hover:bg-gray-50 rounded-md cursor-pointer">
+                {issueObject.dueDate != null && (
+                  // <ButtonDateSelector
+                  //   label={"Due date set to"}
+                  //   setValue={updateDatabaseDueDate}
+                  //   value={dueDateValue}
+                  // />
+                  <div
+                    className="due-date-exists flex items-center gap-2 0"
+                    onClick={() => {
+                      setDueDateModalIsOpen(true);
+                    }}
+                  >
+                    {/* dueDateStatus */}
+                    {dueDateStatus != null &&
+                      dueDateStatus?.inProgress != null && (
+                        <div
+                          className={`due-date-icon text-${dueDateStatus.iconColor}-400`}
+                        >
+                          <SetNewDateIcon />
+                        </div>
+                      )}
+                    {dueDateStatus != null && dueDateStatus?.done != null && (
+                      <div
+                        className={`due-date-icon text-${dueDateStatus.iconColor}-400`}
+                      >
+                        <IssueCalendarDoneIcon />
+                      </div>
+                    )}
+                    {dueDateStatus != null && dueDateStatus.overdue === true && (
+                      <div
+                        className={`due-date-icon text-${dueDateStatus.iconColor}-400`}
+                      >
+                        {/* show an red icon if it has passed the date */}
+                        <IssueCalendarOverdueIcon />
+                      </div>
+                    )}
+                    <div
+                      className={`due-date-nam text-${
+                        dueDateStatus != null && dueDateStatus.iconColor
+                      }-400`}
+                      title="Set new due date"
+                    >
+                      {issueObject.dueDate != null &&
+                        showDueDate(issueObject.dueDate)}
+
+                      {dueDateStatus != null && dueDateStatus.overdue === true
+                        ? "(Overdue)"
+                        : ""}
+                      {/* change calendar color and add (overdue if the issue is overdue ) */}
+                    </div>
+                  </div>
+                )}
+                {issueObject.dueDate == null && (
+                  <div
+                    className="due-date-placeholder flex items-center gap-2"
+                    onClick={() => {
+                      setDueDateModalIsOpen(true);
+                    }}
+                  >
+                    <div className="due-date-icon">
+                      <SetNewDateIcon />
+                    </div>
+                    <div className="due-date-name">Add due date</div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {issueObject.content != null && (
@@ -746,6 +954,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
             selectBoxType="labels"
             setOpen={setDropDownLabelIsOpen}
           />
+
           <DropDownChangeAssignee
             issueObject={issueObject}
             anchorRef={assigneeRef}
@@ -851,6 +1060,12 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
         deleteModalStatus={deleteActivitiesModalStatus}
         setDeleteModalStatus={setDeleteActivitiesModalStatus}
         warningMessageTitle="Are sure you wannt to delete this issue activities"
+      />
+      <SetNewDateModal
+        closeNewModal={handleCloseNewDueDateModal}
+        handleSaveChanges={handleSaveChangesOnDueDate}
+        loading={dueDateModalIsLoading}
+        newModalIsOpen={dueDateModalIsOpen}
       />
     </div>
   );

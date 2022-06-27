@@ -306,7 +306,7 @@ export default function NewIssueModal() {
   }
 
   return (
-    <>
+    <div>
       <BootstrapDialog
         onClose={closeNewIssueModal}
         aria-labelledby="customized-dialog-title"
@@ -439,6 +439,6 @@ export default function NewIssueModal() {
           </div>
         </div>
       </BootstrapDialog>
-    </>
+    </div>
   );
 }

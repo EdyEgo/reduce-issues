@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { calculateDueDateStatus } from "../../../../composables/generalHelpers/calculateDueDateStatus";
 import NoPriority from "@mui/icons-material/MoreHorizSharp";
 import extractFitIconNoDinamic from "../../../selectors/helpers/extractFitIconNoDinamic";
 import NoAssignee from "@mui/icons-material/AccountCircleSharp";
@@ -9,6 +10,11 @@ import DropDownChangeLabel from "./dropDownChangeLabelOnTheGo";
 import DropDownChangeAssignee from "./dropDownChangeAssigneeOnTheGo";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import SetNewDateIcon from "@mui/icons-material/DateRangeTwoTone";
+import IssueCalendarDoneIcon from "@mui/icons-material/EventAvailable";
+import IssueCalendarOverdueIcon from "@mui/icons-material/EventBusy";
+import { updateIssue } from "../../../../api/dataBaseIssuesMethods";
+import SetNewDateModal from "../../modals/setNewDate";
 
 export default function ReturnIssueListElement({
   index,
@@ -32,6 +38,10 @@ export default function ReturnIssueListElement({
   const workspacesTeams = useSelector((state: any) => state.issues.teamsIssues);
 
   const teamList = useSelector((state: any) => state.team.teamList);
+  const authUser = useSelector((state: any) => state.auth.user);
+
+  const [dueDateModalIsOpen, setDueDateModalIsOpen] = useState(false);
+  const [dueDateModalIsLoading, setDueDateModalIsLoading] = useState(false);
 
   const [dropDownPriorityIsOpen, setDropDownPriorityIsOpen] = useState(false);
   const priorityRef = useRef(null);
@@ -42,6 +52,9 @@ export default function ReturnIssueListElement({
 
   function returnFoundedWorkspaceMemberById(searchedId: string) {
     return teamMembersObject.find((member) => member.id === searchedId);
+  }
+  function handleCloseNewDueDateModal() {
+    setDueDateModalIsOpen(false);
   }
 
   const createdAtDate =
@@ -71,17 +84,23 @@ export default function ReturnIssueListElement({
     updatedAtHumanize = moment(updatedAtDate).format(momentFormatForUpdatedAt);
   }
 
-  // const dueDateExists = issue.dueDate != null
+  const dueDateExists = issue?.dueDate != null && issue.dueDate?.toDate != null;
 
-  // let humanizeDueDate;
+  const dueDateStatus =
+    issue?.status != null &&
+    issue?.status?.icon &&
+    issue?.dueDate != null &&
+    issue.dueDate?.toDate != null
+      ? calculateDueDateStatus(issue.dueDate, issue.status.icon)
+      : null;
 
-  // if(dueDateExists){
-  //     const dueDate = issue.dueDate.toDate()
-  //     const yearDiffDueDate =moment().diff(dueDate, 'years');
-  //     const momentFormatForUpdatedAt = yearDiffDueDate >= 1 ? 'MMMM d, YYYY' : 'MMMM d' // show year if the at least one year has passed
-  //     humanizeDueDate = moment(dueDate).format(momentFormatForUpdatedAt)
+  function showDueDate(dueDate: any) {
+    if (dueDate == null) return "";
 
-  // }
+    const useDueDate = dueDate?.toDate != null ? dueDate.toDate() : dueDate;
+
+    return useDueDate.toDateString() + " " + useDueDate.toLocaleTimeString();
+  }
 
   const assigneeUserObject =
     issue.assignedToUserId != null
@@ -159,6 +178,38 @@ export default function ReturnIssueListElement({
     ? `/${selectedWorkspace.workspaceURL.toLowerCase()}/team/${teamURL.toLowerCase()}/${issueIdentifier}`
     : findIssueTeamURL();
 
+  async function handleSaveChangesOnDueDate(newDateValueEvent: any) {
+    await updateIssueDueDate(newDateValueEvent);
+  }
+
+  async function updateIssueDueDate(newDueDateValue: any) {
+    setDueDateModalIsLoading(true);
+
+    const addToActivity = {
+      creatorId: authUser.uid,
+      type: "dueDate",
+      fromMessage: issue?.dueDate != null ? issue?.dueDate : "no due date",
+      toMessage: newDueDateValue,
+    };
+
+    const { error } = await updateIssue({
+      inputObject: {
+        dueDate: newDueDateValue,
+      },
+      issueId: issue.id,
+      teamId: issue.teamId,
+      workspaceId: selectedWorkspace.id,
+
+      addToActivity,
+    });
+
+    // setInputTitleValue("");
+    // setInputTextValue("");
+
+    setDueDateModalIsOpen(false);
+    setDueDateModalIsLoading(false);
+  }
+
   return (
     <div
       className="issue-list-item border-b border-gray-100 flex justify-between font-serif items-center p-4 hover:bg-gray-50 cursor-default"
@@ -214,11 +265,51 @@ export default function ReturnIssueListElement({
       </div>
 
       <div className="issue-list-item__right-half flex items-center gap-2">
-        {/* {checkDisplayElement("dueDate") && dueDateExists != null &&
-                        <div className="issue-due-date border p-1 rounded-md">
-                            {humanizeDueDate }
-                        </div>
-                    } */}
+        {checkDisplayElement("dueDate") && dueDateExists != null && (
+          <div
+            className="due-date-exists flex items-center gap-2 0"
+            onClick={() => {
+              setDueDateModalIsOpen(true);
+            }}
+          >
+            {/* dueDateStatus */}
+            {dueDateStatus != null && dueDateStatus?.inProgress != null && (
+              <div
+                className={`due-date-icon text-${dueDateStatus.iconColor}-400`}
+              >
+                <SetNewDateIcon />
+              </div>
+            )}
+            {dueDateStatus != null && dueDateStatus?.done != null && (
+              <div
+                className={`due-date-icon text-${dueDateStatus.iconColor}-400`}
+              >
+                <IssueCalendarDoneIcon />
+              </div>
+            )}
+            {dueDateStatus != null && dueDateStatus.overdue === true && (
+              <div
+                className={`due-date-icon text-${dueDateStatus.iconColor}-400`}
+              >
+                {/* show an red icon if it has passed the date */}
+                <IssueCalendarOverdueIcon />
+              </div>
+            )}
+            <div
+              className={`due-date-nam text-${
+                dueDateStatus != null && dueDateStatus.iconColor
+              }-400`}
+              title="Set new due date"
+            >
+              {issue.dueDate != null && showDueDate(issue.dueDate)}
+
+              {dueDateStatus != null && dueDateStatus.overdue === true
+                ? "(Overdue)"
+                : ""}
+              {/* change calendar color and add (overdue if the issue is overdue ) */}
+            </div>
+          </div>
+        )}
 
         {checkDisplayElement("labels") &&
           issue?.label != null &&
@@ -288,6 +379,13 @@ export default function ReturnIssueListElement({
         anchorRef={assigneeRef}
         open={dropDownAssigneeIsOpen}
         setOpen={setDropDownAssigneeIsOpen}
+      />
+
+      <SetNewDateModal
+        closeNewModal={handleCloseNewDueDateModal}
+        handleSaveChanges={handleSaveChangesOnDueDate}
+        loading={dueDateModalIsLoading}
+        newModalIsOpen={dueDateModalIsOpen}
       />
     </div>
   );

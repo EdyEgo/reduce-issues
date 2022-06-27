@@ -104,7 +104,7 @@ export async function updateIssue({
       collectionSelected: `workspaces/${workspaceId}/teams/${teamId}/issues`,
       documentName: issueId,
       noRegister: true,
-      inputObject: inputObjectForUpdate,
+      inputObject: { ...inputObjectForUpdate, updatedAt: serverTimestamp() },
     });
     return { error: false };
   } catch (e: any) {

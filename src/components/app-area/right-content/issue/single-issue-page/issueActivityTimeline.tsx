@@ -101,6 +101,7 @@ export default function BasicTimeline({
 
   const textActivity: { [key: string]: string } = {
     created: "created the issue",
+    dueDate: "changed due date",
     addedLabel: "added label",
     addedStatus: "added status",
     addedPriority: "added priority",
@@ -157,6 +158,16 @@ export default function BasicTimeline({
             const memberAssignedIssueObjectct = activity?.assignedIssueToId
               ? findAssigneedUserByIssueAssignedId(activity.assignedIssueToId)
               : null;
+
+            function returnFateMessageOrStringMessage(message: any) {
+              //string | Date
+              if (typeof message === "object" && message?.toDate != null) {
+                return moment(message.toDate()).format(
+                  "dddd, MMMM Do YYYY, h:mm:ss a"
+                );
+              }
+              return message;
+            }
 
             let titleCommentTypeButton = "";
             if (
@@ -287,7 +298,9 @@ export default function BasicTimeline({
                           <div className="from-message flex gap-2">
                             <div>from</div>
                             <div className="font-semibold">
-                              {activity.fromMessage}
+                              {returnFateMessageOrStringMessage(
+                                activity.fromMessage
+                              )}
                             </div>
                           </div>
                         )}
@@ -297,7 +310,9 @@ export default function BasicTimeline({
                           )}
                         {activity.toMessage != null && (
                           <div className="to-conclusion-message font-semibold">
-                            {activity.toMessage}
+                            {returnFateMessageOrStringMessage(
+                              activity.toMessage
+                            )}
                           </div>
                         )}
                       </div>

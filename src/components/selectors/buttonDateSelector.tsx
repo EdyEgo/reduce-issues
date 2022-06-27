@@ -1,31 +1,25 @@
 import Stack from "@mui/material/Stack";
+import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
-export default function MaterialUIPickers({
-  value,
-  setValue,
-  disableButton,
-}: {
-  value: Date | null;
-  setValue: (argument: any) => void;
-  disableButton: boolean;
-}) {
-  if (value === null) value = new Date();
+export default function ButtonDateSelector() {
+  const [dateValue, setDateValue] = useState<null | Date>(null);
+
   const handleChange = (newValue: Date | null) => {
-    setValue(newValue);
+    setDateValue(newValue);
   };
 
+  // let s use open
   return (
-    <div className="container-due-date w-8/12">
+    <div className="container-due-date">
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Stack spacing={2} className="">
           <DateTimePicker
-            disabled={disableButton}
-            label=" Set due date"
-            value={value}
+            label="Set due Date"
+            value={dateValue}
             onChange={handleChange}
             renderInput={(params) => <TextField {...params} />}
           />
