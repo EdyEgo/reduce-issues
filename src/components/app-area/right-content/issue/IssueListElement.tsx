@@ -217,11 +217,8 @@ export default function ReturnIssueListElement({
   }
 
   return (
-    <div>
-      <div
-        className="issue-list-item border-b border-gray-100 flex justify-between font-serif items-center p-4 hover:bg-gray-50 cursor-default"
-        key={index + uniqueKey}
-      >
+    <div key={index + uniqueKey}>
+      <div className="issue-list-item border-b border-gray-100 flex justify-between font-serif items-center p-4 hover:bg-gray-50 cursor-default">
         <div className="issue-list-item__left-half flex items-center gap-2">
           {checkDisplayElement("priority") && (
             <div
@@ -234,7 +231,7 @@ export default function ReturnIssueListElement({
               {issue?.priority != null &&
                 extractFitIconNoDinamic({
                   iconName: issue.priority.icon,
-                  index: index,
+                  index: index + 12,
                 })}
               {issue?.priority == null && <NoPriority />}
             </div>

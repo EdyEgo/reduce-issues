@@ -1,10 +1,17 @@
-import {createSlice , createAsyncThunk} from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // import {signUp} from '../api/dataBaseAuthMethods'
 
-const initialState:{user:null | any, selectedTeam:string,unsubscribe:null | (()=>void),error:null | string} = {
-    user:{email:'prodan',uid:'heyheyehey'},selectedTeam:'',unsubscribe:null,error:null 
-   
-} 
+const initialState: {
+  user: null | any;
+  selectedTeam: string;
+  unsubscribe: null | (() => void);
+  error: null | string;
+} = {
+  user: { email: null, uid: null },
+  selectedTeam: "",
+  unsubscribe: null,
+  error: null,
+};
 
 // interface userObject {
 //     email:string,
@@ -13,46 +20,42 @@ const initialState:{user:null | any, selectedTeam:string,unsubscribe:null | (()=
 //     password:string
 // }
 
-
 // export const signUserUp = createAsyncThunk('auth/signUserUp',async(userObject:userObject,thunkAPI)=>{
 //    const response = await signUp(userObject)
 //    return response
 // })
 
 export const authSlice = createSlice({
-    name:'auth',
-    initialState,
-    reducers:{
-
-       
-       changeUserStatus:(state,action)=>{
-           
-         state.user = action.payload
-       },
-       changeUnsubscribeStatus:(state,action)=>{
-          if(typeof state.unsubscribe === 'function') state.unsubscribe()
-          state.unsubscribe = action.payload
-       },
-       changeErrorStatus:(state,action)=>{
-           state.error = action.payload
-       },
-      
+  name: "auth",
+  initialState,
+  reducers: {
+    changeUserStatus: (state, action) => {
+      state.user = action.payload;
     },
-    // extraReducers:(builder)=>{
-         
-    //     //user signed Up -->
-    //      builder.addCase(signUserUp.fulfilled,(state,action)=>{
-    //         if(!action.payload.error){
-    //             state.user = action.payload.data
-    //            return 
-    //         }
-    //         state.error = action.payload.message
-    //      })
+    changeUnsubscribeStatus: (state, action) => {
+      if (typeof state.unsubscribe === "function") state.unsubscribe();
+      state.unsubscribe = action.payload;
+    },
+    changeErrorStatus: (state, action) => {
+      state.error = action.payload;
+    },
+  },
+  // extraReducers:(builder)=>{
 
-    //     // user signed Up <--
-    // },
-})
+  //     //user signed Up -->
+  //      builder.addCase(signUserUp.fulfilled,(state,action)=>{
+  //         if(!action.payload.error){
+  //             state.user = action.payload.data
+  //            return
+  //         }
+  //         state.error = action.payload.message
+  //      })
 
-export const {changeUserStatus,changeUnsubscribeStatus,changeErrorStatus } = authSlice.actions
+  //     // user signed Up <--
+  // },
+});
 
-export default authSlice.reducer
+export const { changeUserStatus, changeUnsubscribeStatus, changeErrorStatus } =
+  authSlice.actions;
+
+export default authSlice.reducer;

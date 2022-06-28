@@ -45,6 +45,7 @@ export async function signInWithProviderFirebase({
           firstName: splitName[0],
           lastName: splitName[1],
         });
+        window.location.reload();
       }
 
       if (data.length === 0 && signUp == null) {
@@ -55,6 +56,7 @@ export async function signInWithProviderFirebase({
           firstName: splitName[0],
           lastName: splitName[1],
         });
+        window.location.reload();
       }
 
       return { data: user, error: false };

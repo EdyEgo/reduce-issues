@@ -110,12 +110,17 @@ const AppArea: React.FC<AppAreaProps> = () => {
   useEffect(() => {
     let isSubscribed = true;
 
-    if (isSubscribed) {
+    if (isSubscribed && authStoreUser != null) {
       getCurrentUserAndSave()
         .catch((error: Error) =>
           console.log("error on loading current user object ", error.message)
         )
         .then(async (userData: any) => {
+          if (
+            userData?.data == null ||
+            userData.data?.workSpaceSelected?.id == null
+          )
+            return;
           const selectedWorkspaceId = userData.data.workSpaceSelected.id;
           const userWorkSpaces = userData.data.workSpaces;
 
@@ -143,10 +148,10 @@ const AppArea: React.FC<AppAreaProps> = () => {
     return () => {
       isSubscribed = false;
     };
-  }, []);
+  }, [authStoreUser]);
 
   return (
-    <>
+    <div>
       {/* left menu will only change on selected and added staff like favorites and notifications on issues */}
 
       <Router>
@@ -168,7 +173,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
           )}
         </div>
       </Router>
-    </>
+    </div>
   );
 };
 

@@ -16,6 +16,7 @@ import { changeErrorStatus } from "../../../../store/auth";
 import { getUsers } from "../../../../api/dataBaseUsersMethods";
 import { getTeams } from "../../../../api/dataBaseTeamsMethods";
 import { setTeamList } from "../../../../store/team";
+import { changeUserStatus } from "../../../../store/auth";
 import { changeCurrentUser } from "../../../../store/users";
 import { removeSubscriptions } from "../../../../store/issues";
 import {
@@ -138,12 +139,15 @@ export default function MenuListComposition({
   async function logUserOut() {
     // left here , unsub from issues updates
     const result = await signOut();
+    dispatch(changeUserStatus(null));
     dispatch(removeSubscriptions());
     if (result.error) {
       dispatch(changeErrorStatus(result.error));
       return false;
     }
+
     navigate("/");
+
     return true;
   }
 

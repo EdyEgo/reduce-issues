@@ -1,22 +1,11 @@
-import { useStore, useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import DropDownWorkspace from "./dropDownWorkSpace";
-import { useRef, useState, useEffect } from "react";
-import { signOut } from "../../../../api/dataBaseAuthMethods";
-import { changeErrorStatus } from "../../../../store/auth";
+import { useRef, useState } from "react";
 
 interface ManageWorkspaceColumnProps {}
 
 const ManageWorkspaceColumn: React.FC<ManageWorkspaceColumnProps> = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const usersStore = useSelector((state: any) => state.users);
-  const authStoreEmail = useSelector((state: any) => state.auth.user.email);
-  const workspaceStore = useSelector((state: any) => state.workspace);
-  const workspaces = useSelector(
-    (state: any) => state.workspace.userWorkspaces
-  );
   const selectedWorkSpace = useSelector(
     (state: any) => state.workspace.selectedWorkSpace
   );

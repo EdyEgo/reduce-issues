@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
+
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Grow from "@mui/material/Grow";
 import Paper from "@mui/material/Paper";
@@ -9,8 +9,9 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import Stack from "@mui/material/Stack";
 import { signOut } from "../../../../api/dataBaseAuthMethods";
-import { authSlice, changeErrorStatus } from "../../../../store/auth";
+import { changeErrorStatus } from "../../../../store/auth";
 import { useSelector, useDispatch } from "react-redux";
+import { changeUserStatus } from "../../../../store/auth";
 import { changeProfileBarStatus } from "../../../../store/profile";
 import { removeSubscriptions } from "../../../../store/issues";
 
@@ -56,14 +57,14 @@ export default function MenuListComposition({
   async function logUserOut() {
     // left here , unsub from issues updates
     const result = await signOut();
+    dispatch(changeUserStatus(null));
     dispatch(removeSubscriptions());
     if (result.error) {
       dispatch(changeErrorStatus(result.error));
       return false;
     }
-    setTimeout(() => {
-      navigate("/");
-    }, 500);
+
+    navigate("/");
 
     return true;
   }
