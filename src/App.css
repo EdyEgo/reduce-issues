@@ -1,0 +1,15 @@
+body {
+  box-sizing: border-box;
+  height: 100vh;
+}
+
+.left-menu-container {
+  height: 100vh;
+}
+
+@media only screen and (max-width: 800px) {
+  .issue-created-at,
+  .issue-updated-at {
+    display: none;
+  }
+}

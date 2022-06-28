@@ -1,0 +1,30 @@
+.sign-up-button-client-area {
+  background: linear-gradient(270.01deg, rgba(90, 182, 242, 0.8) 0.01%, rgba(0, 255, 255, 0.8) 99.99%);
+  box-shadow: 0px 0px 38px rgba(90, 208, 242, 0.19);
+  border-radius: 8px;
+}
+.sign-up-button-client-area:hover {
+  background: linear-gradient(270deg, #5AD0F2 0%, #00FFFF 26.92%);
+  box-shadow: 0px 0px 16px #00FFFF;
+  border-radius: 8px;
+} 
+
+.sign-up-button-client-area-nav {
+  background: linear-gradient(270.01deg, rgba(90, 182, 242, 0.8) 0.01%, rgba(0, 255, 255, 0.8) 99.99%);
+  box-shadow: 0px 0px 38px rgba(90, 208, 242, 0.19);
+  border-radius: 8px;
+}
+
+
+.sign-in-button-client-area {
+  
+  box-shadow: 0px 0px 38px rgba(90, 208, 242, 0.1);
+  border-radius: 8px;
+}
+.sign-in-button-client-area:hover {
+  
+  box-shadow: 0px 0px 16px  rgba(90, 208, 242, 0.2);
+  border-radius: 8px;
+}
+
+/*   background: radial-gradient(86.43% 86.43% at 22.93% -4.84%, rgb(0, 61, 92) 0%, rgb(0, 54, 81) 19%, rgb(0, 35, 52) 52%, rgb(0, 4, 5) 95%, rgb(0, 0, 0) 100%);*/
