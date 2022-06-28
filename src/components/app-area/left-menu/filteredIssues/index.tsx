@@ -22,7 +22,7 @@ const FilteredIssues: React.FC<FilteredIssuesProps> = () => {
   );
 
   function changeRouteToFilteredIssues() {
-    const filteredIssuesLink = `/${selectedWorkspace.workspaceURL}/filtered-issues`;
+    const filteredIssuesLink = `/reduce-issues/${selectedWorkspace.workspaceURL}/filtered-issues`;
 
     dispatch(changeSelectedTabAppAreaLink(filteredIssuesLink));
 

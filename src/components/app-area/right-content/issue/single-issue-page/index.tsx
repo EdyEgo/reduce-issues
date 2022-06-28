@@ -158,7 +158,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
 
     if (!deletedResult.error) {
       // issue was deleted , redirect to / (that will then redirect you to my issue , or just go back a step :])
-      navigate("/");
+      navigate("/reduce-issues");
     }
 
     setDeleteLoginModalStatus(false);

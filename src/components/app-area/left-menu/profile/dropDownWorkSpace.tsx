@@ -146,7 +146,7 @@ export default function MenuListComposition({
       return false;
     }
 
-    navigate("/");
+    navigate("/reduce-issues");
 
     return true;
   }
@@ -164,7 +164,7 @@ export default function MenuListComposition({
               return;
             }
             await changeSelectedWorkspaceById(workspace[1].id);
-            navigate(workspace[1].workspaceURL);
+            navigate(`/reduce-issues/${workspace[1].workspaceURL}`);
             handleClose(event);
           }}
           key={index}
@@ -217,7 +217,7 @@ export default function MenuListComposition({
                     <div className="line-separator border-b "></div>
                     <MenuItem
                       onClick={(event) => {
-                        navigate("/addworkspace");
+                        navigate("/reduce-issues/addworkspace");
                         handleClose(event);
                       }}
                     >
@@ -225,7 +225,7 @@ export default function MenuListComposition({
                     </MenuItem>
                     <MenuItem
                       onClick={(event) => {
-                        navigate("/workspace-stats-and-settings");
+                        navigate("/reduce-issues/workspace-stats-and-settings");
                         handleClose(event);
                       }}
                     >
@@ -234,7 +234,7 @@ export default function MenuListComposition({
 
                     <MenuItem
                       onClick={(event) => {
-                        navigate("/add-workspace-members");
+                        navigate("/reduce-issues/add-workspace-members");
                         handleClose(event);
                       }}
                     >
@@ -243,7 +243,7 @@ export default function MenuListComposition({
 
                     <MenuItem
                       onClick={(event) => {
-                        navigate("/add-new-team");
+                        navigate("/reduce-issues/add-new-team");
                         handleClose(event);
                       }}
                     >
@@ -258,7 +258,7 @@ export default function MenuListComposition({
                         const userWasLoggedOut = await logUserOut();
                         if (userWasLoggedOut) {
                           handleClose(event);
-                          navigate("/");
+                          navigate("/reduce-issues");
                         }
                       }}
                     >

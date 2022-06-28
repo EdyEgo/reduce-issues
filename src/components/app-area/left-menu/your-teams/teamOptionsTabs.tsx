@@ -42,7 +42,7 @@ const TeamOptionsTabs: React.FC<TeamOptionsTabsProps> = ({ teamObject }) => {
   }
 
   function changeRouteToTeamTab(tabEndLinkName: "all" | "active" | "backlog") {
-    const generalLink = `/${selectedWorkspace.workspaceURL.toLowerCase()}/team/${teamObject.identified.toLowerCase()}/${tabEndLinkName}`;
+    const generalLink = `reduce-issues/${selectedWorkspace.workspaceURL.toLowerCase()}/team/${teamObject.identified.toLowerCase()}/${tabEndLinkName}`;
 
     dispatch(changeSelectedTabAppAreaLink(generalLink));
     const tabName = returnFitTabNameForEndLink(tabEndLinkName);

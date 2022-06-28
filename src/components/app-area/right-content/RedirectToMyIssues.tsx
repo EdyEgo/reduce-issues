@@ -13,7 +13,7 @@ const RedirectToMyIssues: React.FC<RedirectToMyIssuesProps> = () => {
   const selectedWorkspaceId = useSelector(
     (state: any) => state.workspace.selectedWorkSpace.id
   );
-  const filteredIssuesLink = `/${selectedWorkspace.workspaceURL}/filtered-issues`;
+  const filteredIssuesLink = `/reduce-issues/${selectedWorkspace.workspaceURL}/filtered-issues`;
 
   function createSkeletons() {
     const skeletons = [];

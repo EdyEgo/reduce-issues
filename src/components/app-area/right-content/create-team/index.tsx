@@ -67,7 +67,7 @@ const CreateNewTeam: React.FC<CreateNewTeamProps> = () => {
     );
 
     navigate(
-      `${selectedWorkspace.workspaceURL}/team/${teamInputIdentified}/all`
+      `reduce-issues/${selectedWorkspace.workspaceURL}/team/${teamInputIdentified}/all`
     );
 
     // then will make a dispatch to only to add a team to the team list that will cause the useEffect to

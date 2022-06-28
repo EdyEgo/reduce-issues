@@ -103,7 +103,7 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
         <div className="content-container">
           <Routes>
             <Route
-              path="/addworkspace"
+              path="/reduce-issues/addworkspace"
               element={
                 <div className="add-workspace-container">
                   <CreateNewWorspace />
@@ -112,7 +112,7 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
             />
 
             <Route
-              path="/add-new-team"
+              path="/reduce-issues/add-new-team"
               element={
                 <div className="add-new-team-container">
                   <CreateNewTeam />
@@ -121,7 +121,7 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
             />
 
             <Route
-              path="/add-workspace-members"
+              path="/reduce-issues/add-workspace-members"
               element={
                 <div className="add-new-team-container">
                   <AddWorkspaceMembers />
@@ -130,7 +130,7 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
             />
 
             <Route
-              path="/workspace-stats-and-settings"
+              path="/reduce-issues/workspace-stats-and-settings"
               element={<WorkspaceSettignsPage />}
             />
 
@@ -144,7 +144,7 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
             />
 
             <Route
-              path="/:workspaceURL/search"
+              path="/reduce-issues/:workspaceURL/search"
               element={
                 <div className="placeholder">
                   <SearchBar />
@@ -157,7 +157,7 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
             />
 
             <Route
-              path="/:workspaceURL/profile"
+              path="/reduce-issues/:workspaceURL/profile"
               element={
                 <div className="placeholder">
                   <NavBar
@@ -173,7 +173,7 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
             />
 
             <Route
-              path="/:workspaceURL/filtered-issues"
+              path="/reduce-issues/:workspaceURL/filtered-issues"
               element={
                 <div className="placeholder">
                   <NavBar
@@ -188,7 +188,7 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
             />
 
             <Route
-              path="/:workspaceURL/settings/team/:teamURL"
+              path="/reduce-issues/:workspaceURL/settings/team/:teamURL"
               element={
                 <div className="placeholder">
                   <TeamSettingsPage />
@@ -197,7 +197,7 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
             />
 
             <Route
-              path="/:workspaceURL/team/:teamURL/all"
+              path="/reduce-issues/:workspaceURL/team/:teamURL/all"
               element={
                 <div className="placeholder">
                   <NavBar />
@@ -209,7 +209,7 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
             />
 
             <Route
-              path="/:workspaceURL/team/:teamURL/active"
+              path="/reduce-issues/:workspaceURL/team/:teamURL/active"
               element={
                 <div>
                   <NavBar
@@ -224,7 +224,7 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
             />
 
             <Route
-              path="/:workspaceURL/team/:teamURL/backlog"
+              path="/reduce-issues/:workspaceURL/team/:teamURL/backlog"
               element={
                 <div>
                   <NavBar
@@ -239,7 +239,7 @@ const RightSideContent: React.FC<RightSideContentProps> = () => {
             />
 
             <Route
-              path="/:workspaceURL/team/:teamURL/:issueIdentified"
+              path="/reduce-issues/:workspaceURL/team/:teamURL/:issueIdentified"
               element={
                 <div>
                   <SignleIssuePage />

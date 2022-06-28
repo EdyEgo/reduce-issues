@@ -426,7 +426,7 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
       deleteUserWorkspace({ selectedWorkspaceId: selectedWorkspace.id })
     );
     // redirect at my issues after
-    navigate("/");
+    navigate("/reduce-issues");
   }
 
   return (

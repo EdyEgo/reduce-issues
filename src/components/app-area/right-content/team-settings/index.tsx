@@ -175,7 +175,7 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
       );
 
       navigate(
-        `/${selectedWorkspace.workspaceURL}/settings/team/${teamInputIdentified}`
+        `/reduce-issues/${selectedWorkspace.workspaceURL}/settings/team/${teamInputIdentified}`
       );
     }
   }

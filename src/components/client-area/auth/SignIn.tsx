@@ -76,7 +76,7 @@ export default function SignIn() {
       return;
     }
 
-    navigateTo("/");
+    navigateTo("/reduce-issues");
   }
   async function handleProviderSubmit(providerName: string) {
     const providerList: {
@@ -95,7 +95,7 @@ export default function SignIn() {
     const signedInWithProvider = await providerList[providerName]();
     if (signedInWithProvider === undefined || signedInWithProvider?.error)
       return;
-    navigateTo("/");
+    navigateTo("/reduce-issues");
 
     // if data.error don t push
   }

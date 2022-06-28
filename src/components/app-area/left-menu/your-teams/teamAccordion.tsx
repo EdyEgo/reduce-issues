@@ -71,7 +71,7 @@ const CustomizedAccordions: React.FC<TeamItem> = ({
 
   function goToTeamSettings() {
     navigate(
-      `/${workspaceSelected.workspaceURL}/settings/team/${teamObject.identified}`
+      `reduce-issues/${workspaceSelected.workspaceURL}/settings/team/${teamObject.identified}`
     );
   }
 

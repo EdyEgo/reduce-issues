@@ -51,7 +51,9 @@ export default function MenuListComposition({
   function directUserToProfilePage() {
     dispatch(changeProfileBarStatus());
 
-    navigate(`/${workSpaceStore.selectedWorkSpace.workspaceURL}/profile`);
+    navigate(
+      `/reduce-issues/${workSpaceStore.selectedWorkSpace.workspaceURL}/profile`
+    );
   }
 
   async function logUserOut() {
@@ -64,7 +66,7 @@ export default function MenuListComposition({
       return false;
     }
 
-    navigate("/");
+    navigate("/reduce-issues");
 
     return true;
   }
