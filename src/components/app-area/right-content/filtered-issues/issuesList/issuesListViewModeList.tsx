@@ -20,6 +20,7 @@ const IssuesListViewModeList: React.FC<IssuesListViewModeListProps> = ({
   return (
     <div className="issues-list-view-mode-list">
       <GroupedIssuesList
+        key={100}
         filterMyIssue={filterMyIssue}
         useSearch={useSearch}
         filterActiveIssues={filterActiveIssues}

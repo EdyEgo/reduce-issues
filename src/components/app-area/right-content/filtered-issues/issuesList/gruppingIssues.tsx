@@ -297,6 +297,7 @@ const GrouppingIssues: React.FC<GrouppingIssuesProps> = ({
               (issue: any, indexPropertyType: any) => {
                 return (
                   <IssueListElement
+                    key={12}
                     index={indexPropertyType}
                     uniqueKey="W"
                     issue={issue}
@@ -324,6 +325,7 @@ const GrouppingIssues: React.FC<GrouppingIssuesProps> = ({
           {filteredIssuesList.map((issue, index) => {
             return (
               <IssueListElement
+                key={10}
                 index={index}
                 uniqueKey="CE"
                 issue={issue}

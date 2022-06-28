@@ -370,6 +370,7 @@ export default function NewIssueModal() {
               {/* <div className="first-half"> */}
               {
                 <SelectDialogArrayBased
+                  key={83}
                   disableButton={loading}
                   itemsList={statusList}
                   labelTitle={"No status"}
@@ -379,6 +380,7 @@ export default function NewIssueModal() {
               }
               {
                 <SelectDialogArrayBased
+                  key={83}
                   disableButton={loading}
                   itemsList={priorityList}
                   labelTitle={"No priority"}
@@ -390,6 +392,7 @@ export default function NewIssueModal() {
               {/* <div className="second-half"> */}
               {
                 <SelectDialogArrayBased
+                  key={93}
                   disableButton={loading}
                   itemsList={labelsList}
                   labelTitle={"No Label"}
@@ -399,6 +402,7 @@ export default function NewIssueModal() {
               }
 
               <AssigneeSelector
+                key={23}
                 disableButton={loading}
                 teamMembersList={selectedTeamObjectMembersId}
                 selectedMember={selectedMemberObject}
@@ -410,6 +414,7 @@ export default function NewIssueModal() {
 
             <div className="due-date-cotaniner  flex justify-center items-center my-2">
               <SelectDate
+                key={43}
                 disableButton={loading}
                 setValue={setSelectedDueDate}
                 value={selectedDueDate}
