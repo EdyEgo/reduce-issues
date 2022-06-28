@@ -1,35 +1,30 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore ,serverTimestamp } from 'firebase/firestore';
-import {getStorage} from 'firebase/storage'
+import { initializeApp } from "firebase/app";
+import { getFirestore, serverTimestamp } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 // import { getAnalytics, logEvent } from 'firebase/analytics'// later
-import { getAuth } from 'firebase/auth';
-// import {getFunctions} from 'firebase/functions' // nope no need for you 
+import { getAuth } from "firebase/auth";
+// import {getFunctions} from 'firebase/functions' // nope no need for you
 
 //import { isPropertyAccessChain } from "typescript";
 // dot env local must be in  your root folder
-const firebaseConfig = { 
-    apiKey: "AIzaSyBL1mUPzkwEBewJY_hb3JJQH_PHSjMg8Bo",
-    authDomain: "reduce-issues.firebaseapp.com",
-    projectId: "reduce-issues",
-    storageBucket: "reduce-issues.appspot.com",
-    messagingSenderId: "855370941752",
-    appId: "1:855370941752:web:4e1f16ecb678badd9badcd",
-    measurementId: "G-G97Q0K6K7G"
-}
-
-
+const firebaseConfig = {
+  apiKey: `${process.env.REACT_APP_API_KEY}`,
+  authDomain: `${process.env.REACT_APP_AUTH_DOMAIN}`,
+  projectId: `${process.env.REACT_APP_PROJECT_ID}`,
+  storageBucket: `${process.env.REACT_APP_STORAGE_BUCKET}`,
+  messagingSenderId: `${process.env.REACT_APP_MESSAGINGSENDERID}`,
+  appId: `${process.env.REACT_APP_APP_ID}`,
+  measurementId: `${process.env.REACT_APP_MEASUREMENT_ID}`,
+};
 
 initializeApp(firebaseConfig);
 
 // init services
-const db = getFirestore()
-const storage = getStorage()
-// const functions_instance = getFunctions() // no ,no, no, no 
+const db = getFirestore();
+const storage = getStorage();
+// const functions_instance = getFunctions() // no ,no, no, no
 // const analytics = getAnalytics()
-const auth = getAuth()
+const auth = getAuth();
 
 // logEvent(analytics, 'notification_received')
-export { db, storage,auth ,  serverTimestamp };
-
-
-
+export { db, storage, auth, serverTimestamp };
