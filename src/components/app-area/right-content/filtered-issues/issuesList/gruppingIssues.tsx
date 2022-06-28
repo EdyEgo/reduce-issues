@@ -57,9 +57,30 @@ const GrouppingIssues: React.FC<GrouppingIssuesProps> = ({
     (state: any) => state.filtersIssues.filtersListOrder
   );
 
-  const selectedTeamId = useSelector(
+  let selectedTeamTabId = useSelector(
     (state: any) => state.selectedTab.selectedTabAppArea.selectedTeamId
   );
+  const teamList = useSelector((state: any) => state.team.teamList);
+  let selectedTeamId = selectedTeamTabId;
+
+  if (selectedTeamId == null && filterMyIssue == null) {
+    //search by teamURL from params
+    const found = searchTeamIdByTeamURLIdentified();
+    selectedTeamId = found?.id != null ? found.id : null;
+  }
+  //
+
+  function searchTeamIdByTeamURLIdentified() {
+    if (params?.teamURL == null || teamList == null) return;
+    const teamURL = params.teamURL;
+    return teamList.find(
+      (teamObject: any) =>
+        teamObject.identified.toLowerCase() === teamURL.toLowerCase()
+    );
+  }
+
+  //
+
   const teamIssues = useSelector((state: any) => state.issues.teamsIssues);
   const selectedTeamIssues =
     teamIssues[selectedTeamId] != null ? teamIssues[selectedTeamId] : [];
@@ -276,7 +297,8 @@ const GrouppingIssues: React.FC<GrouppingIssuesProps> = ({
               (issue: any, indexPropertyType: any) => {
                 return (
                   <IssueListElement
-                    index={indexPropertyType + groupIndex + 1}
+                    index={indexPropertyType}
+                    uniqueKey="W"
                     issue={issue}
                     teamMembersObject={teamMembersObject}
                   />
@@ -302,7 +324,8 @@ const GrouppingIssues: React.FC<GrouppingIssuesProps> = ({
           {filteredIssuesList.map((issue, index) => {
             return (
               <IssueListElement
-                index={index + 50}
+                index={index}
+                uniqueKey="CE"
                 issue={issue}
                 teamMembersObject={teamMembersObject}
               />

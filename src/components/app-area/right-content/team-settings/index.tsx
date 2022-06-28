@@ -210,7 +210,11 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
     setDisabledRequestButton(true);
     const { error } = await updateOneteam({
       teamId: selectedTeam.id,
-      inputObject: { role: "Member", invitedAt: new Date() },
+      inputObject: {
+        membersId: {
+          [workspaceMemberId]: { role: "Member", invitedAt: new Date() },
+        },
+      },
       workspaceId: selectedWorkspace.id,
     });
     setDisabledRequestButton(false);
@@ -453,114 +457,117 @@ const TeamSettings: React.FC<TeamSettingsProps> = () => {
                     Team members list
                   </div>
                   <div className="list">
-                    {selectedTeamMembersList.map(
-                      (
-                        [memberId, memberValue]: [
-                          memberId: string,
-                          memberValue: any
-                        ],
-                        index: number
-                      ) => {
-                        const foundMember = findTeamMemberById(memberId);
-                        const isMember =
-                          selectedTeam.membersId[foundMember.id] != null
-                            ? true
-                            : false;
-                        return (
-                          <div key={index} className="">
-                            {foundMember != null && (
-                              <div className="exists-container flex gap-4 items-center  border-b pb-4 justify-between flex-wrap">
-                                <div className="member-details flex gap-2 items-center">
-                                  <div className="avatar-container ">
-                                    {foundMember?.photoURL != null && (
-                                      <Avatar
-                                        src={foundMember.photoURL}
-                                        sx={{ width: 20, height: 20 }}
-                                      />
-                                    )}
-                                    {foundMember?.photoURL == null && (
-                                      <AvatarPlaceholder />
-                                    )}
-                                  </div>
-                                  <div className="name-container gap-2">
-                                    <div className="fullp-name flex gap-2">
-                                      <div className="firstName">
-                                        {foundMember.firstName}
-                                      </div>
-                                      <div className="lastName">
-                                        {foundMember.lastName}
-                                      </div>
-                                    </div>
+                    {selectedTeamMembersList.length >= 1 &&
+                      usersList.length >= 1 &&
+                      selectedTeamMembersList.map(
+                        (
+                          [memberId, memberValue]: [
+                            memberId: string,
+                            memberValue: any
+                          ],
+                          index: number
+                        ) => {
+                          const foundMember = findTeamMemberById(memberId);
 
-                                    <div className="email text-gray-600">
-                                      {foundMember.email}
+                          const isMember =
+                            selectedTeam.membersId[foundMember.id] != null
+                              ? true
+                              : false;
+                          return (
+                            <div key={index} className="">
+                              {foundMember != null && (
+                                <div className="exists-container flex gap-4 items-center  border-b pb-4 justify-between flex-wrap">
+                                  <div className="member-details flex gap-2 items-center">
+                                    <div className="avatar-container ">
+                                      {foundMember?.photoURL != null && (
+                                        <Avatar
+                                          src={foundMember.photoURL}
+                                          sx={{ width: 20, height: 20 }}
+                                        />
+                                      )}
+                                      {foundMember?.photoURL == null && (
+                                        <AvatarPlaceholder />
+                                      )}
+                                    </div>
+                                    <div className="name-container gap-2">
+                                      <div className="fullp-name flex gap-2">
+                                        <div className="firstName">
+                                          {foundMember.firstName}
+                                        </div>
+                                        <div className="lastName">
+                                          {foundMember.lastName}
+                                        </div>
+                                      </div>
+
+                                      <div className="email text-gray-600">
+                                        {foundMember.email}
+                                      </div>
                                     </div>
                                   </div>
+                                  <div className="invited-at flex gap-2 text-gray-600">
+                                    <div>Added :</div>
+                                    <div>
+                                      {memberValue?.invitedAt != null &&
+                                        memberValue.invitedAt.nanoseconds > 0 &&
+                                        memberValue.invitedAt.seconds > 0 &&
+                                        moment(
+                                          memberValue.invitedAt.toDate()
+                                        ).fromNow()}
+                                    </div>
+                                  </div>
+                                  <div className="role flex gap-2">
+                                    <div>Team role:</div>
+                                    <div>{memberValue.role}</div>
+                                  </div>
+                                  {memberValue.createdIssues != null && (
+                                    <div className="created-issues flex gap-2">
+                                      <div>Created issues:</div>
+                                      <div>{memberValue.createdIssues}</div>
+                                    </div>
+                                  )}
+                                  {isMember && memberValue.role !== "Owner" && (
+                                    <div className="button-invite-container">
+                                      <Button
+                                        disabled={disabledRequestButton}
+                                        onClick={() => {
+                                          removeWorkspaceMemberInTeam(
+                                            foundMember.id
+                                          );
+                                        }}
+                                        variant="outlined"
+                                        className="button-invite  "
+                                      >
+                                        Remove
+                                      </Button>
+                                    </div>
+                                  )}
+                                  {isMember && authUser.uid === foundMember.id && (
+                                    <div className="button-invite-container ">
+                                      <Button
+                                        onClick={() => {
+                                          removeWorkspaceMemberInTeam(
+                                            foundMember.id
+                                          );
+                                        }}
+                                        disabled={disabledRequestButton}
+                                        variant="outlined"
+                                        className="button-invite-placeholder"
+                                      >
+                                        Leave Team
+                                      </Button>
+                                    </div>
+                                  )}
                                 </div>
-                                <div className="invited-at flex gap-2 text-gray-600">
-                                  <div>Added :</div>
-                                  <div>
-                                    {memberValue?.invitedAt != null &&
-                                      memberValue.invitedAt.nanoseconds > 0 &&
-                                      memberValue.invitedAt.seconds > 0 &&
-                                      moment(
-                                        memberValue.invitedAt.toDate()
-                                      ).fromNow()}
-                                  </div>
-                                </div>
-                                <div className="role flex gap-2">
-                                  <div>Team role:</div>
-                                  <div>{memberValue.role}</div>
-                                </div>
-                                {memberValue.createdIssues != null && (
-                                  <div className="created-issues flex gap-2">
-                                    <div>Created issues:</div>
-                                    <div>{memberValue.createdIssues}</div>
-                                  </div>
-                                )}
-                                {isMember && memberValue.role !== "Owner" && (
-                                  <div className="button-invite-container">
-                                    <Button
-                                      disabled={disabledRequestButton}
-                                      onClick={() => {
-                                        removeWorkspaceMemberInTeam(
-                                          foundMember.id
-                                        );
-                                      }}
-                                      variant="outlined"
-                                      className="button-invite  "
-                                    >
-                                      Remove
-                                    </Button>
-                                  </div>
-                                )}
-                                {isMember && authUser.uid === foundMember.id && (
-                                  <div className="button-invite-container ">
-                                    <Button
-                                      onClick={() => {
-                                        removeWorkspaceMemberInTeam(
-                                          foundMember.id
-                                        );
-                                      }}
-                                      disabled={disabledRequestButton}
-                                      variant="outlined"
-                                      className="button-invite-placeholder"
-                                    >
-                                      Leave Team
-                                    </Button>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      }
-                    )}
+                              )}
+                            </div>
+                          );
+                        }
+                      )}
                   </div>
                 </div>
               )}
 
-              {selectedWorkspace.membersId != null && (
+              {selectedWorkspace.membersId != null && usersList.length >= 1 && (
                 <div className="team-members-list my-2">
                   <div className="members-list-title text-lg p-1 font-semibold">
                     Invite members in this team from current selected workspace

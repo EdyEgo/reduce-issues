@@ -32,7 +32,7 @@ interface defaultViewFilters {
     priority: boolean;
     id: boolean;
     labels: boolean;
-    // dueDate: boolean;
+    dueDate: boolean;
     registeredAt: boolean;
     updatedAt: boolean;
     assignee: boolean;
@@ -68,7 +68,7 @@ const initialState: {
       orderingBy: "status",
       displayProperties: {
         assignee: true,
-        // dueDate:true,
+        dueDate: true,
         id: true,
         labels: true,
         priority: true,

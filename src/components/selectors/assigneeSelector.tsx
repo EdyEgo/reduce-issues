@@ -30,6 +30,9 @@ const SelectAutoWidth: React.FC<SelectProps> = ({
     return workspaceMembers.find((member: any) => member.id === id);
   }
 
+  const [hideBrokenProfileImgWithSrc, setHideBrokenProfileImgWithSrc] =
+    React.useState(false);
+
   function returnElementOption(userObject: any, index: null | number) {
     return (
       <div className="member-option pointer-events-none flex gap-2" key={index}>
@@ -39,10 +42,22 @@ const SelectAutoWidth: React.FC<SelectProps> = ({
               <PersonIcon />
             </div>
           )}
-          {userObject.photoURL && (
+
+          {userObject?.photoURL == null ||
+            (hideBrokenProfileImgWithSrc && (
+              <div className="no-profile-picture ">
+                <PersonIcon />
+              </div>
+            ))}
+          {userObject.photoURL && hideBrokenProfileImgWithSrc === false && (
             <div className="profile-picture ">
               <img
-                alt={userObject.photoURL}
+                alt={" "}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping (not really /:} )
+                  // currentTarget.src="image_path_here";
+                  setHideBrokenProfileImgWithSrc(true);
+                }}
                 src={userObject.photoURL}
                 className="rounded-full max-w-5 max-h-5"
               />

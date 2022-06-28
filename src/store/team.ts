@@ -75,7 +75,10 @@ export const teamSlice = createSlice({
       const copyTeamList = [...state.teamList];
       copyTeamList.splice(teamFoundedIndex, 1, {
         ...copyTeamList[teamFoundedIndex],
-        [teamMemberId]: { role: "Member", invitedAt: new Date() },
+        membersId: {
+          ...copyTeamList[teamFoundedIndex].membersId,
+          [teamMemberId]: { role: "Member", invitedAt: new Date() },
+        },
       });
 
       state.teamList = copyTeamList;
@@ -99,7 +102,7 @@ export const teamSlice = createSlice({
       );
 
       const copyTeamList = [...state.teamList];
-      delete copyTeamList[teamFoundedIndex][teamMemberId];
+      delete copyTeamList[teamFoundedIndex].membersId[teamMemberId];
 
       state.teamList = copyTeamList;
     },

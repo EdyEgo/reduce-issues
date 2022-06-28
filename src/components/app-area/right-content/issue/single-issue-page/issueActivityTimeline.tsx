@@ -118,12 +118,16 @@ export default function BasicTimeline({
   };
 
   function findAssigneedUserByIssueAssignedId(userId: string) {
+    let foundMemberId: any | null = null;
     for (const memberIndex in workspaceMembersList) {
       const memberValue = workspaceMembersList[memberIndex];
-      if (memberValue.id === userId) return memberValue;
+
+      if (memberValue.id === userId) {
+        foundMemberId = memberValue;
+      }
     }
 
-    return null;
+    return foundMemberId;
   }
 
   const currentUserHasTwoNames = authUser.displayName.indexOf(" ");
@@ -151,11 +155,11 @@ export default function BasicTimeline({
             },
             currentActivityIndex
           ) => {
-            const assignedMemberToIssue =
+            const creatorMemberOfTheIssue =
               activity.creatorId !== null
                 ? findAssigneedUserByIssueAssignedId(activity.creatorId)
                 : false;
-            const memberAssignedIssueObjectct = activity?.assignedIssueToId
+            const memberAssignedIssueObject = activity?.assignedIssueToId
               ? findAssigneedUserByIssueAssignedId(activity.assignedIssueToId)
               : null;
 
@@ -180,56 +184,57 @@ export default function BasicTimeline({
             return (
               <div className="timeline-item p-2 " key={currentActivityIndex}>
                 <div className="timeline-separator">
-                  {assignedMemberToIssue !== false && (
+                  {creatorMemberOfTheIssue != null && (
                     <div className="creator-container">
-                      {assignedMemberToIssue !== null &&
-                        assignedMemberToIssue.photoURL != null && (
-                          <div className="assignee-exists flex items-center gap-2">
+                      {creatorMemberOfTheIssue !== null && (
+                        <div className="assignee-exists flex items-center gap-2">
+                          {creatorMemberOfTheIssue.photoURL != null && (
                             <div className="assignee-icon">
                               <Avatar
-                                src={assignedMemberToIssue.photoURL}
+                                src={creatorMemberOfTheIssue.photoURL}
                                 sx={{ width: 19, height: 19 }}
                                 alt=""
                               />
                             </div>
-                            <div className="assignee-name text-xs flex gap-1">
-                              <div className="firstName">
-                                {assignedMemberToIssue.firstName}
-                              </div>
-                              <div className="lastName">
-                                {assignedMemberToIssue.lastName}
-                              </div>
+                          )}
+                          <div className="assignee-name text-xs flex gap-2">
+                            <div className="firstName">
+                              {creatorMemberOfTheIssue.firstName}
                             </div>
-
-                            {activity.registeredAt != null &&
-                              activity.type === "comment" && (
-                                <div className="about-comment-container flex gap-4">
-                                  <div className="humanize-date text-gray-600">
-                                    {moment(
-                                      activity.registeredAt.toDate()
-                                    ).fromNow()}
-                                  </div>
-
-                                  {titleCommentTypeButton !== "" && (
-                                    <div className="delete-comment flex gap-4 items-center text-gray-600  cursor-pointer hover:text-red-400 rounded-md">
-                                      <div title={titleCommentTypeButton}>
-                                        <DeleteCommentIcon
-                                          onClick={() => {
-                                            setDeleteModalStatus(true);
-                                            setCurrentActivityIndexOpenedModalFor(
-                                              currentActivityIndex
-                                            );
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
+                            <div className="lastName">
+                              {creatorMemberOfTheIssue.lastName}
+                            </div>
                           </div>
-                        )}
 
-                      {assignedMemberToIssue === null && (
+                          {activity.registeredAt != null &&
+                            activity.type === "comment" && (
+                              <div className="about-comment-container flex gap-4">
+                                <div className="humanize-date text-gray-600">
+                                  {moment(
+                                    activity.registeredAt.toDate()
+                                  ).fromNow()}
+                                </div>
+
+                                {titleCommentTypeButton !== "" && (
+                                  <div className="delete-comment flex gap-4 items-center text-gray-600  cursor-pointer hover:text-red-400 rounded-md">
+                                    <div title={titleCommentTypeButton}>
+                                      <DeleteCommentIcon
+                                        onClick={() => {
+                                          setDeleteModalStatus(true);
+                                          setCurrentActivityIndexOpenedModalFor(
+                                            currentActivityIndex
+                                          );
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                        </div>
+                      )}
+
+                      {creatorMemberOfTheIssue === null && (
                         <div className="assignee-placeholder flex items-center gap-2">
                           <div className="assignee-icon">
                             <PlaceholderNoAssigneeIcon />
@@ -248,7 +253,6 @@ export default function BasicTimeline({
                       </div>
                     </div>
                   )}
-
                   <TimelineConnector />
                 </div>
                 <div className="timeline-content pl-6 py-1">
@@ -258,23 +262,21 @@ export default function BasicTimeline({
                         <div className="base-message">
                           {textActivity[activity.type]}
                         </div>
-                        {memberAssignedIssueObjectct != null && (
+                        {memberAssignedIssueObject != null && (
                           <div className="assgined-issue-to">
                             {
                               <div className="assigned-to-container">
                                 <div className="assignee-exists flex items-center gap-2">
                                   <div className="assignee-icon">
-                                    {memberAssignedIssueObjectct.photoURL !=
+                                    {memberAssignedIssueObject.photoURL !=
                                       null && (
                                       <Avatar
-                                        src={
-                                          memberAssignedIssueObjectct.photoURL
-                                        }
+                                        src={memberAssignedIssueObject.photoURL}
                                         sx={{ width: 19, height: 19 }}
                                         alt=""
                                       />
                                     )}
-                                    {memberAssignedIssueObjectct.photoURL ==
+                                    {memberAssignedIssueObject.photoURL ==
                                       null && (
                                       <div className="assignee-icon">
                                         <PlaceholderNoAssigneeIcon />
@@ -283,10 +285,10 @@ export default function BasicTimeline({
                                   </div>
                                   <div className="assignee-name text-xs flex gap-1">
                                     <div className="firstName">
-                                      {memberAssignedIssueObjectct.firstName}
+                                      {memberAssignedIssueObject.firstName}
                                     </div>
                                     <div className="lastName">
-                                      {memberAssignedIssueObjectct.lastName}
+                                      {memberAssignedIssueObject.lastName}
                                     </div>
                                   </div>
                                 </div>
@@ -327,12 +329,15 @@ export default function BasicTimeline({
                       </div>
                     )}
 
-                  {activity.registeredAt != null &&
-                    activity.type !== "comment" && (
-                      <div className="humanize-date text-gray-600">
-                        {moment(activity.registeredAt.toDate()).fromNow()}
-                      </div>
-                    )}
+                  {activity.registeredAt != null && (
+                    // was with  && activity.type !== "comment"
+
+                    <div className="humanize-date text-gray-600 my-2">
+                      {/* {activity.registeredAt.toDate().toLocalDateString()} */}
+
+                      {moment(activity.registeredAt.toDate()).fromNow()}
+                    </div>
+                  )}
                 </div>
                 <div className="time-line__line-history h-8 bg-gray-400  border w-1 ml-2 my-2"></div>
               </div>

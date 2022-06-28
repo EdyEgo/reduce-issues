@@ -68,6 +68,14 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
     selectedWorkspace.membersId[authUser.uid].role === "Owner"
       ? true
       : false;
+  console.log(
+    "ai ma",
+    selectedWorkspace,
+    "cum asa",
+    authUser.uid,
+    "bre",
+    areYouWorkspaceOwner
+  );
 
   async function startSearchForNewWorkspaceMembers() {
     const trimedInputValue = searchInputValue.trim();
@@ -354,6 +362,10 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
                         );
                         if (foundMember == null) return "";
                         const userIsSelf = foundMember.id === authUser.uid;
+
+                        const userHasThePowerToRemove =
+                          userIsSelf || areYouWorkspaceOwner === true;
+
                         return (
                           <div
                             className="found-member-item flex justify-between items-center"
@@ -397,12 +409,13 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
                             </div>
 
                             <div className="right-side">
-                              {areYouWorkspaceOwner == null && (
+                              {/* {userHasThePowerToRemove === false && (
                                 <div className="can-not-member-container text-red-700 invisible">
                                   -----
                                 </div>
-                              )}
-                              {areYouWorkspaceOwner != null && (
+                              )} */}
+
+                              {userHasThePowerToRemove && (
                                 <div className="remove-container-btn">
                                   <LoadingButton
                                     disabled={disabledRequestButton}

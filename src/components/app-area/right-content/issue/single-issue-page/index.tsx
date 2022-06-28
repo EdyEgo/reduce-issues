@@ -493,10 +493,11 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
   function creteSkeletons() {
     const skeletons = [];
     for (let i = 0; i < 20; i++) {
-      skeletons.push(<Skeleton />);
+      skeletons.push(<Skeleton key={i} />);
     }
     return skeletons;
   }
+
   return (
     <div className="single-issue-container p-2">
       {issueObject != null && teamObject != null && (
@@ -517,7 +518,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
                   <ArrowForwardIosIcon fontSize="small" />
                 </div>
                 <div className="issue-identifier p-1">
-                  {issueObject.identified}
+                  {issueObject.teamIdentified}-{issueObject.identifiedNumber}
                 </div>
               </div>
 

@@ -19,9 +19,11 @@ import SetNewDateModal from "../../modals/setNewDate";
 export default function ReturnIssueListElement({
   index,
   issue,
+  uniqueKey,
   teamMembersObject,
 }: {
   issue: any;
+  uniqueKey: string;
   index: number;
   teamMembersObject: { id: string; photoURL: string | null }[];
 }) {
@@ -65,23 +67,27 @@ export default function ReturnIssueListElement({
     issue.registeredAt.seconds > 0
       ? issue.registeredAt.toDate()
       : "";
-  const yearDiffCreatedAt = moment().diff(createdAtDate, "years");
-  const momentFormatForCreatedAt =
-    yearDiffCreatedAt >= 1 ? "MMMM d, YYYY" : "MMMM d"; // show year if the at least one year has passed
-  const createdAtHumanizeDate = moment(createdAtDate).format(
-    momentFormatForCreatedAt
-  );
+  // const yearDiffCreatedAt = moment().diff(createdAtDate, "years");
+  // const momentFormatForCreatedAt =
+  //   yearDiffCreatedAt >= 1 ? "MMMM d, YYYY" : "MMMM d"; // show year if the at least one year has passed
+  // const createdAtHumanizeDate = moment(createdAtDate).format(
+  //   momentFormatForCreatedAt
+  // );
 
+  const createdAtHumanizeDate = createdAtDate.toDateString();
   const updatedAtExists = issue.updatedAt != null;
 
   let updatedAtHumanize;
 
   if (updatedAtExists) {
     const updatedAtDate = issue.updatedAt.toDate();
-    const yearDiffUpdatedAtAt = moment().diff(updatedAtDate, "years");
-    const momentFormatForUpdatedAt =
-      yearDiffUpdatedAtAt >= 1 ? "MMMM d, YYYY" : "MMMM d"; // show year if the at least one year has passed
-    updatedAtHumanize = moment(updatedAtDate).format(momentFormatForUpdatedAt);
+
+    updatedAtHumanize = updatedAtDate.toDateString();
+
+    // const yearDiffUpdatedAtAt = moment().diff(updatedAtDate, "years");
+    // const momentFormatForUpdatedAt =
+    //   yearDiffUpdatedAtAt >= 1 ? "MMMM d, YYYY" : "MMMM d"; // show year if the at least one year has passed
+    // updatedAtHumanize = moment(updatedAtDate).format(momentFormatForUpdatedAt);
   }
 
   const dueDateExists = issue?.dueDate != null && issue.dueDate?.toDate != null;
@@ -214,7 +220,7 @@ export default function ReturnIssueListElement({
     <div>
       <div
         className="issue-list-item border-b border-gray-100 flex justify-between font-serif items-center p-4 hover:bg-gray-50 cursor-default"
-        key={index + "s"}
+        key={index + uniqueKey}
       >
         <div className="issue-list-item__left-half flex items-center gap-2">
           {checkDisplayElement("priority") && (
@@ -268,7 +274,7 @@ export default function ReturnIssueListElement({
         <div className="issue-list-item__right-half flex items-center  gap-2">
           {checkDisplayElement("dueDate") && dueDateExists != null && (
             <div
-              className="due-date-exists flex items-center gap-2 0"
+              className="due-date-exists flex items-center gap-2 0 mr-2 cursor-pointer"
               onClick={() => {
                 setDueDateModalIsOpen(true);
               }}
@@ -328,11 +334,13 @@ export default function ReturnIssueListElement({
             )}
 
           {checkDisplayElement("registeredAt") && (
-            <div className="issue-created-at">{createdAtHumanizeDate}</div>
+            <div className="issue-created-at mr-3 ">
+              {createdAtHumanizeDate}
+            </div>
           )}
 
           {checkDisplayElement("updatedAt") && (
-            <div className="issue-updated-at">
+            <div className="issue-updated-at mr-3">
               {updatedAtExists && updatedAtHumanize}
             </div>
           )}

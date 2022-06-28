@@ -219,8 +219,8 @@ export async function postIssue({
         updatedAt: serverTimestamp(),
         activity: [
           {
-            creatorId: null,
-            registerAt: new Date(),
+            creatorId,
+            registeredAt: new Date(),
             type: "created",
           },
         ],
