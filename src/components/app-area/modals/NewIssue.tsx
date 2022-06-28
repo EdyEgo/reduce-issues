@@ -135,7 +135,7 @@ export default function NewIssueModal() {
   // const openWithPreselectedDueDate = preSelectedTypeLabe != null && preSelectedTypeLabe.type === "status" ?  preSelectedTypeLabe.objectValue : null
 
   const [loading, setLoading] = React.useState(false);
-  // this is too much mate :(
+  const [errorMessage, setErrorMessage] = React.useState<null | string>(null);
 
   const [selectedTeamObjectMembersId, setSelectedTeamObjectMembersId] =
     React.useState([]);
@@ -231,6 +231,15 @@ export default function NewIssueModal() {
       assignedToUserId,
     } = values;
 
+    if (teamId == null || teamId === "" || title === "" || text === "") {
+      setErrorMessage("Please complete all fields with a star!");
+      setLoading(false);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 3000);
+      return;
+    }
+
     const newIssueObject = {
       title,
       content: {
@@ -320,11 +329,13 @@ export default function NewIssueModal() {
             <div className="title "> Create a new issue</div>
             <div className="select-team">
               <SelectDialogObjectBased
+                key={55}
+                index={65}
                 disableButton={loading}
                 itemsList={teamsList}
                 selectedItem={selectedTeamId}
                 setSelectedItem={updateTeam}
-                labelTitle="Select Team"
+                labelTitle="Select Team*"
                 returnIdAsValue={true}
               />
             </div>
@@ -380,7 +391,7 @@ export default function NewIssueModal() {
               }
               {
                 <SelectDialogArrayBased
-                  key={83}
+                  key={86}
                   disableButton={loading}
                   itemsList={priorityList}
                   labelTitle={"No priority"}
@@ -419,6 +430,19 @@ export default function NewIssueModal() {
                 setValue={setSelectedDueDate}
                 value={selectedDueDate}
               />
+            </div>
+
+            <div className="error-message-container">
+              {errorMessage === null && (
+                <div className="font-semibold invisible p-1">
+                  error message placeholder
+                </div>
+              )}
+              {errorMessage !== null && (
+                <div className="font-semibold text-center p-1 text-red-400">
+                  {errorMessage}
+                </div>
+              )}
             </div>
 
             {/*  setting the parent issue must wait  , we need to first see how we get the issues lists from the teams */}
