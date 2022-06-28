@@ -32,6 +32,11 @@ const ManageProfileColumn: React.FC<ManageProfileColumnProps> = () => {
         ref={anchorRef}
         onClick={handleToggle}
       >
+        {userObject?.photoURL == null && (
+          <div className="no-profile-picture p-1">
+            <AccountCircleSharpIcon />
+          </div>
+        )}
         {userObject?.photoURL == null ||
           (hideBrokenProfileImgWithSrc && (
             <div className="no-profile-picture p-1">

@@ -61,7 +61,10 @@ export default function MenuListComposition({
       dispatch(changeErrorStatus(result.error));
       return false;
     }
-    navigate("/");
+    setTimeout(() => {
+      navigate("/");
+    }, 500);
+
     return true;
   }
 

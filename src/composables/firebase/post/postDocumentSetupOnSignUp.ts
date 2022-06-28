@@ -44,7 +44,7 @@ export default async function postDocumentSetupOnSignUp(
     const createdWorkSpace = await postNewDocument({
       collectionSelected: "workspaces",
       inputObject: {
-        name: "My First Workspace",
+        name: `${firstName} First Workspace`,
         photoURL: null,
         identified: "MFW",
         labels: [
@@ -73,7 +73,7 @@ export default async function postDocumentSetupOnSignUp(
           [user.uid]: { role: "Owner", invitedAt: serverTimestamp() },
         },
 
-        name: "My First Team",
+        name: `${firstName} First Team`,
         photoURL: null,
         identified: "MFT",
         timezone: browserDate,
@@ -170,7 +170,7 @@ export default async function postDocumentSetupOnSignUp(
           [user.uid]: { role: "Owner", invitedAt: serverTimestamp() },
         },
         assignedIssues: 1,
-        name: "My Second Team",
+        name: `${firstName} Second Team`,
         photoURL: null,
         identified: "MST",
         timezone: browserDate,
@@ -253,7 +253,7 @@ export default async function postDocumentSetupOnSignUp(
     const createdWorkSpaceSec = await postNewDocument({
       collectionSelected: "workspaces",
       inputObject: {
-        name: "My Second Workspace",
+        name: `${firstName} Second Workspace`,
         photoURL: null,
         identified: "MSW",
         labels: [
@@ -282,7 +282,7 @@ export default async function postDocumentSetupOnSignUp(
           [user.uid]: { role: "Owner", invitedAt: serverTimestamp() },
         },
         assignedIssues: 1,
-        name: "My Second Team",
+        name: `${firstName} Second Team`,
         photoURL: null,
         identified: "MST",
         timezone: browserDate,
