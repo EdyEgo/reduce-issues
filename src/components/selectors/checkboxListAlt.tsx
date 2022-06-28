@@ -29,8 +29,6 @@ export default function CheckboxListSecondary({
 }: {
   checkboxType: string | null;
 }) {
-  const [items, setItems] = React.useState<any[]>([]);
-
   const dispatch = useDispatch();
   const params = useParams();
 
@@ -366,7 +364,7 @@ export default function CheckboxListSecondary({
               primary={firstName + " " + lastName}
             />
           )}
-          {associatedNumber != null && (
+          {associatedNumber != null && checkboxType !== "creator" && (
             <div className="associated-number ml-2" key={index + 10}>
               {associatedNumber}
             </div>
