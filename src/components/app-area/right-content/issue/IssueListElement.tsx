@@ -181,7 +181,7 @@ export default function ReturnIssueListElement({
   }
 
   const generalLink = teamURL
-    ? `/${selectedWorkspace.workspaceURL.toLowerCase()}/team/${teamURL.toLowerCase()}/${issueIdentifier}`
+    ? `/reduce-issues/${selectedWorkspace.workspaceURL.toLowerCase()}/team/${teamURL.toLowerCase()}/${issueIdentifier}`
     : findIssueTeamURL();
 
   async function handleSaveChangesOnDueDate(newDateValueEvent: any) {
