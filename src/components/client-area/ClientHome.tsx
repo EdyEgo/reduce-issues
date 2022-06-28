@@ -20,7 +20,7 @@ const ClientHome: React.FC<ClientHomeProps> = () => {
           </div>
           <div className="action-register-row mt-10">
             <Link
-              to="/signup"
+              to="/reduce-issues/signup"
               className="sign-up-button-client-area transform-all ease-in-out duration-300  border-0  rounded-md  font-bold text-black text-lg cursor-pointer p-4 "
             >
               Sign up for free{" "}
