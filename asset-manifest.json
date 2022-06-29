@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/reduce-issues/static/css/main.4a483dd0.css",
-    "main.js": "/reduce-issues/static/js/main.50a40b9f.js",
+    "main.js": "/reduce-issues/static/js/main.d5ec56ff.js",
     "static/js/787.1cebc8c0.chunk.js": "/reduce-issues/static/js/787.1cebc8c0.chunk.js",
     "index.html": "/reduce-issues/index.html",
     "main.4a483dd0.css.map": "/reduce-issues/static/css/main.4a483dd0.css.map",
-    "main.50a40b9f.js.map": "/reduce-issues/static/js/main.50a40b9f.js.map",
+    "main.d5ec56ff.js.map": "/reduce-issues/static/js/main.d5ec56ff.js.map",
     "787.1cebc8c0.chunk.js.map": "/reduce-issues/static/js/787.1cebc8c0.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.4a483dd0.css",
-    "static/js/main.50a40b9f.js"
+    "static/js/main.d5ec56ff.js"
   ]
 }
