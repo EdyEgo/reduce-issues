@@ -40,6 +40,7 @@ import {
   deleteIssue,
 } from "../../../../../api/dataBaseIssuesMethods";
 
+import { decrementIssuesNumber } from "../../../../../store/team";
 import SaveChanges from "@mui/icons-material/SaveAs";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
@@ -54,7 +55,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
 
   const params = useParams();
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const authUser = useSelector((state: any) => state.auth.user);
 
   const teamList = useSelector((state: any) => state.team.teamList);
@@ -136,7 +137,8 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
   // compare with issueObject
 
   // load activity
-
+  const stateStore = useSelector((state: any) => state);
+  console.log("state is", stateStore);
   async function deleteIssueFunction() {
     setDeleteLoginModalStatus(true);
 
@@ -157,6 +159,7 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
     }
 
     if (!deletedResult.error) {
+      dispatch(decrementIssuesNumber({ teamId: issueObject.teamId }));
       // issue was deleted , redirect to / (that will then redirect you to my issue , or just go back a step :])
       navigate("/reduce-issues");
     }

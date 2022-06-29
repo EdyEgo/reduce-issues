@@ -62,17 +62,6 @@ export default function CreateNewWorkspace() {
       teamName
     );
     navigate("/reduce-issues");
-    // if error:false then extract result.data.team(same here  .error an .data)
-    // and  result.data.workspace(same here  .error an .data)  ////////// LEFT HERE
-    // NEXT will update the store with the created workspace , and team ,
-    // btw the new created workspace is the selected workspace , may just go to home and use that useEffect to reFetch for a refresh on data ,
-    //with unsubs from the issues , and useNavigate to go to "/"
-    // you can just create a variable in the store so that useEffect to be able to watch it so he can refresh
-
-    //  TEAM IS NOT CREATED AS A SUB COLLECTION
-
-    // REEEEEEMEMBER TO CHECK FOR THE NAMES TO BE AT LEAST 4 CHARACTERS LONG
-    console.log("have i created a new workspace dang it", result);
 
     setLoading(false);
   };

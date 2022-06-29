@@ -25,6 +25,7 @@ import AssigneeSelector from "../../selectors/assigneeSelector";
 import SelectPictures from "../../selectors/selectPictures";
 import SelectDate from "../../selectors/basicDateSelector";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { incrementIssuesNumber } from "../../../store/team";
 import {
   labelsList,
   priorityList,
@@ -308,6 +309,8 @@ export default function NewIssueModal() {
       workspaceId: selectedWorkspace.id,
       pictureListURL: mapPicturesURL,
     });
+
+    dispatch(incrementIssuesNumber({ teamId }));
 
     closeNewIssueModal();
     setLoading(false);

@@ -30,7 +30,7 @@ const CreateNewIssue: React.FC<CreateNewIssueProps> = () => {
         </div>
         <Link
           className="search-btn   my-4 border rounded-md py-1 px-2 hover:bg-gray-100 hover:text-gray-900 text-gray-700"
-          to={selectedWorkspaceUrl + "/search"}
+          to={"reduce-issues/" + selectedWorkspaceUrl + "/search"}
         >
           <MagnifyingGlass className="pointer-events-none" />
         </Link>

@@ -45,6 +45,11 @@ export const usersSlice = createSlice({
   name: "issues",
   initialState,
   reducers: {
+    clearIssuesMemory(state) {
+      state.openModalWithPreloadedData = {};
+      state.newIssueModalOpenStatus = false;
+      state.teamsIssues = {};
+    },
     changeGrouping(state, action) {
       state.grouping = action.payload;
     },
@@ -114,6 +119,7 @@ export const usersSlice = createSlice({
 });
 
 export const {
+  clearIssuesMemory,
   changeGrouping,
   changeShowViewOption,
   loadTeamsIssues,

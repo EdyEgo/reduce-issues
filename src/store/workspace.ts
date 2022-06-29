@@ -34,6 +34,19 @@ export const workspaceSlice = createSlice({
   name: "workspace",
   initialState,
   reducers: {
+    clearWorkspaceMemory(state) {
+      state.members = [];
+      state.selectedWorkSpace = {
+        name: "Loading Workspace",
+        id: "",
+        photoURL: null,
+        membersId: null,
+        identified: "MFWU",
+        timezone: "",
+        workspaceURL: "myfirstUnloaded",
+      };
+      state.userWorkspaces = {};
+    },
     changeSelectedWorkSpace: (state, action) => {
       state.selectedWorkSpace = action.payload;
     },
@@ -125,6 +138,7 @@ export const workspaceSlice = createSlice({
 });
 
 export const {
+  clearWorkspaceMemory,
   changeSelectedWorkSpace,
   deleteUserWorkspace,
   addMemberToWorkspace,

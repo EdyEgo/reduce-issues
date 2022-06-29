@@ -86,6 +86,33 @@ export const filterIssuesSlice = createSlice({
   name: "filterIssues",
   initialState,
   reducers: {
+    clearFilterIssueMemory(state) {
+      state.filtersListOrder = {
+        status: [],
+        priority: [],
+        labels: [],
+        creator: [],
+        dueDate: [],
+        assignee: [],
+      };
+      state.viewFilters = {
+        default: {
+          groupingBy: "status",
+          orderingBy: "status",
+          displayProperties: {
+            assignee: true,
+            dueDate: true,
+            id: true,
+            labels: true,
+            priority: true,
+            registeredAt: true,
+            status: true,
+            updatedAt: true,
+          },
+        },
+        custom: { empty: true },
+      };
+    },
     addCustomViewGrupingBy(state, { payload }) {
       if (state.viewFilters.custom.empty === false) {
         state.viewFilters.custom.groupingBy = payload;
@@ -246,6 +273,7 @@ export const filterIssuesSlice = createSlice({
 });
 
 export const {
+  clearFilterIssueMemory,
   removeAllFilterListItemsByType,
   changeAllAllFilterListIsValueByType,
   addCustomViewGrupingBy,

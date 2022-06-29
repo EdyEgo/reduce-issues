@@ -12,6 +12,35 @@ export const teamSlice = createSlice({
   name: "team",
   initialState,
   reducers: {
+    decrementIssuesNumber(state, { payload }) {
+      const teamId = payload.teamId;
+      const copyTeamsList = [...state.teamList];
+      const teamFoundedIndex = state.teamList.findIndex(
+        (teamObject) => teamObject.id === teamId
+      );
+      const teamObjectToModify = copyTeamsList[teamFoundedIndex];
+      copyTeamsList.splice(teamFoundedIndex, 1, {
+        ...teamObjectToModify,
+        issuesNumber: teamObjectToModify.issuesNumber - 1,
+      });
+      state.teamList = copyTeamsList;
+    },
+    incrementIssuesNumber(state, { payload }) {
+      const teamId = payload.teamId;
+      const copyTeamsList = [...state.teamList];
+      const teamFoundedIndex = state.teamList.findIndex(
+        (teamObject) => teamObject.id === teamId
+      );
+      const teamObjectToModify = copyTeamsList[teamFoundedIndex];
+      copyTeamsList.splice(teamFoundedIndex, 1, {
+        ...teamObjectToModify,
+        issuesNumber: teamObjectToModify.issuesNumber + 1,
+      });
+      state.teamList = copyTeamsList;
+    },
+    clearTeamListMemoryOnLogOut(state) {
+      state.teamList = [];
+    },
     changeSelectedTeam: (state, action) => {
       state.selectedTeam = action.payload;
     }, // we don t have a selected team future
@@ -111,6 +140,9 @@ export const teamSlice = createSlice({
 
 export const {
   changeSelectedTeam,
+  incrementIssuesNumber,
+  decrementIssuesNumber,
+  clearTeamListMemoryOnLogOut,
   setTeamList,
   addATeamInTeamList,
   deleteOneTeamFromTeamList,

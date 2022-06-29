@@ -160,7 +160,7 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
         workSpaceSelected: { id: selectedWorkspaceId },
       })
     );
-    // this part is not gonna be needed once you make the routes right ----->
+
     const collectionUserWorkspace = workspaces;
     const workspaceData = await getCurrentSelectedWorkspaceAndSave(
       selectedWorkspaceId,
@@ -173,9 +173,6 @@ const WorkspaceSettings: React.FC<WorkspaceSettingsProps> = () => {
 
     const newWorkspaceSelected = workspaces[selectedWorkspaceId];
     dispatch(changeSelectedWorkSpaceStore(newWorkspaceSelected));
-    // see if the teams are loaded and the issues
-    console.log("delete this in the future");
-    //this part is not gonna be needed once you make the routes right <-----
   }
 
   const buttonSx = {

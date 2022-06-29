@@ -13,8 +13,15 @@ import { changeErrorStatus } from "../../../../store/auth";
 import { useSelector, useDispatch } from "react-redux";
 import { changeUserStatus } from "../../../../store/auth";
 import { changeProfileBarStatus } from "../../../../store/profile";
-import { removeSubscriptions } from "../../../../store/issues";
+import {
+  removeSubscriptions,
+  clearIssuesMemory,
+} from "../../../../store/issues";
+import { clearTeamListMemoryOnLogOut } from "../../../../store/team";
+import { clearWorkspaceMemory } from "../../../../store/workspace";
+import { clearCurrentUser } from "../../../../store/users";
 
+import { clearFilterIssueMemory } from "../../../../store/filtersIssues";
 export default function MenuListComposition({
   open,
   setOpen,
@@ -25,6 +32,7 @@ export default function MenuListComposition({
   anchorRef: any;
 }) {
   const workSpaceStore = useSelector((state: any) => state.workspace);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -59,12 +67,23 @@ export default function MenuListComposition({
   async function logUserOut() {
     // left here , unsub from issues updates
     const result = await signOut();
-    dispatch(changeUserStatus(null));
-    dispatch(removeSubscriptions());
+
+    // reset store data
+
     if (result.error) {
       dispatch(changeErrorStatus(result.error));
       return false;
     }
+
+    dispatch(changeUserStatus(null));
+    dispatch(removeSubscriptions());
+
+    // clear memory
+    dispatch(clearTeamListMemoryOnLogOut());
+    dispatch(clearWorkspaceMemory());
+    dispatch(clearCurrentUser());
+    dispatch(clearIssuesMemory());
+    dispatch(clearFilterIssueMemory());
 
     navigate("/reduce-issues");
 

@@ -68,14 +68,6 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
     selectedWorkspace.membersId[authUser.uid].role === "Owner"
       ? true
       : false;
-  console.log(
-    "ai ma",
-    selectedWorkspace,
-    "cum asa",
-    authUser.uid,
-    "bre",
-    areYouWorkspaceOwner
-  );
 
   async function startSearchForNewWorkspaceMembers() {
     const trimedInputValue = searchInputValue.trim();

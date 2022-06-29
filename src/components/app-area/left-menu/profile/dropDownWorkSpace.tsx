@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useNavigate, Link } from "react-router-dom";
-import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
+
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Grow from "@mui/material/Grow";
 import Paper from "@mui/material/Paper";
@@ -17,8 +17,13 @@ import { getUsers } from "../../../../api/dataBaseUsersMethods";
 import { getTeams } from "../../../../api/dataBaseTeamsMethods";
 import { setTeamList } from "../../../../store/team";
 import { changeUserStatus } from "../../../../store/auth";
-import { changeCurrentUser } from "../../../../store/users";
+import { changeCurrentUser, clearCurrentUser } from "../../../../store/users";
 import { removeSubscriptions } from "../../../../store/issues";
+import { clearTeamListMemoryOnLogOut } from "../../../../store/team";
+import { clearWorkspaceMemory } from "../../../../store/workspace";
+
+import { clearIssuesMemory } from "../../../../store/issues";
+import { clearFilterIssueMemory } from "../../../../store/filtersIssues";
 import {
   changeSelectedWorkSpace,
   loadMembersToStore,
@@ -98,7 +103,7 @@ export default function MenuListComposition({
         workSpaceSelected: { id: selectedWorkspaceId },
       })
     );
-    // this part is not gonna be needed once you make the routes right ----->
+
     const collectionUserWorkspace = workspaces;
     const workspaceData = await getCurrentSelectedWorkspaceAndSave(
       selectedWorkspaceId,
@@ -111,9 +116,6 @@ export default function MenuListComposition({
 
     const newWorkspaceSelected = workspaces[selectedWorkspaceId];
     dispatch(changeSelectedWorkSpaceStore(newWorkspaceSelected));
-    // see if the teams are loaded and the issues
-    console.log("delete this in the future");
-    //this part is not gonna be needed once you make the routes right <-----
   }
 
   const handleClose = (event: Event | React.SyntheticEvent) => {
@@ -139,12 +141,20 @@ export default function MenuListComposition({
   async function logUserOut() {
     // left here , unsub from issues updates
     const result = await signOut();
-    dispatch(changeUserStatus(null));
-    dispatch(removeSubscriptions());
+
     if (result.error) {
       dispatch(changeErrorStatus(result.error));
       return false;
     }
+    dispatch(changeUserStatus(null));
+    dispatch(removeSubscriptions());
+
+    // clear memory
+    dispatch(clearTeamListMemoryOnLogOut());
+    dispatch(clearWorkspaceMemory());
+    dispatch(clearCurrentUser());
+    dispatch(clearIssuesMemory());
+    dispatch(clearFilterIssueMemory());
 
     navigate("/reduce-issues");
 

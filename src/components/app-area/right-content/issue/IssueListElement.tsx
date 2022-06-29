@@ -177,7 +177,7 @@ export default function ReturnIssueListElement({
       }
     }
 
-    return `/${selectedWorkspaceUrl}/team/${teamURLNeeded}/${issueIdentifier}`;
+    return `/reduce-issues/${selectedWorkspaceUrl}/team/${teamURLNeeded}/${issueIdentifier}`;
   }
 
   const generalLink = teamURL
