@@ -261,6 +261,6 @@ export default async function postDocumentSetupOnSignUp(
       },
     });
   } catch (e: any) {
-    console.log("my error ", e.message);
+    console.log("error is", e.message);
   }
 }

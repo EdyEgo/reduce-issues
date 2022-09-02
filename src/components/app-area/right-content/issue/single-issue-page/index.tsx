@@ -138,7 +138,6 @@ const SingleIssuePage: React.FC<SingleIssuePageProps> = () => {
 
   // load activity
   const stateStore = useSelector((state: any) => state);
-  console.log("state is", stateStore);
   async function deleteIssueFunction() {
     setDeleteLoginModalStatus(true);
 

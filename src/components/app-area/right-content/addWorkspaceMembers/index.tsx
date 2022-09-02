@@ -8,6 +8,8 @@ import AvatarPlaceholder from "@mui/icons-material/AccountCircle";
 // import AddWorkspaceUserIcon from "@mui/icons-material/PersonAddAltOutlined";
 import AddWorkspaceUserIcon from "@mui/icons-material/PersonAddAltRounded";
 import RemoveWorkspaceUserIcon from "@mui/icons-material/PersonRemoveAlt1Outlined";
+import ListIcon from "@mui/icons-material/List";
+
 import {
   getUserByEmail,
   addWorkspaceToUserWorkSpaces,
@@ -20,6 +22,7 @@ import {
   addMemberToWorkspace,
   removeMemberFromWorkspace,
 } from "../../../../store/workspace";
+import { changeDrawerStateByDirectionId } from "../../../../store/drawers";
 import Button from "@mui/material/Button";
 
 import Modal from "@mui/material/Modal";
@@ -34,7 +37,7 @@ import Typography from "@mui/material/Typography";
 interface AddWorkspaceMembersProps {}
 
 const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
-  const dispactch = useDispatch();
+  const dispatch = useDispatch();
   const [searchInputValue, setSearchInputValue] = useState("");
   const authUser = useSelector((state: any) => state.auth.user);
 
@@ -145,7 +148,7 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
 
     // dispatch store changes
 
-    dispactch(
+    dispatch(
       addMemberToWorkspace({
         userId: userObject.id,
         userValue: userObject,
@@ -177,7 +180,7 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
     }
 
     //dispactch info store
-    dispactch(
+    dispatch(
       removeMemberFromWorkspace({
         userId: userToRemove.id,
         userValue: userToRemove,
@@ -199,6 +202,21 @@ const AddWorkspaceMembers: React.FC<AddWorkspaceMembersProps> = () => {
     <div className="add-workspace-members-container px-28 mt-10">
       {selectedWorkspace != null && (
         <div className="content-container">
+          <div className="header xl:hidden border-b mb-2 flex justify-start items-center px-4 py-2 text-gray-700">
+            <div
+              className="icon"
+              onClick={() => {
+                dispatch(
+                  changeDrawerStateByDirectionId({
+                    direction: "left",
+                    newStatus: true,
+                  })
+                );
+              }}
+            >
+              <ListIcon fontSize="medium" />
+            </div>
+          </div>
           <div className="nav-team-settings  p-8">
             <div className="about-container border-b pb-2 text-2xl">
               <div className="first-title">Add members to your workspace</div>

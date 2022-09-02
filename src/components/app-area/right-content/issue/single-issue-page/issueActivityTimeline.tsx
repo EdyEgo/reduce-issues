@@ -152,16 +152,7 @@ export default function BasicTimeline({
     splitdisplayName != null
       ? splitdisplayName[0] + " " + splitdisplayName[1][0] + "."
       : authUser.displayName;
-  console.log(
-    "wth is happening right here boy",
-    authUser.displayName.trim(),
-    "sss",
-    useUserName,
-    "JJ",
-    splitdisplayName,
-    "LL",
-    splitdisplayName[1]
-  );
+
   const shortUserName =
     useUserName.length > 20 ? useUserName.slice(0, 20) + ".." : useUserName;
   return (
