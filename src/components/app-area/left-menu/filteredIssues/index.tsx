@@ -5,6 +5,7 @@ import {
   changeTabAreaStaticTabSelection,
   changeSeletedTeamId,
 } from "../../../../store/selectedTab";
+import { changeDrawerStateByDirectionId } from "../../../../store/drawers";
 
 import { useNavigate } from "react-router-dom";
 
@@ -32,6 +33,12 @@ const FilteredIssues: React.FC<FilteredIssuesProps> = () => {
 
     dispatch(changeTabAreaStaticTabSelection("isMyIssues"));
 
+    dispatch(
+      changeDrawerStateByDirectionId({
+        direction: "left",
+        newStatus: false,
+      })
+    );
     navigate(filteredIssuesLink);
   }
 

@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { changenewIssueModalOpenStatus } from "../../../../store/issues";
+import { changeDrawerStateByDirectionId } from "../../../../store/drawers";
+
 import MagnifyingGlass from "@mui/icons-material/Search";
 import WritePen from "@mui/icons-material/DriveFileRenameOutline";
 
@@ -13,6 +15,12 @@ const CreateNewIssue: React.FC<CreateNewIssueProps> = () => {
   const dispatch = useDispatch();
 
   function openNewIssueModal() {
+    dispatch(
+      changeDrawerStateByDirectionId({
+        direction: "left",
+        newStatus: false,
+      })
+    );
     dispatch(changenewIssueModalOpenStatus({ open: true }));
   }
 
@@ -29,6 +37,14 @@ const CreateNewIssue: React.FC<CreateNewIssueProps> = () => {
           <span className="pointer-events-none">Create a new Issue </span>
         </div>
         <Link
+          onClick={() => {
+            dispatch(
+              changeDrawerStateByDirectionId({
+                direction: "left",
+                newStatus: false,
+              })
+            );
+          }}
           className="search-btn   my-4 border rounded-md py-1 px-2 hover:bg-gray-100 hover:text-gray-900 text-gray-700"
           to={"reduce-issues/" + selectedWorkspaceUrl + "/search"}
         >

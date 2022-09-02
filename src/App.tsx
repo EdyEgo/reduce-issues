@@ -38,7 +38,7 @@ function App() {
     }
 
     setLoading(false);
-    changeUnsubscribeStatus(data);
+    dispatch(changeUnsubscribeStatus(data));
   }, [dispatch, currentUser]); // functions like dispatch are  here only because of the "Mr. eslint" is screaming his lungs of
 
   return (

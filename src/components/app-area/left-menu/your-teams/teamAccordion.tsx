@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { styled } from "@mui/material/styles";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
@@ -11,6 +11,7 @@ import MuiAccordionSummary, {
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import TeamOptions from "./teamOptionsTabs";
 import TeamSettingsIcon from "@mui/icons-material/ManageAccounts";
+import { changeDrawerStateByDirectionId } from "../../../../store/drawers";
 
 interface TeamItem {
   teamObject: {
@@ -60,6 +61,7 @@ const CustomizedAccordions: React.FC<TeamItem> = ({
   teamObject,
 }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const workspaceSelected = useSelector(
     (state: any) => state.workspace.selectedWorkSpace
   ); // workspaceURL
@@ -100,6 +102,12 @@ const CustomizedAccordions: React.FC<TeamItem> = ({
           <div
             onClick={() => {
               goToTeamSettings();
+              dispatch(
+                changeDrawerStateByDirectionId({
+                  direction: "left",
+                  newStatus: false,
+                })
+              );
             }}
             className="team-options__settings flex cursor-pointer hover:bg-gray-200 p-1 ml-1 py-2  rounded-md transition-all ease"
           >

@@ -21,7 +21,7 @@ import { changeCurrentUser, clearCurrentUser } from "../../../../store/users";
 import { removeSubscriptions } from "../../../../store/issues";
 import { clearTeamListMemoryOnLogOut } from "../../../../store/team";
 import { clearWorkspaceMemory } from "../../../../store/workspace";
-
+import { changeDrawerStateByDirectionId } from "../../../../store/drawers";
 import { clearIssuesMemory } from "../../../../store/issues";
 import { clearFilterIssueMemory } from "../../../../store/filtersIssues";
 import {
@@ -176,6 +176,13 @@ export default function MenuListComposition({
             await changeSelectedWorkspaceById(workspace[1].id);
             navigate(`/reduce-issues/${workspace[1].workspaceURL}`);
             handleClose(event);
+
+            dispatch(
+              changeDrawerStateByDirectionId({
+                direction: "left",
+                newStatus: false,
+              })
+            );
           }}
           key={index}
         >
@@ -192,6 +199,7 @@ export default function MenuListComposition({
     <Stack direction="row" spacing={5} className="absolute top-7 left-9 z-10">
       <div>
         <Popper
+          className="relative"
           open={open}
           anchorEl={anchorRef.current}
           role={undefined}
@@ -207,7 +215,7 @@ export default function MenuListComposition({
                   placement === "bottom-start" ? "left top" : "left bottom",
               }}
             >
-              <Paper>
+              <Paper style={{ width: "100%" }}>
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList
                     autoFocusItem={open}
@@ -229,6 +237,12 @@ export default function MenuListComposition({
                       onClick={(event) => {
                         navigate("/reduce-issues/addworkspace");
                         handleClose(event);
+                        dispatch(
+                          changeDrawerStateByDirectionId({
+                            direction: "left",
+                            newStatus: false,
+                          })
+                        );
                       }}
                     >
                       Create a new workspace
@@ -237,6 +251,12 @@ export default function MenuListComposition({
                       onClick={(event) => {
                         navigate("/reduce-issues/workspace-stats-and-settings");
                         handleClose(event);
+                        dispatch(
+                          changeDrawerStateByDirectionId({
+                            direction: "left",
+                            newStatus: false,
+                          })
+                        );
                       }}
                     >
                       Workspace settigns and stats
@@ -246,6 +266,12 @@ export default function MenuListComposition({
                       onClick={(event) => {
                         navigate("/reduce-issues/add-workspace-members");
                         handleClose(event);
+                        dispatch(
+                          changeDrawerStateByDirectionId({
+                            direction: "left",
+                            newStatus: false,
+                          })
+                        );
                       }}
                     >
                       Workspace members
@@ -255,6 +281,12 @@ export default function MenuListComposition({
                       onClick={(event) => {
                         navigate("/reduce-issues/add-new-team");
                         handleClose(event);
+                        dispatch(
+                          changeDrawerStateByDirectionId({
+                            direction: "left",
+                            newStatus: false,
+                          })
+                        );
                       }}
                     >
                       Add team
@@ -270,6 +302,13 @@ export default function MenuListComposition({
                           handleClose(event);
                           navigate("/reduce-issues");
                         }
+
+                        dispatch(
+                          changeDrawerStateByDirectionId({
+                            direction: "left",
+                            newStatus: false,
+                          })
+                        );
                       }}
                     >
                       Logout

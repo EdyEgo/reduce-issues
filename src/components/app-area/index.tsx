@@ -1,16 +1,13 @@
 import { BrowserRouter as Router } from "react-router-dom";
 import { useEffect } from "react";
 import NewIssueModal from "./modals/NewIssue";
-import { useStore, useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { getUser, getUsers } from "../../api/dataBaseUsersMethods";
 import {
   getWorkSpace,
   getWorkSpacesByIds,
 } from "../../api/dataBaseWorkSpaceMethods";
-import {
-  getTeams,
-  getTeamsWhereTheUserMeetsTheRole,
-} from "../../api/dataBaseTeamsMethods";
+import { getTeamsWhereTheUserMeetsTheRole } from "../../api/dataBaseTeamsMethods";
 import { changeCurrentUser } from "../../store/users";
 import {
   changeSelectedWorkSpace,
@@ -20,6 +17,7 @@ import {
 import { setTeamList } from "../../store/team";
 import LeftMenu from "./left-menu";
 import RightContent from "./right-content";
+import MenuDrawer from "./drawer/MenuDrawer";
 
 interface AppAreaProps {}
 
@@ -157,13 +155,13 @@ const AppArea: React.FC<AppAreaProps> = () => {
       <Router>
         {/* links here */}
         <div className="flex app-side-content-container text-md mt-1 h-full">
-          <div className="w-3/12 left-menu-container ">
+          <div className="xl:w-3/12 left-menu-container hidden xl:block">
             <LeftMenu />
           </div>
 
           {/* add pagination to issues by date,use serverTimestamp */}
           {/* routes here */}
-          <div className="w-10/12 right-content-container">
+          <div className="w-full xl:w-10/12 right-content-container">
             <RightContent />
           </div>
           {newIssueModalIsOpen && (
@@ -171,6 +169,7 @@ const AppArea: React.FC<AppAreaProps> = () => {
               <NewIssueModal />
             </div>
           )}
+          <MenuDrawer />
         </div>
       </Router>
     </div>

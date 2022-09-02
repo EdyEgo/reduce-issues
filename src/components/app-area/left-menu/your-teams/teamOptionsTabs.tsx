@@ -1,9 +1,7 @@
-import WysiwygSharpIcon from "@mui/icons-material/WysiwygSharp";
-import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import BacklogIcon from "@mui/icons-material/BlurOn";
 import ActiveIcon from "@mui/icons-material/HourglassTop";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   changeSelectedTabAppAreaLink,
@@ -11,6 +9,7 @@ import {
   changeTabAreaStaticTabSelection,
   changeSeletedTeamId,
 } from "../../../../store/selectedTab";
+import { changeDrawerStateByDirectionId } from "../../../../store/drawers";
 
 interface TeamOptionsTabsProps {
   teamObject: {
@@ -63,6 +62,12 @@ const TeamOptionsTabs: React.FC<TeamOptionsTabsProps> = ({ teamObject }) => {
           <div
             onClick={() => {
               changeRouteToTeamTab("all");
+              dispatch(
+                changeDrawerStateByDirectionId({
+                  direction: "left",
+                  newStatus: false,
+                })
+              );
             }}
             className="issue flex my-1 cursor-pointer hover:bg-gray-200 p-1 rounded-md transition-all ease"
           >
@@ -73,6 +78,12 @@ const TeamOptionsTabs: React.FC<TeamOptionsTabsProps> = ({ teamObject }) => {
             <div
               onClick={() => {
                 changeRouteToTeamTab("active");
+                dispatch(
+                  changeDrawerStateByDirectionId({
+                    direction: "left",
+                    newStatus: false,
+                  })
+                );
               }}
               className="team-options__active flex cursor-pointer hover:bg-gray-200 p-1 ml-1  rounded-md transition-all ease"
             >
@@ -82,6 +93,12 @@ const TeamOptionsTabs: React.FC<TeamOptionsTabsProps> = ({ teamObject }) => {
             <div
               onClick={() => {
                 changeRouteToTeamTab("backlog");
+                dispatch(
+                  changeDrawerStateByDirectionId({
+                    direction: "left",
+                    newStatus: false,
+                  })
+                );
               }}
               className="team-options__backlog flex cursor-pointer hover:bg-gray-200 p-1 ml-1 rounded-md transition-all ease"
             >

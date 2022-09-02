@@ -12,6 +12,8 @@ import { signOut } from "../../../../api/dataBaseAuthMethods";
 import { changeErrorStatus } from "../../../../store/auth";
 import { useSelector, useDispatch } from "react-redux";
 import { changeUserStatus } from "../../../../store/auth";
+import { changeDrawerStateByDirectionId } from "../../../../store/drawers";
+
 import { changeProfileBarStatus } from "../../../../store/profile";
 import {
   removeSubscriptions,
@@ -119,7 +121,7 @@ export default function MenuListComposition({
                   placement === "bottom-start" ? "left top" : "left bottom",
               }}
             >
-              <Paper>
+              <Paper style={{ width: "100%" }}>
                 <ClickAwayListener onClickAway={handleClose}>
                   <MenuList
                     autoFocusItem={open}
@@ -131,6 +133,12 @@ export default function MenuListComposition({
                       onClick={async (event) => {
                         directUserToProfilePage();
                         handleClose(event);
+                        dispatch(
+                          changeDrawerStateByDirectionId({
+                            direction: "left",
+                            newStatus: false,
+                          })
+                        );
                       }}
                     >
                       Profile
@@ -140,6 +148,13 @@ export default function MenuListComposition({
                       onClick={async (event) => {
                         const userWasLoggedOut = await logUserOut();
                         if (userWasLoggedOut) handleClose(event);
+
+                        dispatch(
+                          changeDrawerStateByDirectionId({
+                            direction: "left",
+                            newStatus: false,
+                          })
+                        );
                       }}
                     >
                       Logout

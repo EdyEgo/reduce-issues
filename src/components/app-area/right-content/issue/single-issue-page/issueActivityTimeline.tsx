@@ -131,12 +131,37 @@ export default function BasicTimeline({
   }
 
   const currentUserHasTwoNames = authUser.displayName.indexOf(" ");
-  const splitdisplayName =
-    currentUserHasTwoNames !== -1 ? authUser.displayName.split(" ") : null;
+  let splitdisplayName =
+    currentUserHasTwoNames !== -1
+      ? authUser.displayName.trim().split(" ")
+      : null;
+
+  if (Array.isArray(splitdisplayName)) {
+    // in case the split array has an empty string in it
+    if (splitdisplayName.includes("") || splitdisplayName.includes(" ")) {
+      splitdisplayName = splitdisplayName.reduce((prev, curr) => {
+        if (curr.trim().length <= 0) {
+          return prev;
+        }
+        return [...prev, curr];
+      }, []);
+    }
+  }
+
   const useUserName =
     splitdisplayName != null
       ? splitdisplayName[0] + " " + splitdisplayName[1][0] + "."
       : authUser.displayName;
+  console.log(
+    "wth is happening right here boy",
+    authUser.displayName.trim(),
+    "sss",
+    useUserName,
+    "JJ",
+    splitdisplayName,
+    "LL",
+    splitdisplayName[1]
+  );
   const shortUserName =
     useUserName.length > 20 ? useUserName.slice(0, 20) + ".." : useUserName;
   return (

@@ -7,6 +7,7 @@ import issuesReducer from "./issues";
 import selectedTabReducer from "./selectedTab";
 import filtersIssuesReducer from "./filtersIssues";
 import profileReducer from "./profile";
+import drawerReducer from "./drawers";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     profile: profileReducer,
     selectedTab: selectedTabReducer,
     filtersIssues: filtersIssuesReducer,
+    drawer: drawerReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
