@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/reduce-issues/static/css/main.e681fa73.css",
+    "main.js": "/reduce-issues/static/js/main.0baae34d.js",
+    "static/js/787.1cebc8c0.chunk.js": "/reduce-issues/static/js/787.1cebc8c0.chunk.js",
+    "index.html": "/reduce-issues/index.html",
+    "main.e681fa73.css.map": "/reduce-issues/static/css/main.e681fa73.css.map",
+    "main.0baae34d.js.map": "/reduce-issues/static/js/main.0baae34d.js.map",
+    "787.1cebc8c0.chunk.js.map": "/reduce-issues/static/js/787.1cebc8c0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e681fa73.css",
+    "static/js/main.0baae34d.js"
+  ]
+}
